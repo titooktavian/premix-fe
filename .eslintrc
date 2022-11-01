@@ -1,0 +1,27 @@
+{
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "rules": {
+        "react/prop-types": 1,
+        "react/react-in-jsx-scope": "off",
+        "indent": ["error", 4],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4]
+    },
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    }
+}
