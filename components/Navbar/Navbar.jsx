@@ -353,7 +353,6 @@ const Navbar = () => {
                     ))}
                     {userLogin && (
                         <>
-                            <Divider />
                             <button
                                 type="button"
                                 className="text-red-300 py-4 text-base font-medium"
