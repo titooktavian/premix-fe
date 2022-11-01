@@ -1,11 +1,8 @@
-import Link from "next/link";
 import PropTypes from "prop-types";
-import Image from "next/image";
 import { AiOutlinePicture, AiOutlineHdd, AiOutlineDownload } from "react-icons/ai";
 import { BsShieldCheck } from "react-icons/bs";
-import { MdProductionQuantityLimits } from "react-icons/md";
 
-import { Carousel, CarouselItem, CategoryCard, ListOutlet, Modal, ProductCard, PromoCard, SectionTitle } from "components";
+import { Carousel, CarouselItem, CategoryCard, ProductCard, PromoCard, SectionTitle } from "components";
 // import {
 //     BannerHeader,
 //     PromoCard,
@@ -14,7 +11,7 @@ import { Carousel, CarouselItem, CategoryCard, ListOutlet, Modal, ProductCard, P
 //     Carousel,
 //     ListOutlet
 // } from "components";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 // import { SORT_PRODUCT } from "constants";
 
 const Index = ({ 
@@ -25,20 +22,6 @@ const Index = ({
     // recomendedProducts,
     // listOutlet,
 }) => {
-    const router = useRouter();
-    const goToProduct = (query) => {
-        const { sort_type, sort_by } = query;
-        const sortQuery = { sort_type, sort_by };
-        router.push({
-            pathname: "/produk",
-            query: { ...router.query, ...sortQuery }
-        });
-    }
-
-    const flickityOptions = {
-        initialIndex: 2
-    }
-
     return (
         <div 
             className="mb-6 md:mt-3 mt-0"
