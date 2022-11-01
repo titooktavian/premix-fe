@@ -9,6 +9,7 @@ export { default as ProductCard } from "./ProductCard/ProductCard";
 export { default as Modal } from "./Modal/Modal";
 export { default as ErrorLayout } from "./Layout/ErrorLayout";
 export { default as Carousel } from "./Carousel/Carousel";
+export { default as CarouselItem } from "./Carousel/CarouselItem";
 export { default as Alert } from "./Alert/Alert";
 export { default as Input } from "./Input/Input";
 export { default as FormikInput } from "./Input/Formik/FormikInput";

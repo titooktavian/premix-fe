@@ -5,7 +5,7 @@ import { AiOutlinePicture, AiOutlineHdd, AiOutlineDownload } from "react-icons/a
 import { BsShieldCheck } from "react-icons/bs";
 import { MdProductionQuantityLimits } from "react-icons/md";
 
-import { Carousel, CategoryCard, ListOutlet, Modal, ProductCard, PromoCard, SectionTitle } from "components";
+import { Carousel, CarouselItem, CategoryCard, ListOutlet, Modal, ProductCard, PromoCard, SectionTitle } from "components";
 // import {
 //     BannerHeader,
 //     PromoCard,
@@ -60,23 +60,11 @@ const Index = ({
                             wrapAround: true,
                         }}
                     >
-                        <div
-                            className={`mx-2 w-full cursor-pointer relative h-[350px] overflow-x-clip p-4 bg-green-100 rounded-3xl`}
-                        >
-                                <Image src="/images/carousel/1.jpeg" layout="fill" objectFit="cover" priority />
-                        </div>
+                        <CarouselItem name="Promo Akun Spotify" description="Dapatkan promo termurah di bulan ini, kali ini akun spotify harganya lebih terjangkau. Nikmati diskon 50% sampai 31 Oktober 2023" link="/" imageUrl="/images/carousel/2.jpeg" />
 
-                        <div
-                            className={`mx-2 w-full cursor-pointer relative h-[350px] overflow-x-clip p-4 bg-green-100 rounded-3xl`}
-                        >
-                                <Image src="/images/carousel/2.jpeg" layout="fill" objectFit="cover" priority />
-                        </div>
+                        <CarouselItem name="Promo Akun Spotify" description="Dapatkan promo termurah di bulan ini, kali ini akun spotify harganya lebih terjangkau. Nikmati diskon 50% sampai 31 Oktober 2023" link="/" imageUrl="/images/carousel/2.jpeg" />
 
-                        <div
-                            className={`mx-2 w-full cursor-pointer relative h-[350px] overflow-x-clip p-4 bg-green-100 rounded-3xl`}
-                        >
-                                <Image src="/images/carousel/3.jpeg" layout="fill" objectFit="cover" priority />
-                        </div>
+                        <CarouselItem name="Promo Akun Spotify" description="Dapatkan promo termurah di bulan ini, kali ini akun spotify harganya lebih terjangkau. Nikmati diskon 50% sampai 31 Oktober 2023" link="/" imageUrl="/images/carousel/3.jpeg" />
                     </Carousel>
                 </div>
             </section>
