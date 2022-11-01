@@ -7,7 +7,7 @@ const ProductCard = ({ name, category, price, discount, imageUrl }) => {
         <div className="flex flex-col rounded-3xl shadow-[0px_4px_24px_rgba(39,38,65,0.06)] p-4">
             <div className="flex flex-col gap-2 rounded-3xl">
                 <div className="relative pt-[56.25%]">
-                    <Image src={imageUrl} width="64px" height="64px" className="rounded-md rounded-2xl" layout='fill' objectFit='cover'/>
+                    <Image src={imageUrl} className="rounded-md rounded-2xl" layout='fill' objectFit='cover'/>
                 </div>
                 <span className="py-1 px-2 bg-[#272541] rounded-2xl text-xs text-[#FFFFFF] font-bold w-fit mt-1">
                     {category}
