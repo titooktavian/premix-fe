@@ -1,5 +1,5 @@
-import { Component } from "react";
-import { getOutletByDomain, getOutletInfo } from "./api";
+// import { Component } from "react";
+// import { getOutletByDomain, getOutletInfo } from "./api";
 import { withIronSessionSsr } from "iron-session/next";
 import { sessionOptions } from "lib/session";
 
