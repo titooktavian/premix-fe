@@ -13,11 +13,8 @@
     },
     "extends": ["eslint:recommended", "plugin:react/recommended"],
     "rules": {
-        "react/prop-types": 1,
+        "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
-        "indent": ["error", 4],
-        "react/jsx-indent": ["error", 4],
-        "react/jsx-indent-props": ["error", 4]
     },
     "env": {
         "browser": true,
