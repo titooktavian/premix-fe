@@ -17,7 +17,7 @@ import { Carousel, CarouselItem, CategoryCard, ProductCard, PromoCard, SectionTi
 const Index = ({ 
     // products, 
     // categories, 
-    // home, 
+    pageTitle, 
     // promos, 
     // recomendedProducts,
     // listOutlet,

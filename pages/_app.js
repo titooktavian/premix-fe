@@ -1,15 +1,12 @@
 import "styles/globals.css";
 import { StateContext } from "context/StateContext";
-import { DefaultLayout, ErrorLayout, WebtreeLayout, Alert, Loading } from "components/index";
+import { DefaultLayout, ErrorLayout, Alert, Loading } from "components/index";
 
 function MyApp({ Component, pageProps }) {
     let Layout = DefaultLayout;
     switch (Component.layout) {
     case 'ERR':
         Layout = ErrorLayout;
-        break;
-    case 'WEBTREE':
-        Layout = WebtreeLayout;
         break;
     }
 

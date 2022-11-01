@@ -1,14 +1,12 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { FaBars, FaChevronDown, FaChevronRight, FaUser } from "react-icons/fa";
-import { HiOutlineShoppingCart, HiOutlineUser, HiOutlineSearch } from "react-icons/hi";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
+import { HiOutlineShoppingCart, HiOutlineSearch } from "react-icons/hi";
 import { GrClose } from "react-icons/gr";
-import { Divider } from "components";
-import { toRupiah } from "helpers/formatter";
 import { useStateContext } from "context/StateContext";
 import { NAVIGATIONS, USER_NAVIGATIONS } from "constants/enum";
 
@@ -28,12 +26,12 @@ const Navbar = () => {
         cartItems, 
         // totalPrice, 
         // outlet, 
-        // setIsConfirmLogin, 
+        setIsConfirmLogin,
         userLogin,
-        // handleLogout,
+        handleLogout,
         // selectedOutlet,
         // outletCode,
-        // setLoginParam,
+        setLoginParam,
     } = useStateContext();
 
     // const { logo_path, nama } = outlet;
@@ -175,7 +173,6 @@ const Navbar = () => {
                                             </Link>
                                         </li>
                                     ))}
-                                    <Divider />
                                     <li className="p-3 text-red-300 group relative w-full h-full cursor-pointer text-sm font-medium hover:font-bold" onClick={handleLogout}>
                                         <a className="block h-full">Keluar</a>
                                     </li>
@@ -184,10 +181,10 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <>
-                            <a className="cursor-pointer hidden text-base font-normal text-dark-300 md:block cursor-pointer py-4" onClick={openPopupLogin}>
+                            <a className="cursor-pointer hidden text-base font-normal text-dark-300 md:block py-4" onClick={openPopupLogin}>
                                 Login
                             </a>
-                            <a className="cursor-pointer hidden text-base font-normal text-dark-300 md:block cursor-pointer py-4" onClick={openPopupLogin}>
+                            <a className="cursor-pointer hidden text-base font-normal text-dark-300 md:block py-4" onClick={openPopupLogin}>
                                 Register
                             </a>
                         </>
@@ -337,7 +334,6 @@ const Navbar = () => {
                         </li>
                         <FaChevronRight className="text-base" />
                     </a>
-                    <Divider />
                     {navigations.map((nav) => (
                         <li
                             className="py-4 text-base font-medium text-dark-300"

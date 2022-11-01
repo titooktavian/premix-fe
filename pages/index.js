@@ -8,8 +8,9 @@
 import Beranda from "views/Beranda";
 import { coreGSSP } from "helpers/CoreHOC";
 
+// eslint-disable-next-line no-unused-vars
 export const getServerSideProps = coreGSSP(async ({ req }) => {
-    try {
+    // try {
         // const [
         //     products,
         //     categories,
@@ -47,11 +48,11 @@ export const getServerSideProps = coreGSSP(async ({ req }) => {
                 pageTitle: 'PremixStore',
             }
         };
-    } catch (error) {
-        return {
-            notFound: true
-        };
-    }
+    // } catch (error) {
+    //     return {
+    //         notFound: true
+    //     };
+    // }
 });
 
 export default Beranda;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Footer, Navbar, Modal, Button } from "..";
 import Head from "next/head";
 import { useEffect } from "react";
