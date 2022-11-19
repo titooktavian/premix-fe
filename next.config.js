@@ -22,14 +22,7 @@ module.exports = {
     },
     images: {
         domains: [
-            "mayang.klopos.com",
-            "beta-mayang.mangkujagat.com",
-            "majoo.id",
-            "alpha-beta-master-data.sgp1.digitaloceanspaces.com",
-            "mayang-staging.sgp1.digitaloceanspaces.com",
-            "ecs7.tokopedia.net",
-            "api.sandbox.midtrans.com",
-            "majoo-space.sgp1.digitaloceanspaces.com",
+            "via.placeholder.com"
         ]
     }
 };

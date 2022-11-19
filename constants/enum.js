@@ -79,9 +79,9 @@ export const VALID_OTP_DATA = "VALID_OTP_DATA";
 export const ERROR_MESSAGE_VERIFY_LIMIT = "Anda sudah melebihi limit 3 kali untuk kirim kode verifikasi hari ini silahkan ulangi pada besok hari";
 export const NAVIGATIONS = [
     { name: "Home", link: "/", isActive: true },
-    { name: "Product", link: "/", isActive: false },
-    { name: "Information", link: "/", isActive: false },
-    { name: "Contact", link: "/", isActive: false },
+    { name: "Product", link: "/produk", isActive: false },
+    { name: "Information", link: "/information", isActive: false },
+    { name: "Contact", link: "/contact", isActive: false },
 ];
 
 export const USER_NAVIGATIONS = [
@@ -117,10 +117,12 @@ export const ACCOUNT_MENU = {
 
 export const API_TARGET = {
     E_MENU: 'E_MENU',
+    PREMIX: 'PREMIX',
 };
 
 export const API_TARGET_VALUE = {
     E_MENU: '/api/ms_emenu_utilities/',
+    PREMIX: '/api/',
 }
 
 export const VERIF_METHOD_TYPE = {

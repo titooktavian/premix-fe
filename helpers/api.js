@@ -40,6 +40,8 @@ const endpoints = {
     promoValidate: (outletCode) => `merchantpromo/${outletCode}/availability-validate`,
     downloadEreceipt: (transactionNo) => `transaction/receipt/${transactionNo}/download`,
     webtree: (outletCode) => `webtree/${outletCode}`,
+    getListProduct: () => `products`,
+    getDetailProduct: (idProduct) => `product/${idProduct}`,
 };
 
 export const login = (payload) => fetchApi(endpoints.login, payload, "post", {serviceDomainType: API_TARGET.E_MENU });
@@ -128,3 +130,7 @@ export const downloadEreceipt = (transactionNo) =>
     fetchApi(endpoints.downloadEreceipt(transactionNo), {}, "get", { serviceDomainType: API_TARGET.E_MENU });
 export const getWebtree = (outletCode) =>
     fetchApi(endpoints.webtree(outletCode), {}, "get", { serviceDomainType: API_TARGET.E_MENU });
+export const getListProduct = (payload) =>
+    fetchApi(endpoints.getListProduct(), payload, "get", { serviceDomainType: API_TARGET.PREMIX });
+export const getDetailProduct = (idProduct) =>
+    fetchApi(endpoints.getDetailProduct(idProduct), {}, "get", { serviceDomainType: API_TARGET.PREMIX });

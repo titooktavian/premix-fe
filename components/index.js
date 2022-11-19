@@ -11,3 +11,7 @@ export { default as SectionTitle } from "./SectionTitle/SectionTitle";
 export { default as PromoCard } from "./PromoCard/PromoCard";
 export { default as CategoryCard } from "./CategoryCard/CategoryCard";
 export { default as Alert } from "./Alert/Alert";
+export { default as ImageSlider } from "./ImageSlider/ImageSlider";
+export { default as ProductSection } from "./ProductSection/ProductSection";
+export { default as Variant } from "./Variant/Variant";
+export { default as AddCart } from "./AddCart/AddCart";

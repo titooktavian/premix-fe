@@ -49,9 +49,9 @@ const fetchApi = async (
         headers,
         body
     };
-    let server;
-    if (endPoint.includes("https") || typeof(window) !== "undefined") server = "";
-    else server = process.env.NEXT_PUBLIC_BASE_URL;
+    let server = process.env.NEXT_PUBLIC_BASE_URL;
+    // if (endPoint.includes("https") || typeof(window) !== "undefined") server = "";
+    // else server = process.env.NEXT_PUBLIC_BASE_URL;
 
     let target = "";
     
@@ -59,12 +59,16 @@ const fetchApi = async (
     case API_TARGET.E_MENU:
         target = API_TARGET_VALUE.E_MENU;
         break;
+    case API_TARGET.PREMIX:
+            target = API_TARGET_VALUE.PREMIX;
+            break;
     default:
         target = '';
         break;
     }
 
     const url = server + target + endPoint + qs;
+    console.log(url)
 
     const response = await fetch(url, requestOptions);
     let data;

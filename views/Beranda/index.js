@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { AiOutlinePicture, AiOutlineHdd, AiOutlineDownload } from "react-icons/ai";
 import { BsShieldCheck } from "react-icons/bs";
 
-import { Carousel, CarouselItem, CategoryCard, ProductCard, PromoCard, SectionTitle } from "components";
+import { Carousel, CarouselItem, CategoryCard, ProductCard, ProductSection, PromoCard, SectionTitle } from "components";
 // import {
 //     BannerHeader,
 //     PromoCard,
@@ -14,13 +14,8 @@ import { Carousel, CarouselItem, CategoryCard, ProductCard, PromoCard, SectionTi
 // import { useRouter } from "next/router";
 // import { SORT_PRODUCT } from "constants";
 
-const Index = ({ 
-    // products, 
-    // categories, 
-    pageTitle, 
-    // promos, 
-    // recomendedProducts,
-    // listOutlet,
+const Index = ({
+    pageTitle,
 }) => {
     return (
         <div 
@@ -104,31 +99,9 @@ const Index = ({
                 </div>
             </section>
 
-            <section className="-mx-4 mb-4 p-4 md:mx-0 ">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <SectionTitle title="Produk Terlaris" subtitle="Ayo jangan sampai kelewatan produk terlaris kami" />
+            <ProductSection title="Produk Terlaris" subtitle="Ayo jangan sampai kelewatan produk terlaris kami" perPage={4} category="1" withPagination />
 
-                    <div className="grid gap-4 grid-cols-4 my-4">
-                        <ProductCard name="Akun Iconscout" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/1.png"} />
-                        <ProductCard name="Akun Canva" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/2.png"} />
-                        <ProductCard name="Akun Powtoon" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/3.png"} />
-                        <ProductCard name="Akun Vecteezy" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/4.png"} />
-                    </div>
-                </div>
-            </section>
-
-            <section className="-mx-4 mb-4 p-4 md:mx-0 ">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <SectionTitle title="Produk Terbaru" subtitle="Produk yang baru kami rilis di minggu ini" />
-
-                    <div className="grid gap-4 grid-cols-4 my-4">
-                        <ProductCard name="Akun Iconscout" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/1.png"} />
-                        <ProductCard name="Akun Canva" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/2.png"} />
-                        <ProductCard name="Akun Powtoon" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/3.png"} />
-                        <ProductCard name="Akun Vecteezy" category="Akun Design" price="35000" discount="Disc 40$" imageUrl={"/4.png"} />
-                    </div>
-                </div>
-            </section>
+            <ProductSection title="Produk Terbaru" subtitle="Produk yang baru kami rilis di minggu ini" perPage={4} category="2" withPagination />
         </div>
     );
 };

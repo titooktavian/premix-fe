@@ -22,6 +22,7 @@ const Navbar = () => {
         });
         setNavigations(menus);
     };
+
     const { 
         cartItems, 
         // totalPrice, 
@@ -29,12 +30,8 @@ const Navbar = () => {
         setIsConfirmLogin,
         userLogin,
         handleLogout,
-        // selectedOutlet,
-        // outletCode,
         setLoginParam,
     } = useStateContext();
-
-    // const { logo_path, nama } = outlet;
 
     const openPopupLogin = () =>{
         if(userLogin){ 
@@ -46,35 +43,9 @@ const Navbar = () => {
         setIsConfirmLogin(true);
     };
 
-    // useEffect(() => {
-    //     let tempNavigations = NAVIGATIONS;
-    //     if (selectedOutlet && (selectedOutlet !== outletCode)) {
-    //         tempNavigations = tempNavigations.map((navigation) => {
-    //             if(navigation.name === "Beranda") navigation.link = `/${selectedOutlet}/home`;
-    //             else if(navigation.name === "Produk") navigation.link = `/${selectedOutlet}/produk`;
-    //             else if(navigation.name === "Promo") navigation.link = `/${selectedOutlet}/promo`;
-    //             if(navigation.name === "Hubungi Kami") navigation.link = `/${selectedOutlet}/kontak`;
-    //             navigation.isActive = navigation.link === router.asPath ? true : false;
-    //             return { ...navigation };
-    //         });
-    //     }
-    //     else {
-    //         tempNavigations =  tempNavigations.map((navigation) => {
-    //             if(navigation.name === "Beranda") navigation.link = "/";
-    //             else if(navigation.name === "Produk") navigation.link = "/produk";
-    //             else if(navigation.name === "Promo") navigation.link = "/promo";
-    //             else if(navigation.name === "Hubungi Kami") navigation.link = "/kontak";
-    //             navigation.isActive = navigation.link === router.asPath ? true : false;
-    //             return { ...navigation };
-    //         });
-    //     }
-    //     setNavigations(tempNavigations);
-    // }, [router, selectedOutlet]);
-
-    // useEffect(() => {
-    //     if (isHamburgerOpen) document.body.style.overflow = "hidden";
-    //     else document.body.style.overflow = "visible";
-    // }, [isHamburgerOpen]);
+    useEffect(() => {
+        activeMenu(router.route);
+    }, []);
 
     const [clientWindowHeight, setClientWindowHeight] = useState(0);
     const [clientScroll, setClientScroll] = useState(0);
@@ -98,16 +69,8 @@ const Navbar = () => {
         } else {
             setNavBackground("relative");
         }
-        // let backgroundTransparacyVar = clientWindowHeight / 600;
-
-        // if (backgroundTransparacyVar < 1) {
-        //     let paddingVar = 30 - backgroundTransparacyVar * 20;
-        //     let boxShadowVar = backgroundTransparacyVar * 0.1;
-        //     setBackgroundTransparacy(backgroundTransparacyVar);
-        //     setPadding(paddingVar);
-        //     setBoxShadow(boxShadowVar);
-        // }
     }, [clientScroll]);
+
     return (
         <div
             className={`${navBackground} transition-all duration-250`}
