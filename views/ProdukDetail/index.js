@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 
 import { AddCart, ImageSlider, ProductCard, SectionTitle, Variant } from "components";
-import { HiOutlineSearch } from "react-icons/hi";
-import { AiFillCheckCircle, AiOutlineMinus, AiOutlinePlus, AiOutlineStar } from "react-icons/ai";
+import { AiOutlineStar } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { getDetailProduct } from "helpers/api";
 import { AlertService } from "services";
