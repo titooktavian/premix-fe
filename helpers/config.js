@@ -49,12 +49,12 @@ const fetchApi = async (
         headers,
         body
     };
-    let server = process.env.NEXT_PUBLIC_BASE_URL;
-    // if (endPoint.includes("https") || typeof(window) !== "undefined") server = "";
-    // else server = process.env.NEXT_PUBLIC_BASE_URL;
+    
+    let server;
+    if (options.serviceDomainType === 'local') server = "";
+    else server = process.env.NEXT_PUBLIC_BASE_URL;
 
     let target = "";
-    
     switch (options.serviceDomainType) {
     case API_TARGET.E_MENU:
         target = API_TARGET_VALUE.E_MENU;
@@ -68,7 +68,7 @@ const fetchApi = async (
     }
 
     const url = server + target + endPoint + qs;
-
+    
     const response = await fetch(url, requestOptions);
     let data;
     try {

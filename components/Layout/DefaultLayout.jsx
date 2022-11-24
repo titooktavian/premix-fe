@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutlet}) => {
-    // const { 
+    const { 
     //     outlet, 
     //     setOutletInfo, 
     //     setOutletCode, 
@@ -15,10 +15,10 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
     //     bgColor,
     //     isConfirmLogin,
     //     setIsConfirmLogin,
-    //     setUserLogin,
+        setUserLogin,
     //     setSelectedOutlet,
     //     loginParam
-    // } = useStateContext();
+    } = useStateContext();
     // const { nama } = outlet;
     const router = useRouter();
     const { route } = router;
@@ -33,9 +33,9 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
     //     if (selectedOutlet) setSelectedOutlet(selectedOutlet);
     // },[selectedOutlet])
     
-    // useEffect(()=>{
-    //     if (user) setUserLogin(user);
-    // },[user])
+    useEffect(()=>{
+        if (user) setUserLogin(user);
+    },[user])
 
     const headTitle = (route) => {
         switch (route) {

@@ -4,42 +4,41 @@ import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { SectionTitle } from "components";
 import Link from "next/link";
+import { useState } from "react";
+import fetchApi from "helpers/config";
+import { catchError } from "helpers/formatter";
+import { setTokenLocalStorage } from "helpers/utils";
 
 const Index = ({
     pageTitle,
 }) => {
-    const { cartItems, onResetCart, onAddToCart, setLoading } = useStateContext();
+    const { cartItems, onResetCart, onAddToCart, setLoading, setUserLogin } = useStateContext();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const router = useRouter();
 
-    const changeCartValue = async (qty, productId, variant, name) => {
-        setLoading(true);
-        const productCart = {
-            idProduct: productId,
-            quantity: qty,
-            variant: variant,
-            name: name,
+    const doLogin = async () => {
+        const body = {
+            email: email,
+            password: password,
         };
 
-        await onAddToCart(productCart);
-        setLoading(false);
-    }
-
-    const resetCart = async () => {
         setLoading(true);
-        await onResetCart();
-        setLoading(false);
-    }
+        fetchApi("/api/login", body, "post", {
+            serviceDomainType: "local"
+        }).then(async (res) => {
+            if (res) {
+                await setUserLogin(res.user_data);
+                setTokenLocalStorage(res.access_token);
+                router.push('/produk');
+            }
 
-    const goProduct = () => {
-        router.push('/produk');
-    }
-
-    const goCheckout = () => {
-        if (cartItems.data.length > 0) {
-            router.push('/checkout');
-        } else {
-            AlertService.error('Tidak ada item di keranjang anda');
-        }
+            throw Error('Gagal melakukan login');
+        }).catch((error) => {
+            setLoading(false);
+            AlertService.error(catchError(error));
+        });
     }
 
     return (
@@ -59,21 +58,21 @@ const Index = ({
 
                         <div className="mt-3">
                             <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan email" required />
+                            <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                         </div>
                         <div className="mt-3">
                             <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan password" required />
+                            <input type="password" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                         </div>
 
                         <div className="flex mt-3">
                             <div className="flex items-center mb-4">
-                                <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2" />
                                 <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Ingatkan saya</label>
                             </div>
                         </div>
 
-                        <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {goCheckout();}}>
+                        <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {doLogin()}}>
                             Login
                         </div>
                     </div>

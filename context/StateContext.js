@@ -199,34 +199,34 @@ export const StateContext = ({ children }) => {
 
     useEffect(() => {
         async function fetchData() {
-            const cart = JSON.parse(localStorage.getItem('cart_user')) || { data: [] };
-            let checkoutItemsId = JSON.parse(localStorage.getItem('checkoutItems'));
-            if (checkoutItemsId) setCheckoutItems(checkoutItemsId);
-            if (userLogin) {
-                const outlet = outletCode;
-                const getCart = await getUserCart(outlet, userLogin.customer_no);
-                cart.data = getCart.data.map((item) => {
-                    let add_on_detail_id = [];
-                    item.add_on.forEach((addOn) => {
-                        addOn.details.forEach((addOnDetail) => {
-                            add_on_detail_id.push({
-                                parentId: addOn.id,
-                                addOnId: addOnDetail.id,
-                            })
-                        }) 
-                    });
-                    return {
-                        ...item,
-                        add_on_detail_id,
-                        id_product: item.id,
-                        img_path: item.image,
-                    };
-                });
-            }
-            if (cart) {
-                setCartItems(cart);
-                localStorage.setItem('cart_user', JSON.stringify(cart));
-            }
+            // const cart = JSON.parse(localStorage.getItem('cart_user')) || { data: [] };
+            // let checkoutItemsId = JSON.parse(localStorage.getItem('checkoutItems'));
+            // if (checkoutItemsId) setCheckoutItems(checkoutItemsId);
+            // if (userLogin) {
+            //     // const outlet = outletCode;
+            //     // const getCart = await getUserCart(outlet, userLogin.customer_no);
+            //     // cart.data = getCart.data.map((item) => {
+            //     //     let add_on_detail_id = [];
+            //     //     item.add_on.forEach((addOn) => {
+            //     //         addOn.details.forEach((addOnDetail) => {
+            //     //             add_on_detail_id.push({
+            //     //                 parentId: addOn.id,
+            //     //                 addOnId: addOnDetail.id,
+            //     //             })
+            //     //         }) 
+            //     //     });
+            //     //     return {
+            //     //         ...item,
+            //     //         add_on_detail_id,
+            //     //         id_product: item.id,
+            //     //         img_path: item.image,
+            //     //     };
+            //     // });
+            // }
+            // if (cart) {
+            //     setCartItems(cart);
+            //     localStorage.setItem('cart_user', JSON.stringify(cart));
+            // }
         }
         fetchData();
     }, [router]);

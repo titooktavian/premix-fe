@@ -102,6 +102,14 @@ const setDay = (day) => {
     return dayName.indexOf(day);
 }
 
+const setTokenLocalStorage = (token) => {
+    localStorage.setItem('token', token);
+}
+
+const getTokenLocalStorage = () => {
+    localStorage.getItem('token');
+}
+
 export {
     isIOS,
     isInputNumber,
@@ -114,4 +122,6 @@ export {
     generateRandomId,
     generaterandomCode,
     setDay,
+    setTokenLocalStorage,
+    getTokenLocalStorage,
 };

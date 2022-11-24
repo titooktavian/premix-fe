@@ -6,6 +6,8 @@ const endpoints = {
     getDetailProduct: (idProduct) => `product/${idProduct}`,
     getAllCategories: () => `categories`,
     getBanner: () => `banner-content`,
+    authenticate: () => 'authenticate',
+    register: () => 'register',
 };
 
 export const getListProduct = (payload) =>
@@ -16,3 +18,7 @@ export const getAllCategories = () =>
     fetchApi(endpoints.getAllCategories(), {}, "get", { serviceDomainType: API_TARGET.PREMIX });
 export const getBanner = () =>
     fetchApi(endpoints.getBanner(), {}, "get", { serviceDomainType: API_TARGET.PREMIX });
+export const authenticate = (payload) =>
+    fetchApi(endpoints.authenticate(), payload, "post", { serviceDomainType: API_TARGET.PREMIX });
+export const register = (payload) =>
+    fetchApi(endpoints.register(), payload, "post", { serviceDomainType: API_TARGET.PREMIX });

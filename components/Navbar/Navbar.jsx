@@ -63,7 +63,6 @@ const Navbar = () => {
 
     const [navBackground, setNavBackground] = useState("");
 
-
     useEffect(() => {
         if (clientScroll > 60) {
             setNavBackground("bg-[#FFFFFF] fixed top-0 z-10 w-full");
@@ -122,10 +121,7 @@ const Navbar = () => {
                     {userLogin ?(
                         <div className="group relative hidden md:block">
                             <div className="grid grid-flow-col gap-1 place-items-center cursor-pointer">
-                                <div className="flex h-[25px] w-[25px] mr-1 items-center justify-center rounded-full bg-dark-400">
-                                    <FaUser className="text-sm text-white" />
-                                </div>
-                                <span>{userLogin.customer_fullname}</span>
+                                <span>{userLogin.name}</span>
                                 <FaChevronDown className="text-base" />
                             </div>
                             <div className="absolute right-0 top-full w-[200px] z-cart hidden h-fit rounded-b-2xl bg-white shadow-md md:group-hover:block">

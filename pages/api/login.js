@@ -1,15 +1,14 @@
 import { withIronSessionApiRoute } from "iron-session/next";
-import { login } from "helpers/api";
+import { authenticate } from "helpers/api";
 import { sessionOptions } from "lib/session";
 
 export default withIronSessionApiRoute(async function loginRoute(req, res) {
-    const { merchantCode } = req.session;
-    const data = await login({
-        phone_no: req.body.phone_no,
+    const data = await authenticate({
+        email: req.body.email,
         password: req.body.password,
-        outlet_code: merchantCode,
     });
-    req.session.user = data?.data;
+    req.session.user = data?.user_data;
+    req.session.token = data?.access_token;
     await req.session.save();
-    res.status(data.status_code).send(data);
+    res.send(data);
 }, sessionOptions);
