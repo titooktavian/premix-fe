@@ -9,6 +9,7 @@ import { HiOutlineShoppingCart, HiOutlineSearch } from "react-icons/hi";
 import { GrClose } from "react-icons/gr";
 import { useStateContext } from "context/StateContext";
 import { NAVIGATIONS, USER_NAVIGATIONS } from "constants/enum";
+import { toRupiah } from "helpers/formatter";
 
 const Navbar = () => {
     const router = useRouter();
@@ -25,7 +26,7 @@ const Navbar = () => {
 
     const { 
         cartItems, 
-        // totalPrice, 
+        // cartItems.total, 
         // outlet, 
         setIsConfirmLogin,
         userLogin,
@@ -144,12 +145,12 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <>
-                            <a className="cursor-pointer hidden text-base font-normal text-dark-300 md:block py-4" onClick={openPopupLogin}>
-                                Login
-                            </a>
-                            <a className="cursor-pointer hidden text-base font-normal text-dark-300 md:block py-4" onClick={openPopupLogin}>
-                                Register
-                            </a>
+                            <Link href="/login">
+                                <a className="block h-full">Login</a>
+                            </Link>
+                            <Link href="/register">
+                                <a className="block h-full">Register</a>
+                            </Link>
                         </>
                     )}
                     <div className="group relative  py-4">
@@ -170,7 +171,6 @@ const Navbar = () => {
                                     <h4 className="mb-2 text-base font-bold">
                                         Keranjang ({cartItems.data.length} Item){" "}
                                     </h4>
-                                    <Divider />
                                     <div className="mb-2 mt-2 flex flex-col space-y-2 p-4">
                                         {cartItems.data.map((item) => (
                                             <div
@@ -195,17 +195,16 @@ const Navbar = () => {
                                                             {item.name}
                                                         </p>
                                                         <p className="text-sm font-bold text-dark-300">
-                                                            x{item.quantity}
+                                                            x{item.qty}
                                                         </p>
                                                     </div>
                                                     <p className="text-right text-sm font-bold text-dark-300">
-                                                        {toRupiah(item.price)}
+                                                        {toRupiah(item.subtotal)}
                                                     </p>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                    <Divider />
                                     <Link href="/keranjang">
                                         <a className="mt-2 flex w-full items-center justify-between rounded-full bg-turq-300 p-4 text-white">
                                             <div className="flex items-center space-x-1">
@@ -215,7 +214,7 @@ const Navbar = () => {
                                                     {cartItems.data.length} Item
                                                 </span>
                                             </div>
-                                            <span>{toRupiah(totalPrice)}</span>
+                                            <span>{toRupiah(cartItems.price)}</span>
                                         </a>
                                     </Link>
                                 </>

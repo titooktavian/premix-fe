@@ -1,25 +1,30 @@
 import { useState, useEffect } from "react";
 import propTypes from "prop-types";
-import { ProductCard, SectionTitle } from "components";
+import { Pagination, ProductCard, SectionTitle } from "components";
 import { getListProduct } from "helpers/api";
 import { AlertService } from "services";
 import { catchError } from "helpers/formatter";
 import ProductSectionSkeleton from "./ProductSectionSkeleton";
 
-const ProductSection = ({ title, subtitle, perPage, category, withPagination }) => {
+const ProductSection = ({ title, subtitle, perPage, category, withPagination, sort }) => {
     const [productList, setProductList] = useState([]);
     const [limit, setLimit] = useState(perPage);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [loadingState, setLoadingState] = useState(true);
 
+    const changePageHandler = (event) => {
+        fetchData(event.selected);
+    }
+
     const fetchData = async (page) => {
         setLoadingState(true);
         try {
             const res = await getListProduct({
-                category: category,
-                limit: 4,
+                ...category !== 'all' && { category: category },
+                limit: limit,
                 page: withPagination ? page + 1 : 1,
+                ...sort && { sort_by: sort },
             });
 
             const {
@@ -43,6 +48,9 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination }) 
         fetchData(0)
     }, []);
     
+    useEffect(() => {
+        fetchData(0)
+    }, [category]);
     return (
         <>
             {!loadingState ? (
@@ -54,7 +62,7 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination }) 
                         {productList.length > 0 ? (
                             <>
                                 {productList.map((list) => {
-                                    const imgUrl = JSON.parse(list.img_url)[0];
+                                    const imgUrl = list.img_url[0];
                                     return (
                                         <ProductCard key={`product-${list.id_product}`} productId={list.id_product} name={list.product_name} category={list.category_name} price="35000" discount="Disc 40$" imageUrl={imgUrl} />
                                     )}
@@ -65,6 +73,11 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination }) 
                         )}
                         </div>
                     </div>
+                    {withPagination && (
+                        <div className="md:mx-auto md:max-w-[1110px] px-4 flex justify-center mt-10">
+                            <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
+                        </div>
+                    )}
                 </section>
             ) : (
                 <ProductSectionSkeleton />
@@ -79,6 +92,7 @@ ProductSection.propTypes = {
     perPage: propTypes.number,
     category: propTypes.string,
     withPagination: propTypes.bool,
+    sort: propTypes.string,
 };
 
 ProductSection.defaultProps = {
@@ -87,6 +101,7 @@ ProductSection.defaultProps = {
     subtitle: "",
     perPage: 4,
     withPagination: false,
+    sort: undefined,
 };
 
 export default ProductSection;

@@ -20,8 +20,8 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
     //     loginParam
     // } = useStateContext();
     // const { nama } = outlet;
-    // const router = useRouter();
-    // const { route } = router;
+    const router = useRouter();
+    const { route } = router;
     // const urlLogin = loginParam ? `/masuk?source=${loginParam}` : '/masuk';
 
     // useEffect(() => {
@@ -37,16 +37,16 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
     //     if (user) setUserLogin(user);
     // },[user])
 
-    // const headTitle = (route) => {
-    //     switch (route) {
-    //     case "/produk":
-    //         return `Produk - ${nama}`;
-    //     case "/keranjang":
-    //         return `Keranjang - ${nama}`;
-    //     default:
-    //         return nama;
-    //     }
-    // };
+    const headTitle = (route) => {
+        switch (route) {
+        case "/produk":
+            return `Produk`;
+        case "/produk-detail/[id_produk]":
+            return `Produk Detail`;
+        default:
+            return 'Home';
+        }
+    };
     // const closeLoginPopup = ()=>{
     //     setIsConfirmLogin(!isConfirmLogin);
     // }
@@ -85,9 +85,9 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
                 <Head>
                     <link
                         rel="shortcut icon"
-                        href={"/images/item-default.png"}
+                        href={"/logo.png"}
                     />
-                    <title>Home</title>
+                    <title>{headTitle(route)}</title>
                 </Head>
                 <header className="top-0 z-10">
                     <Navbar />

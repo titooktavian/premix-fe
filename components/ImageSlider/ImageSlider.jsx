@@ -1,8 +1,9 @@
+import propTypes from "prop-types";
 import Image from "next/image";
 import { useState } from "react";
 import Slider from "react-slick";
 
-const ImageSlider = () => {
+const ImageSlider = ({ imageList }) => {
     const [nav1, setNav1] = useState();
     const [nav2, setNav2] = useState();
     const settings = {
@@ -12,6 +13,7 @@ const ImageSlider = () => {
         slidesToScroll: 1,
         arrows: false
     };
+
     return (
         <div className="w-full">
             <Slider
@@ -19,117 +21,49 @@ const ImageSlider = () => {
                 ref={(slider1) => setNav1(slider1)}
                 {...settings}
             >
-                <div className="w-full relative aspect-[4/3]">
-                    <Image 
-                        src="/images/image-slider/1.jpeg"
-                        layout="fill"
-                        objectFit="cover"
-                        className="object-cover rounded-xl"
-                        priority
-                    />
-                </div>
-                <div className="w-full relative aspect-[4/3]">
-                    <Image 
-                        src="/images/image-slider/2.jpeg"
-                        layout="fill"
-                        objectFit="cover"
-                        className="object-cover rounded-xl"
-                        priority
-                    />
-                </div>
-                <div className="w-full relative aspect-[4/3]">
-                    <Image 
-                        src="/images/image-slider/3.jpeg"
-                        layout="fill"
-                        objectFit="cover"
-                        className="object-cover rounded-xl"
-                        priority
-                    />
-                </div>
-                <div className="w-full relative aspect-[4/3]">
-                    <Image 
-                        src="/images/image-slider/4.jpeg"
-                        layout="fill"
-                        objectFit="cover"
-                        className="object-cover rounded-xl"
-                        priority
-                    />
-                </div>
-                <div className="w-full relative aspect-[4/3]">
-                    <Image 
-                        src="/images/image-slider/5.jpeg"
-                        layout="fill"
-                        objectFit="cover"
-                        className="object-cover rounded-xl"
-                        priority
-                    />
-                </div>
+                {imageList.map((imgTop, i) => (
+                    <div className="w-full relative aspect-[4/3]" key={`img-top-${i}`}>
+                        <Image 
+                            src={imgTop}
+                            layout="fill"
+                            objectFit="contain"
+                            className="object-cover rounded-xl"
+                            priority
+                        />
+                    </div>    
+                ))}
             </Slider>
             <Slider
                 asNavFor={nav1}
                 ref={(slider2) => setNav2(slider2)}
-                slidesToShow={5}
+                slidesToShow={imageList.length}
                 swipeToSlide={true}
                 focusOnSelect={true}
             >
-                <div className="pr-3 mt-2 cursor-pointer">
-                    <div className="w-full relative aspect-square pr-3">
-                        <Image 
-                            src="/images/image-slider/1.jpeg"
-                            layout="fill"
-                            objectFit="contain"
-                            className="object-cover rounded-lg"
-                            priority
-                        />
+                {imageList.map((img, index) => (
+                    <div className="pr-3 mt-2 cursor-pointer" key={`img-nav-${index}`}>
+                        <div className="w-full relative aspect-square pr-3 w-[124px] h-[124px]">
+                            <Image 
+                                src={img}
+                                layout="fill"
+                                objectFit="contain"
+                                className="rounded-lg"
+                                priority
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="pr-3 mt-2 cursor-pointer">
-                    <div className="w-full relative aspect-square pr-3">
-                        <Image 
-                            src="/images/image-slider/2.jpeg"
-                            layout="fill"
-                            objectFit="contain"
-                            className="object-cover rounded-lg"
-                            priority
-                        />
-                    </div>
-                </div>
-                <div className="pr-3 mt-2 cursor-pointer">
-                    <div className="w-full relative aspect-square pr-3">
-                        <Image 
-                            src="/images/image-slider/3.jpeg"
-                            layout="fill"
-                            objectFit="contain"
-                            className="object-cover rounded-lg"
-                            priority
-                        />
-                    </div>
-                </div>
-                <div className="pr-3 mt-2 cursor-pointer">
-                    <div className="w-full relative aspect-square pr-3">
-                        <Image 
-                            src="/images/image-slider/4.jpeg"
-                            layout="fill"
-                            objectFit="contain"
-                            className="object-cover rounded-lg"
-                            priority
-                        />
-                    </div>
-                </div>
-                <div className="pr-3 mt-2 cursor-pointer">
-                    <div className="w-full relative aspect-square pr-3">
-                        <Image 
-                            src="/images/image-slider/5.jpeg"
-                            layout="fill"
-                            objectFit="contain"
-                            className="object-cover rounded-lg"
-                            priority
-                        />
-                    </div>
-                </div>
+                ))}
             </Slider>
         </div>
     );
 }
+
+ImageSlider.propTypes = {
+    imageList: propTypes.array,
+};
+
+ImageSlider.defaultProps = {
+    imageList: [],
+};
 
 export default ImageSlider;

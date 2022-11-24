@@ -22,7 +22,8 @@ module.exports = {
     },
     images: {
         domains: [
-            "via.placeholder.com"
+            "via.placeholder.com",
+            "api.nusahabbat.com",
         ]
     }
 };

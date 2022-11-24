@@ -68,13 +68,12 @@ const fetchApi = async (
     }
 
     const url = server + target + endPoint + qs;
-    console.log(url)
 
     const response = await fetch(url, requestOptions);
     let data;
     try {
         data = await response.json();
-        data.status_code = response.status;
+        // data.status_code = response.status;
     } catch (e) {
         data = null;
     }

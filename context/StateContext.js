@@ -1,4 +1,4 @@
-import { getOutletProductDetail, getUserCart, updateUserCart } from "helpers/api";
+import { getDetailProduct, getOutletProductDetail, getUserCart, updateUserCart } from "helpers/api";
 import { generateRandomId } from "helpers/utils";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -10,7 +10,8 @@ const Context = createContext();
 
 export const StateContext = ({ children }) => {
     const [cartItems, setCartItems] = useState({
-        merchantCode: undefined,
+        id_user: null,
+        price: 0,
         data: [],
     });
     const [totalPrice, setTotalPrice] = useState(0);
@@ -37,113 +38,118 @@ export const StateContext = ({ children }) => {
     const router = useRouter();
 
     const onAddToCart = async (product, callback = undefined) => {
-        let cartData = [...cartItems.data];
-        const outlet = selectedOutlet || outletCode;
-        const { cart_id, id_product, name, quantity, note, add_on_detail_id } = product;
-        const getProductDetail = await getOutletProductDetail(outlet, { id_product});
-        if(!getProductDetail.status) {
-            AlertService.error(catchError(getProductDetail));
+        let cartData = {...cartItems};
+        const { idProduct, quantity, variant, name } = product;
+        
+        const getProductDetail = await getDetailProduct(idProduct);
+        // if(!getProductDetail.status) {
+        //     AlertService.error(catchError(getProductDetail));
+        //     return;
+        // }
+
+        const selectedVariant = getProductDetail.product_durations.filter(obj => {
+            return obj.id_product_duration === variant
+        })
+
+        if(selectedVariant < 1) {
+            AlertService.error(catchError('Variant yang anda pilih tidak tersedia'));
             return;
         }
-        let isAdd = true;
-        const isInCart = cartData.find((x)=> {
-            if(cart_id){ 
-                isAdd = false
-                return (x.cart_id === cart_id);
-            }
-            else {
-                return (x.id_product === id_product && x.note === note && JSON.stringify(x.add_on_detail_id) === JSON.stringify(add_on_detail_id));
-            }
-        });
-        let all_add_on = getProductDetail.data.add_on.filter(parent => add_on_detail_id.find(x => x.parentId == parent.id)).map((dt) =>{
-            return {
-                ...dt,
-                details: dt.details.filter(detail => add_on_detail_id.find(x => x.addOnId == detail.id)),
-            }
-        });
-        const selectedAddOn = all_add_on.reduce(function(a, b){
-            return a.concat(b.details);
-        }, []);
-        const addOnPrice = selectedAddOn.reduce(function(a, b){
-            return a + b.sell_price;
-        },0)
-        const selectedItemPrice = getProductDetail.data.price + addOnPrice;
+
+        const selectedItemPrice = selectedVariant[0].price * quantity;
         const selectedProduct = {
-            cart_id: !isInCart ? generateRandomId() : isInCart.cart_id,
-            img_path: getProductDetail.data.img_path[0],
-            note,
-            id_product,
-            name,
-            price: selectedItemPrice,
-            quantity: isAdd ? (isInCart?.quantity || 0) + quantity : quantity ? quantity : 0,
-            add_on: all_add_on,
-            add_on_detail_id: add_on_detail_id,
-        }
-        if (userLogin) {
-            const payload = {
-                ...selectedProduct,
-                add_on_detail_id: selectedProduct.add_on_detail_id.map((x) => x.addOnId),
-                product_id: selectedProduct.id_product,
-                customer_no: userLogin.customer_no
-            };
-            const updateCart = await updateUserCart(outlet, userLogin.customer_no, payload);
-            if(!updateCart.status) {
-                AlertService.error(catchError(getProductDetail));
-                return;
+            id_product: idProduct,
+            id_product_duration: selectedVariant[0].id_product_duration,
+            qty: quantity,
+            subtotal: selectedItemPrice,
+            name: name,
+            price: selectedVariant[0].price,
+            variant: selectedVariant[0].duration_value,
+            imgURL: getProductDetail.img_url[0], 
+        };
+
+        let newItem = [];
+        let isOnCart = false
+        if (cartData.data.length > 0) {
+            const arrIndex = cartData.data.findIndex(x => x.id_product === idProduct && x.id_product_duration === variant);
+            let clonedCart = [...cartData.data];
+            
+            if (arrIndex >= 0) {
+                isOnCart = true;
+                if (quantity > 0) {
+                    clonedCart[arrIndex] = {...selectedProduct};
+                } else {
+                    clonedCart.splice(arrIndex, 1);
+                }
+            } else {
+                clonedCart.push(selectedProduct);
             }
-            selectedProduct.cart_id = updateCart.data.cart_id;
-            selectedProduct.quantity = updateCart.data.product_buy_quantity;
-        }
-        if (isInCart) {
-            const indexItem = cartData.findIndex(x=> x === isInCart);
-            if (!selectedProduct.quantity) cartData.splice(indexItem, 1);
-            else cartData[indexItem] = selectedProduct;
-        } else cartData = [...cartData, selectedProduct];
-        const cart = {
-            merchantCode: outlet,
-            data: cartData,
-        }
-        setCartItems(cart);
-        localStorage.setItem('cart_user', JSON.stringify(cart));
-        if (callback && typeof callback === "function") {
-            if (selectedProduct.quantity) {
-                let message = `Berhasil menambahkan ${product.name} ke keranjang`
-                if(cart_id) message = `Berhasil menrubah item ${product.name} di keranjang`
-                AlertService.success(
-                    message
-                );
-            }
-            else {
-                AlertService.success(
-                    `Berhasil menghapus ${product.name} dari keranjang`
-                );
-            }
-            callback();
+
+            newItem = [...clonedCart];
+        } else {
+            newItem.push(selectedProduct)
+        };
+
+        const totalPriceCart = newItem.reduce((total, item) => {
+            return (total += item.subtotal);
+        }, 0);
+
+        cartData = {
+            id_user: cartData.id_user,
+            price: totalPriceCart,
+            data: [...newItem],
+        };
+
+        // if (userLogin) {
+        //     const payload = {
+        //         ...selectedProduct,
+        //         add_on_detail_id: selectedProduct.add_on_detail_id.map((x) => x.addOnId),
+        //         product_id: selectedProduct.id_product,
+        //         customer_no: userLogin.customer_no
+        //     };
+        //     const updateCart = await updateUserCart(outlet, userLogin.customer_no, payload);
+        //     if(!updateCart.status) {
+        //         AlertService.error(catchError(getProductDetail));
+        //         return;
+        //     }
+        //     selectedProduct.cart_id = updateCart.data.cart_id;
+        //     selectedProduct.quantity = updateCart.data.product_buy_quantity;
+        // }
+        setCartItems(cartData);
+        localStorage.setItem('cart_user', JSON.stringify(cartData));
+        if (quantity > 0) {
+            let message = `Berhasil menambahkan ${name} ke keranjang`
+            if(isOnCart) message = `Berhasil mengubah item ${name} di keranjang`
+            AlertService.success(
+                message
+            );
+        } else {
+            AlertService.success(
+                `Berhasil menghapus ${product.name} dari keranjang`
+            );
         }
     };
 
     const onResetCart = async () => {
-        if (userLogin) {
-            cartItems.data.forEach((x) => {
-                const payload = {
-                    ...x,
-                    quantity: 0,
-                    add_on_detail_id: x.add_on_detail_id,
-                    product_id: x.id_product,
-                    customer_no: userLogin.customer_no
-                };
-                updateUserCart(cartItems.merchantCode, userLogin.customer_no, payload);
-            })
-        }
-        const cart = {
-            merchantCode: selectedOutlet || outletCode,
-            data: []
+        // if (userLogin) {
+        //     cartItems.data.forEach((x) => {
+        //         const payload = {
+        //             ...x,
+        //             quantity: 0,
+        //             add_on_detail_id: x.add_on_detail_id,
+        //             product_id: x.id_product,
+        //             customer_no: userLogin.customer_no
+        //         };
+        //         updateUserCart(cartItems.merchantCode, userLogin.customer_no, payload);
+        //     })
+        // }
+        const cartData = {
+            id_user: null,
+            price: 0,
+            data: [],
         };
-        localStorage.setItem('cart_user', JSON.stringify(cart));
-        setCartItems(cart);
-        return {
-            success: true,
-        }
+        localStorage.setItem('cart_user', JSON.stringify(cartData));
+        setCartItems(cartData);
     };
 
     const onUpdateProduct = (cartId, option) => {

@@ -160,3 +160,34 @@ export const TRANSACTION_STATUS_LABEL = {
     10: "Failed on Aggregator",
     11: "Failed",
 };
+
+export const BANK_LIST = [
+    {
+        id: 1,
+        bankName: 'Bank BCA',
+        logo: '/images/bank-icon/bca.png',
+        rekening: '12345678',
+        receiverName: 'Aku',
+    },
+    {
+        id: 2,
+        bankName: 'Bank Mandiri',
+        logo: '/images/bank-icon/mandiri.png',
+        rekening: '12345678',
+        receiverName: 'Aku',
+    },
+    {
+        id: 3,
+        bankName: 'Bank Negara Indonesia',
+        logo: '/images/bank-icon/bni.png',
+        rekening: '12345678',
+        receiverName: 'Aku',
+    },
+    {
+        id: 4,
+        bankName: 'Bank Rakyat Indonesia',
+        logo: '/images/bank-icon/bri.png',
+        rekening: '12345678',
+        receiverName: 'Aku',
+    },
+]

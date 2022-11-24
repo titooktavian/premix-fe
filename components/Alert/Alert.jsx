@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import { AlertService, AlertType } from "services";
-import { BsExclamationOctagonFill } from "react-icons/bs";
+import { AiOutlineExclamation } from "react-icons/ai";
 
 Alert.propTypes = {
     id: PropTypes.string,
@@ -101,11 +101,11 @@ export default function Alert({ id, fade }) {
 
         const alertTypeClass = {
             [AlertType.Success]:
-                "bg-green-100  border-green-400 text-green-700",
-            [AlertType.Error]: "bg-red-100  border-red-400 text-red-700",
-            [AlertType.Info]: "bg-turq-100  border-turq-400 text-turq-700",
+                "text-green-500 bg-green-100",
+            [AlertType.Error]: "text-red-500 bg-red-100",
+            [AlertType.Info]: "text-blue-500 bg-blue-100",
             [AlertType.Warning]:
-                "bg-neutral-100  border-neutral-400 text-neutral-700"
+                "text-orange-500 bg-orange-100"
         };
 
         classes.push(alertTypeClass[alert.type]);
@@ -124,11 +124,11 @@ export default function Alert({ id, fade }) {
             {alerts.map((alert, index) => (
                 <div key={index} role="alert">
                     <div
-                        className={`relative mx-4 flex rounded border py-2 px-4 ${cssClasses(
-                            alert
-                        )}`}
+                        className={`relative mx-4 flex rounded border py-2 px-4 items-center text-gray-500 bg-white mb-2`}
                     >   
-                        <BsExclamationOctagonFill className="m-auto text-base" />
+                        <div className={`flex w-8 h-8 items-center justify-center ${cssClasses(alert)}`}>
+                            <AiOutlineExclamation className="text-base" />
+                        </div>
                         <span
                             className="mx-2 sm:inline font-semibold"
                             dangerouslySetInnerHTML={{ __html: alert.message }}

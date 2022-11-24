@@ -1,15 +1,19 @@
 import propTypes from "prop-types";
 import Link from "next/link";
+import Image from "next/image";
 
 const CarouselItem = ({ name, description, link, imageUrl }) => {
     return (
         <div
-            className="mx-2 w-full p-4 rounded-3xl bg-cover bg-no-repeat relative pt-[30%]"
+            className="mx-2 w-full p-4 rounded-3xl bg-fill bg-right bg-[#272541] bg-no-repeat relative pt-[30%]"
             style={{
-                backgroundImage: `url('${imageUrl}')`,
+                backgroundImage: `url('/images/carousel/carousel-bg.png')`,
             }}
         >
-            <div className="flex flex-col absolute inset-0 justify-center p-10 w-1/2">
+            <div className="flex flex-col absolute inset-0 justify-center p-10 w-2/3">
+                <div className="w-[132px] h-[40px] relative">
+                    <Image src={imageUrl} className="rounded-2xl" layout='fill' objectFit='contain'/>
+                </div>
                 <div className="text-[32px] text-[#FFFFFF] font-bold">
                     {name}
                 </div>

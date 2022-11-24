@@ -16,7 +16,7 @@ const Variant = ({ label, list, clickHandler, selectedVariant }) => {
                                 <AiFillCheckCircle className="text-base" />
                             )}
                             
-                            {variantList.duration_value}
+                            {`${variantList.duration_value} Hari`}
                         </div>
                     );
                 })}
