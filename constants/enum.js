@@ -85,9 +85,10 @@ export const NAVIGATIONS = [
 ];
 
 export const USER_NAVIGATIONS = [
-    { name: "Akun Saya", link: "/akun", isActive: false },
-    { name: "Pesanan", link: "/transaksi-berlangsung", isActive: false },
-    { name: "Histori Pemesanan", link: "/riwayat-transaksi", isActive: false },
+    { name: "Dashboard", link: "/", isActive: false },
+    { name: "Order", link: "/", isActive: false },
+    { name: "Bantuan", link: "/", isActive: false },
+    { name: "Akun", link: "/", isActive: false },
 ]
 
 export const POPUP_BACKGROUND = {

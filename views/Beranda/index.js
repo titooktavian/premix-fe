@@ -94,7 +94,7 @@ const Index = ({
                         <SectionTitle title="Promo Hari Ini" subtitle="Ayo buruan beli akun sekarang, sebelum kehabisan" />
                         <div className="grid gap-4 grid-cols-3 my-4">
                             {productPromo.map((promo) => (
-                                <PromoCard name={promo.product_name} category={promo.category_name} price={promo.product_durations[0].price} discount="Disc 40$" imageUrl={promo.img_url[0]} />
+                                <PromoCard idProduct={promo.id_product} name={promo.product_name} category={promo.category_name} price={promo.product_durations[0].price} discount={promo.promo_percentage} imageUrl={promo.img_url[0]} />
                             ))}
                         </div>
                     </div>

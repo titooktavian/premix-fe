@@ -121,7 +121,7 @@ const Navbar = () => {
                     {userLogin ?(
                         <div className="group relative hidden md:block">
                             <div className="grid grid-flow-col gap-1 place-items-center cursor-pointer">
-                                <span>{userLogin.name}</span>
+                                <span>Halo, <label className="font-bold">{userLogin.name}</label></span>
                                 <FaChevronDown className="text-base" />
                             </div>
                             <div className="absolute right-0 top-full w-[200px] z-cart hidden h-fit rounded-b-2xl bg-white shadow-md md:group-hover:block">
@@ -134,7 +134,7 @@ const Navbar = () => {
                                         </li>
                                     ))}
                                     <li className="p-3 text-red-300 group relative w-full h-full cursor-pointer text-sm font-medium hover:font-bold" onClick={handleLogout}>
-                                        <a className="block h-full">Keluar</a>
+                                        <a className="block h-full">Logout</a>
                                     </li>
                                 </ul>
                             </div>

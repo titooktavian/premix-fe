@@ -8,6 +8,7 @@ const endpoints = {
     getBanner: () => `banner-content`,
     authenticate: () => 'authenticate',
     register: () => 'register',
+    transaction: () => 'transaction',
 };
 
 export const getListProduct = (payload) =>
@@ -22,3 +23,5 @@ export const authenticate = (payload) =>
     fetchApi(endpoints.authenticate(), payload, "post", { serviceDomainType: API_TARGET.PREMIX });
 export const register = (payload) =>
     fetchApi(endpoints.register(), payload, "post", { serviceDomainType: API_TARGET.PREMIX });
+export const createTransaction = (payload) =>
+    fetchApi(endpoints.transaction(), payload, "post", { serviceDomainType: API_TARGET.PREMIX });

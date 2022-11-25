@@ -131,7 +131,7 @@ const Index = ({
                         </div>
                     </section>
         
-                    <ProductSection title="Produk Terkait" subtitle="" perPage={4} category="1" withPagination={false} />
+                    <ProductSection title="Produk Terkait" subtitle="" perPage={4} category={productDetail.id_product_category} withPagination={false} />
                 </div>
             ) : (
                 <ProdukDetailSkeleton />

@@ -1,10 +1,21 @@
 import propTypes from "prop-types";
 import Image from "next/image";
 import { toRupiah } from "helpers/formatter";
+import { useRouter } from "next/router";
 
-const PromoCard = ({ name, category, price, discount, imageUrl }) => {
+const PromoCard = ({ name, category, price, discount, imageUrl, idProduct }) => {
+    const router = useRouter();
+
+    const goDetail = (productId) => {
+        router.push({
+            pathname: '/produk-detail/[id_produk]',
+            query: { id_produk: productId },
+        })
+        
+    }
+
     return (
-        <div className="flex flex-col rounded-3xl shadow-[0px_4px_24px_rgba(39,38,65,0.06)]">
+        <div className="flex flex-col rounded-3xl shadow-[0px_4px_24px_rgba(39,38,65,0.06)]" onClick={() => { goDetail(idProduct) }}>
             <div className="flex gap-2 rounded-3xl bg-[#E2E2E7] bg-[url('/promo-background.png')] p-6 bg-contain bg-no-repeat bg-bottom">
                 <div className="relative w-16 h-16 bg-white rounded-xl">
                     <Image src={imageUrl} className="rounded-2xl shadow-[0px_4px_8px_rgba(0,0,0,0.08)]" layout='fill' objectFit='contain'/>
@@ -18,7 +29,7 @@ const PromoCard = ({ name, category, price, discount, imageUrl }) => {
             <div className="flex gap-2 p-6">
                 <div className="w-1/2">
                     <span className="py-1 px-2 bg-[#FF5C6F] rounded-2xl text-xs text-[#FFFFFF] font-bold">
-                        {discount}
+                        {`Disc ${discount}%`}
                     </span>
                 </div>
                 <div className="w-1/2 text-right text-sm text-[#272541] font-bold">{toRupiah(price)}</div>

@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { catchError } from "helpers/formatter";
 import { register } from "helpers/api";
+import fetchApi from "helpers/config";
+import { setTokenLocalStorage } from "helpers/utils";
 
 const Index = ({
     pageTitle,
@@ -20,18 +22,69 @@ const Index = ({
     const router = useRouter();
 
     const doRegister = async () => {
+        if (email === '') {
+            AlertService.error('Email tidak boleh kosong');
+            return;
+        }
+
+        if (nama === '') {
+            AlertService.error('Nama tidak boleh kosong');
+            return;
+        }
+
+        if (password === '') {
+            AlertService.error('Password tidak boleh kosong');
+            return;
+        }
+
+        if (password.length < 8) {
+            AlertService.error('Password yang anda masukkan kurang dari 8 karakter');
+            return;
+        }
+
+        if (phoneNumber === '') {
+            AlertService.error('No. Handphone tidak boleh kosong');
+            return;
+        }
+
         setLoading(true);
+
         try {
             const res = await register({
                 email: email,
                 name: nama,
                 password: password,
+                phone_number: phoneNumber,
             });
-            console.log(res)
+            
+            doLogin();
         } catch (error) {
             AlertService.error(catchError(error));
         }
         setLoading(false)
+    }
+
+    const doLogin = async () => {
+        const body = {
+            email: email,
+            password: password,
+        };
+
+        setLoading(true);
+        fetchApi("/api/login", body, "post", {
+            serviceDomainType: "local"
+        }).then(async (res) => {
+            if (res) {
+                await setUserLogin(res.user_data);
+                setTokenLocalStorage(res.access_token);
+                router.push('/produk');
+            }
+
+            throw Error('Gagal melakukan login');
+        }).catch((error) => {
+            setLoading(false);
+            AlertService.error(catchError(error));
+        });
     }
 
     return (
