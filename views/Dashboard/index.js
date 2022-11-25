@@ -38,10 +38,21 @@ const Index = ({
             name: 'Akun Vecteezy',
             purchase_date: '2022-11-25',
             expired_date: '2022-11-27',
-            status: 1,
+            status: 2,
             duration: 30,
         }
     ];
+
+    const renderStatus = (status) => {
+        switch (status) {
+            case 1:
+                return ( <div className="bg-[#66AE76] rounded-md text-white py-1 px-2 w-fit text-xs">Aktif</div> );
+            case 2:
+                return ( <div className="bg-[#8E8E9A] rounded-md text-white py-1 px-2 w-fit text-xs">Tidak Aktif</div> );
+            default:
+                return null;
+        }
+    }
 
     return (
         <div 
@@ -115,7 +126,7 @@ const Index = ({
                                                 {items.expired_date}
                                             </td>
                                             <td className="py-4 px-6">
-                                                {items.status}
+                                                {renderStatus(items.status)}
                                             </td>
                                         </tr>
                                     )) : (
