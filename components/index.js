@@ -17,3 +17,4 @@ export { default as Variant } from "./Variant/Variant";
 export { default as AddCart } from "./AddCart/AddCart";
 export { default as Pagination } from "./Pagination/Pagination";
 export { default as Accordion } from "./Accordion/Accordion";
+export { default as Sidebar } from "./Sidebar/Sidebar";

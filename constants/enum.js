@@ -85,10 +85,18 @@ export const NAVIGATIONS = [
 ];
 
 export const USER_NAVIGATIONS = [
-    { name: "Dashboard", link: "/", isActive: false },
+    { name: "Dashboard", link: "/dashboard", isActive: false },
     { name: "Order", link: "/", isActive: false },
     { name: "Bantuan", link: "/", isActive: false },
     { name: "Akun", link: "/", isActive: false },
+]
+
+export const USER_SIDEBAR = [
+    { name: "Dashboard", link: "/dashboard", isActive: true },
+    { name: "Order", link: "/order", isActive: false },
+    { name: "Bantuan", link: "/bantuan", isActive: false },
+    { name: "Akun", link: "/akun", isActive: false },
+    { name: "Logout", link: "/logout", isActive: false },
 ]
 
 export const POPUP_BACKGROUND = {
