@@ -8,13 +8,13 @@ const AddCart = ({ cartValue, setCartValue, stock, withStock, withLabel }) => {
 
     const changeCartValue = (type) => {
         if (type === CHANGE_CART_TYPE.INCREASE) {
-            setValue(value + 1);
-            setCartValue(value + 1);
+            setValue(parseInt(value) + 1);
+            setCartValue(parseInt(value) + 1);
         }
 
         if (type === CHANGE_CART_TYPE.DECREASE && value > 0) {
-            setValue(value - 1);
-            setCartValue(value - 1);
+            setValue(parseInt(value) - 1);
+            setCartValue(parseInt(value) - 1);
         }
     }
 
@@ -47,7 +47,10 @@ const AddCart = ({ cartValue, setCartValue, stock, withStock, withLabel }) => {
 AddCart.propTypes = {
     cartValue: propTypes.number,
     setCartValue: propTypes.func,
-    stock: propTypes.number,
+    stock: propTypes.oneOfType([
+        propTypes.number,
+        propTypes.string,
+    ]),
     withStock: propTypes.bool,
     withLabel: propTypes.bool,
 };

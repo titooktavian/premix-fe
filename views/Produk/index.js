@@ -18,8 +18,11 @@ const Index = ({
     const fetchCategory = async () => {
         try {
             const res = await getAllCategories();
-            setCategoryList(res);
-            getCategoryName(res);
+
+            if (!res.status) throw Error(res.msg);
+
+            setCategoryList(res.data);
+            getCategoryName(res.data);
         } catch (error) {
             AlertService.error(catchError(error));
         }

@@ -23,11 +23,6 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
     const router = useRouter();
     const { route } = router;
     // const urlLogin = loginParam ? `/masuk?source=${loginParam}` : '/masuk';
-
-    // useEffect(() => {
-    //     if (outletInfo) setOutletInfo(outletInfo);
-    //     if (merchantCode) setOutletCode(merchantCode);
-    // }, []);
     
     // useEffect(()=>{
     //     if (selectedOutlet) setSelectedOutlet(selectedOutlet);

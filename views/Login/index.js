@@ -7,12 +7,13 @@ import Link from "next/link";
 import { useState } from "react";
 import fetchApi from "helpers/config";
 import { catchError } from "helpers/formatter";
-import { setTokenLocalStorage } from "helpers/utils";
+import { getTokenLocalStorage, setTokenLocalStorage } from "helpers/utils";
+import { getCartUser } from "helpers/api";
 
 const Index = ({
     pageTitle,
 }) => {
-    const { cartItems, onResetCart, onAddToCart, setLoading, setUserLogin } = useStateContext();
+    const { cartItems, onResetCart, onReplaceCart, setLoading, setUserLogin } = useStateContext();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -28,17 +29,57 @@ const Index = ({
         fetchApi("/api/login", body, "post", {
             serviceDomainType: "local"
         }).then(async (res) => {
-            if (res) {
-                await setUserLogin(res.user_data);
-                setTokenLocalStorage(res.access_token);
+            if (res.status) {
+                await setUserLogin(res.data.user_data);
+                setTokenLocalStorage(res.data.access_token);
+                await getCart(res.data.user_data);
+
                 router.push('/produk');
+                return;
             }
 
-            throw Error('Gagal melakukan login');
+            throw Error(res.msg);
         }).catch((error) => {
             setLoading(false);
             AlertService.error(catchError(error));
         });
+    }
+
+    const getCart = async (user) => {
+        try {
+            const res = await getCartUser();
+
+            if (!res.status && (res.data && res.data !== '')) throw Error(res.msg);
+
+            let combinedCart = [];
+            if (cartItems.data.length > 0) {
+                combinedCart = [...cartItems.data];
+            }
+
+            if (res.data && res.data.cart_details) {
+                res.data.cart_details.map(serverCart => {
+                    const itemToAdd = {
+                        id_product: serverCart.id_product,
+                        id_product_duration: serverCart.id_product_duration,
+                        qty: serverCart.qty,
+                        name: serverCart.products.product_name,
+                        subtotal: serverCart.total,
+                        variant: serverCart.product_duration.duration_value,
+                        imgURL: serverCart.products.img_url[0],
+                        price: serverCart.product_duration.price,
+                    };
+
+                    combinedCart.push(itemToAdd)
+                })
+            }
+
+            if (combinedCart.length > 0) {
+                await onReplaceCart(combinedCart, user.id_user);
+            }
+
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
     }
 
     return (

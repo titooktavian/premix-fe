@@ -11,7 +11,7 @@ const CarouselItem = ({ name, description, link, imageUrl }) => {
             }}
         >
             <div className="flex flex-col absolute inset-0 justify-center p-10 w-2/3">
-                <div className="w-[132px] h-[40px] relative">
+                <div className="w-[132px] h-[40px] relative mb-3">
                     <Image src={imageUrl} className="rounded-2xl" layout='fill' objectFit='contain'/>
                 </div>
                 <div className="text-[32px] text-[#FFFFFF] font-bold">

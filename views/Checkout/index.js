@@ -29,7 +29,8 @@ const Index = ({
                 const detail = {
                     id_product: cart.id_product,
                     id_product_duration: cart.id_product_duration,
-                    qty: cart.qty
+                    qty: cart.qty,
+                    subtotal: cart.subtotal,
                 }
 
                 transactionDetail.push(detail);
@@ -42,17 +43,16 @@ const Index = ({
                 details: transactionDetail,
             });
 
+            if (!res.status) throw Error(res.msg);
+
+            setCheckoutData(res.data);
             setCheckoutStatus(true);
-            setCheckoutData(res);
+            AlertService.success('Terima kasih. Pesananmu diterima');
         } catch (error) {
             AlertService.error(catchError(error));
         }
         setLoading(false);
     }
-
-    console.log(cartItems)
-    console.log(userLogin)
-    console.log(checkoutData)
 
     return (
         <div 
@@ -163,63 +163,139 @@ const Index = ({
             )}
             
             {checkoutStatus && (
-                <section className="-mx-4 mb-4 p-4 md:mx-0">
-                    <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col">
-                        <div className="overflow-x-auto relative">
-                            <table className="w-full text-sm text-left">
-                                <thead className="text-base text-[#272541] bg-[#F4F4FD]">
-                                    <tr>
-                                        <th scope="col" className="py-5 px-6">
-                                            Produk
-                                        </th>
-                                        <th scope="col" className="py-5 px-6">
-                                            Harga
-                                        </th>
-                                        <th scope="col" className="py-5 px-6">
-                                            Jumlah
-                                        </th>
-                                        <th scope="col" className="py-5 px-6">
-                                            Subtotal
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cartItems.data.length > 0 ?cartItems.data.map((items) => (
-                                        <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <td className="py-4 px-6">
-                                                <div className="flex gap-4">
-                                                    <div className="h-20 w-20 relative">
-                                                        <Image src={items.imgURL} className="rounded-lg" layout='fill' objectFit='contain'/>
+                <>
+                    <section className="-mx-4 mb-4 p-4 md:mx-0">
+                        <div className="md:mx-auto md:max-w-[1110px] px-4">
+                            <div className="flex gap-4">
+                                <div className="flex flex-col w-1/3">
+                                    <div className="font-bold text-2xl text-[#272541]">Detail Order</div>
+
+                                    <div className="text-sm text-[#272541] font-normal mt-5">Nomor Order</div>
+                                    <div className="text-base text-[#272541] font-bold">2001098</div>
+
+                                    <div className="text-sm text-[#272541] font-normal mt-5">Tanggal Order</div>
+                                    <div className="text-base text-[#272541] font-bold">23 November 2022</div>
+
+                                    <div className="text-sm text-[#272541] font-normal mt-5">Email</div>
+                                    <div className="text-base text-[#272541] font-bold">shamanta@gmail.com</div>
+                                </div>
+
+                                <div className="flex flex-col w-2/3">
+                                    <div className="font-bold text-2xl text-[#272541]">Bank Transfer</div>
+
+                                    <div className="grid grid-cols-2 mt-5 gap-4">
+                                        {BANK_LIST.map((bank) => (
+                                            <div className="flex" key={`choose-bank-${bank.id}`}>
+                                                <div className="flex items-center h-5">
+                                                    <input id={`choose-bank-${bank.id}`} name="bank-radio" aria-describedby="helper-radio-text" type="radio" value={bank.id} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" />
+                                                </div>
+                                                <div className="ml-2 text-sm">
+                                                    <div className="w-[70px] h-[20px] relative mb-2">
+                                                        <Image src={bank.logo} layout="fill" objectFit="contain" />
                                                     </div>
-                                                    <div className="flex flex-col justify-center">
-                                                        <span className="font-bold text-base">{items.name}</span>
-                                                        <label className="w-fit bg-[#3F0071] text-white text-xs px-4 py-[2px] rounded-[4px]">{`${items.variant} Hari`}</label>
+                                                    <div className="flex flex-col gap-1 text-sm">
+                                                        <span>Nama Pemilik Rekening: <strong>{bank.receiverName}</strong></span>
+                                                        <span>No. Rekening: <strong>{bank.rekening}</strong></span>
                                                     </div>
                                                 </div>
-                                                
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                {toRupiah(items.price)}
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                {`${items.qty} Akun`}
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                {toRupiah(items.subtotal)}
-                                            </td>
-                                        </tr>
-                                    )) : (
-                                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <td colSpan="4" className="py-4 px-6 text-center">
-                                                Keranjang anda kosong
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+
+                    <section className="-mx-4 p-4 md:mx-0">
+                        <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col">
+                            <div className="overflow-x-auto relative">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="text-base text-[#272541] bg-[#F4F4FD]">
+                                        <tr>
+                                            <th scope="col" className="py-5 px-6">
+                                                Produk
+                                            </th>
+                                            <th scope="col" className="py-5 px-6">
+                                                Jumlah
+                                            </th>
+                                            <th scope="col" className="py-5 px-6 text-right">
+                                                Subtotal
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {checkoutData.transaction_details && checkoutData.transaction_details.length > 0 ? checkoutData.transaction_details.map((items) => (
+                                            <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td className="py-4 px-6">
+                                                    <div className="flex gap-4">
+                                                        <div className="h-20 w-20 relative">
+                                                            <Image src={items.product.img_url[0]} className="rounded-lg" layout='fill' objectFit='contain'/>
+                                                        </div>
+                                                        <div className="flex flex-col justify-center">
+                                                            <span className="font-bold text-base">{items.product.product_name}</span>
+                                                            <label className="w-fit bg-[#3F0071] text-white text-xs px-4 py-[2px] rounded-[4px]">{`${items.product_duration.duration_value} Hari`}</label>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    {`${items.qty.length} Akun`}
+                                                </td>
+                                                <td className="py-4 px-6 text-right">
+                                                    {toRupiah(items.subtotal)}
+                                                </td>
+                                            </tr>
+                                        )) : (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <td colSpan="3" className="py-4 px-6 text-center">
+                                                    Keranjang anda kosong
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="-mx-4 mb-4 p-4 md:mx-0">
+                        <div className="md:mx-auto md:max-w-[1110px] px-4">
+                            <div className="flex gap-2 w-full border-[#e5e7eb] border-b pb-5">
+                                <div className="w-full flex flex-col gap-3">
+                                    <div className="flex w-full font-bold">
+                                        <div className="flex w-1/3">
+                                            Subtotal
+                                        </div>
+                                        <div className="w-2/3 text-right">
+                                            {toRupiah(checkoutData.subtotal)}
+                                        </div>
+                                    </div>
+                                    <div className="flex w-full">
+                                        <div className="flex w-1/3">
+                                            Bank Transfer
+                                        </div>
+                                        <div className="w-2/3 text-right">
+                                            Bank BCA
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex gap-2 w-full pt-5">
+                                <div className="w-full flex flex-col gap-3">
+                                    <div className="flex w-full font-bold">
+                                        <div className="flex w-1/3">
+                                            Total
+                                        </div>
+                                        <div className="w-2/3 text-right">
+                                            {toRupiah(checkoutData.total)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+                
             )}
         </div>
     );

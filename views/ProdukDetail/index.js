@@ -28,10 +28,12 @@ const Index = ({
         try {
             const res = await getDetailProduct(id_produk);
 
-            setProductDetail(res);
-            setStock(res.product_durations[0].stock);
-            setPrice(res.product_durations[0].price);
-            setSelectedVariant(res.product_durations[0].id_product_duration);
+            if (!res.status) throw Error(res.msg);
+
+            setProductDetail(res.data);
+            setStock(res.data.product_durations[0].stock);
+            setPrice(res.data.product_durations[0].price);
+            setSelectedVariant(res.data.product_durations[0].id_product_duration);
             setLoadingState(false);
         } catch (error) {
             AlertService.error(catchError(error));

@@ -87,7 +87,7 @@ const Index = ({
                                         <td className="py-4 px-6">
                                             <div className="flex gap-4">
                                                 <div className="h-20 w-20 relative">
-                                                    <Image src={items.imgURL} className="rounded-lg" layout='fill' objectFit='contain'/>
+                                                    <Image src={items.imgURL || '/images/image-slider/1.jpeg'} className="rounded-lg" layout='fill' objectFit='contain'/>
                                                 </div>
                                                 <div className="flex flex-col justify-center">
                                                     <span className="font-bold text-base">{items.name}</span>

@@ -1,4 +1,5 @@
 import { API_TARGET, API_TARGET_VALUE } from "constants/enum";
+import { getTokenLocalStorage } from "./utils";
 
 const contentType = (method) => {
     switch(method) {
@@ -19,10 +20,12 @@ const fetchApi = async (
     method = "get",
     options = {
         serviceDomainType: undefined
-    }
+    },
+    withToken = false,
 ) => {
     const headers = {
         "Content-Type": contentType(String(method).toLowerCase()),
+        ...withToken && { access_token: getTokenLocalStorage() }
     };
     let qs = "";
     let body;

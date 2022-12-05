@@ -27,6 +27,8 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
                 ...sort && { sort_by: sort },
             });
 
+            if (!res.status) throw Error(res.msg);
+
             const {
                 data,
                 last_page,

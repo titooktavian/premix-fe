@@ -56,6 +56,8 @@ const Index = ({
                 password: password,
                 phone_number: phoneNumber,
             });
+
+            if (!res.status) throw Error(res.msg);
             
             doLogin();
         } catch (error) {
@@ -75,12 +77,13 @@ const Index = ({
             serviceDomainType: "local"
         }).then(async (res) => {
             if (res) {
-                await setUserLogin(res.user_data);
-                setTokenLocalStorage(res.access_token);
+                await setUserLogin(res.data.user_data);
+                setTokenLocalStorage(res.data.access_token);
                 router.push('/produk');
+                return;
             }
 
-            throw Error('Gagal melakukan login');
+            throw Error(res.msg);
         }).catch((error) => {
             setLoading(false);
             AlertService.error(catchError(error));

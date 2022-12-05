@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
-import { AiOutlinePicture, AiOutlineHdd, AiOutlineDownload } from "react-icons/ai";
-import { BsShieldCheck } from "react-icons/bs";
 
-import { Carousel, CarouselItem, CategoryCard, ProductCard, ProductSection, PromoCard, SectionTitle } from "components";
+import { Carousel, CarouselItem, CategoryCard, ProductSection, PromoCard, SectionTitle } from "components";
 import { getAllCategories, getBanner, getListProduct } from "helpers/api";
 import { AlertService } from "services";
 import { useEffect, useState } from "react";
@@ -19,7 +17,8 @@ const Index = ({
     const fetchCategory = async () => {
         try {
             const res = await getAllCategories();
-            setCategoryList(res);
+            if (!res.status) throw Error(res.msg);
+            setCategoryList(res.data);
         } catch (error) {
             AlertService.error(catchError(error));
         }
@@ -28,7 +27,9 @@ const Index = ({
     const fetchBanner = async () => {
         try {
             const res = await getBanner();
-            setBannerList(res);
+            if (!res.status) throw Error(res.msg);
+
+            setBannerList(res.data);
         } catch (error) {
             AlertService.error(catchError(error));
         }
@@ -41,6 +42,8 @@ const Index = ({
                 limit: 3,
                 page: 1,
             });
+
+            if (!res.status) throw Error(res.msg);
 
             const {
                 data,
@@ -81,7 +84,7 @@ const Index = ({
                             }}
                         >
                             {bannerList.map((banner) => (
-                                <CarouselItem key={`banner-${banner.id}`} name={banner.title} description={banner.description} link={banner.redirect_url} imageUrl="/images/carousel/carousel-bg.png" />
+                                <CarouselItem key={`banner-${banner.id}`} name={banner.title} description={banner.description} link={banner.redirect_url} imageUrl={banner.img_url} />
                             ))}
                         </Carousel>
                     </div>
@@ -94,7 +97,7 @@ const Index = ({
                         <SectionTitle title="Promo Hari Ini" subtitle="Ayo buruan beli akun sekarang, sebelum kehabisan" />
                         <div className="grid gap-4 grid-cols-3 my-4">
                             {productPromo.map((promo) => (
-                                <PromoCard idProduct={promo.id_product} name={promo.product_name} category={promo.category_name} price={promo.product_durations[0].price} discount={promo.promo_percentage} imageUrl={promo.img_url[0]} />
+                                <PromoCard key={`promo-${promo.id_product}`} idProduct={promo.id_product} name={promo.product_name} category={promo.category_name} price={promo.product_durations[0].price} discount={promo.promo_percentage} imageUrl={promo.img_url[0]} />
                             ))}
                         </div>
                     </div>

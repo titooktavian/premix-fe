@@ -42,13 +42,10 @@ export const StateContext = ({ children }) => {
         const { idProduct, quantity, variant, name } = product;
         
         const getProductDetail = await getDetailProduct(idProduct);
-        // if(!getProductDetail.status) {
-        //     AlertService.error(catchError(getProductDetail));
-        //     return;
-        // }
+        if (!getProductDetail.status) throw Error(getProductDetail.msg);
 
-        const selectedVariant = getProductDetail.product_durations.filter(obj => {
-            return obj.id_product_duration === variant
+        const selectedVariant = getProductDetail.data.product_durations.filter(obj => {
+            return obj.id_product_duration.toString() === variant.toString()
         })
 
         if(selectedVariant < 1) {
@@ -65,11 +62,11 @@ export const StateContext = ({ children }) => {
             name: name,
             price: selectedVariant[0].price,
             variant: selectedVariant[0].duration_value,
-            imgURL: getProductDetail.img_url[0], 
+            imgURL: getProductDetail.data.img_url[0], 
         };
 
         let newItem = [];
-        let isOnCart = false
+        let isOnCart = false;
         if (cartData.data.length > 0) {
             const arrIndex = cartData.data.findIndex(x => x.id_product === idProduct && x.id_product_duration === variant);
             let clonedCart = [...cartData.data];
@@ -91,7 +88,7 @@ export const StateContext = ({ children }) => {
         };
 
         const totalPriceCart = newItem.reduce((total, item) => {
-            return (total += item.subtotal);
+            return (total += parseInt(item.subtotal));
         }, 0);
 
         cartData = {
@@ -100,21 +97,6 @@ export const StateContext = ({ children }) => {
             data: [...newItem],
         };
 
-        // if (userLogin) {
-        //     const payload = {
-        //         ...selectedProduct,
-        //         add_on_detail_id: selectedProduct.add_on_detail_id.map((x) => x.addOnId),
-        //         product_id: selectedProduct.id_product,
-        //         customer_no: userLogin.customer_no
-        //     };
-        //     const updateCart = await updateUserCart(outlet, userLogin.customer_no, payload);
-        //     if(!updateCart.status) {
-        //         AlertService.error(catchError(getProductDetail));
-        //         return;
-        //     }
-        //     selectedProduct.cart_id = updateCart.data.cart_id;
-        //     selectedProduct.quantity = updateCart.data.product_buy_quantity;
-        // }
         setCartItems(cartData);
         localStorage.setItem('cart_user', JSON.stringify(cartData));
         if (quantity > 0) {
@@ -129,6 +111,34 @@ export const StateContext = ({ children }) => {
             );
         }
     };
+
+    const onReplaceCart = async (param, userId) => {
+        console.log(param)
+        const totalPriceCart = param.reduce((total, item) => {
+            return (total += parseInt(item.subtotal, 10));
+        }, 0);
+
+        const cartData = {
+            id_user: userLogin?.id_user || userId,
+            price: totalPriceCart,
+            data: [...param],
+        };
+
+        const payload = {
+            id_user: userLogin?.id_user || userId,
+            total: cartData.price,
+            items: [...cartData.data],
+        };
+
+        const updateCart = await updateUserCart(payload);
+        if(!updateCart.status) {
+            AlertService.error(catchError(updateCart));
+            return;
+        }
+
+        setCartItems(cartData);
+        localStorage.setItem('cart_user', JSON.stringify(cartData));
+    }
 
     const onResetCart = async () => {
         // if (userLogin) {
@@ -199,7 +209,7 @@ export const StateContext = ({ children }) => {
 
     useEffect(() => {
         async function fetchData() {
-            // const cart = JSON.parse(localStorage.getItem('cart_user')) || { data: [] };
+            const cart = JSON.parse(localStorage.getItem('cart_user')) || { data: [] };
             // let checkoutItemsId = JSON.parse(localStorage.getItem('checkoutItems'));
             // if (checkoutItemsId) setCheckoutItems(checkoutItemsId);
             // if (userLogin) {
@@ -223,10 +233,10 @@ export const StateContext = ({ children }) => {
             //     //     };
             //     // });
             // }
-            // if (cart) {
-            //     setCartItems(cart);
-            //     localStorage.setItem('cart_user', JSON.stringify(cart));
-            // }
+            if (cart) {
+                setCartItems(cart);
+                localStorage.setItem('cart_user', JSON.stringify(cart));
+            }
         }
         fetchData();
     }, [router]);
@@ -268,6 +278,7 @@ export const StateContext = ({ children }) => {
                 setCheckoutItems,
                 promoRequestId,
                 setPromoRequestId,
+                onReplaceCart,
             }}
         >
             {children}

@@ -7,8 +7,8 @@ export default withIronSessionApiRoute(async function loginRoute(req, res) {
         email: req.body.email,
         password: req.body.password,
     });
-    req.session.user = data?.user_data;
-    req.session.token = data?.access_token;
+    req.session.user = data?.data.user_data;
+    req.session.token = data?.data.access_token;
     await req.session.save();
     res.send(data);
 }, sessionOptions);

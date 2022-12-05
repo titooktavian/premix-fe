@@ -107,7 +107,7 @@ const setTokenLocalStorage = (token) => {
 }
 
 const getTokenLocalStorage = () => {
-    localStorage.getItem('token');
+    return localStorage.getItem('token');
 }
 
 export {
