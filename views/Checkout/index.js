@@ -17,6 +17,7 @@ const Index = ({
     const [email, setEmail] = useState('');
     const [nama, setNama] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState(BANK_LIST[0]);
 
     const { cartItems, onResetCart, onAddToCart, setLoading, userLogin } = useStateContext();
     const router = useRouter();
@@ -52,6 +53,10 @@ const Index = ({
             AlertService.error(catchError(error));
         }
         setLoading(false);
+    }
+
+    const confirmOrder = () => {
+        router.push(`/konfirmasi-pesanan?payment=${paymentMethod.id}`);
     }
 
     return (
@@ -187,9 +192,9 @@ const Index = ({
                                         {BANK_LIST.map((bank) => (
                                             <div className="flex" key={`choose-bank-${bank.id}`}>
                                                 <div className="flex items-center h-5">
-                                                    <input id={`choose-bank-${bank.id}`} name="bank-radio" aria-describedby="helper-radio-text" type="radio" value={bank.id} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" />
+                                                    <input id={`choose-bank-${bank.id}`} name="bank-radio" aria-describedby="helper-radio-text" type="radio" value={bank.id} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" checked={bank.id === paymentMethod.id} />
                                                 </div>
-                                                <div className="ml-2 text-sm">
+                                                <div className="ml-2 text-sm cursor-pointer" onClick={() => {setPaymentMethod(bank)}}>
                                                     <div className="w-[70px] h-[20px] relative mb-2">
                                                         <Image src={bank.logo} layout="fill" objectFit="contain" />
                                                     </div>
@@ -275,7 +280,7 @@ const Index = ({
                                             Bank Transfer
                                         </div>
                                         <div className="w-2/3 text-right">
-                                            Bank BCA
+                                            {paymentMethod.bankName}
                                         </div>
                                     </div>
                                 </div>
@@ -291,6 +296,14 @@ const Index = ({
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="-mx-4 mb-4 p-4 md:mx-0">
+                        <div className="md:mx-auto md:max-w-[1110px] px-4 flex justify-center">
+                            <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-72 flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {confirmOrder();}}>
+                                Bayar Sekarang
                             </div>
                         </div>
                     </section>
