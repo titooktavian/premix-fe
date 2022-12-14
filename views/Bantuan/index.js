@@ -11,12 +11,16 @@ import ActionColumn from "components/Table/components/ActionColumn";
 import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/hi";
 import { AiOutlineTag, AiOutlineUser } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
+import { RiImageLine } from "react-icons/ri";
 
 const Index = ({
     pageTitle,
 }) => {
     const { setLoading, userLogin } = useStateContext();
     const [showDetail, setShowDetail] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
 
     const content = [
         {
@@ -106,12 +110,14 @@ const Index = ({
                     </div>
                     <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
                         <div className="flex gap-2">
-                            <div className="font-bold w-2/3 text-2xl">Bantuan</div>
-                            <div className="w-1/3 flex justify-end">
-                                <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {}}>
-                                    Buat Tiket
+                            <div className="font-bold w-2/3 text-2xl">{showDetail ? 'Detail Tiket' : 'Bantuan'}</div>
+                            {!showDetail && (
+                                <div className="w-1/3 flex justify-end">
+                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {}}>
+                                        Buat Tiket
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                         <div className="relative">
                             {!showDetail && (
@@ -259,81 +265,88 @@ const Index = ({
                             )}
                             {showDetail && (
                                 <div className="w-full flex flex-col gap-4">
-                                    <div
-                                        className="flex w-full h-[94px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-lg text-white items-center p-6 gap-6"
-                                        style={{
-                                            backgroundImage: `url('/images/bg-dashboard.png')`,
-                                        }}
-                                    >
-                                        <div className="flex flex-col">
-                                            <div className="flex gap-2">
-                                                <span className="text-base font-bold">No. Order</span>
-                                                <div className="bg-[#66AE76] rounded-md text-white py-1 px-2 w-fit text-xs">Aktif</div>
+                                    <div className="rounded-lg bg-white p-4 flex flex-col w-full">
+                                        <div className="flex">
+                                            <div className="w-1/2 flex items-center gap-2">
+                                                <HiOutlineTicket />
+                                                <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
                                             </div>
-                                            <div className="text-base font-normal">0004</div>
+                                            <div className="w-1/2 flex items-center justify-end gap-2">
+                                                <span className="text-xs text-[#6E6C85]">12:00 AM</span>
+                                                <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
+                                            </div>
                                         </div>
 
-                                        <div className="flex flex-col">
-                                            <div className="flex gap-2">
-                                                <span className="text-base font-bold">Tanggal Pembelian</span>
-                                            </div>
-                                            <div className="text-base font-normal">23 November 2022</div>
+                                        <div className="flex flex-col mt-5 gap-2">
+                                            <div className="text-base font-bold">Tidak bisa login ke member area</div>
+                                            <div className="text-sm font-normal font-bold text-[#6E6C85]">Kenapa pada saat saya login password saya salah terus, padahal sama dengan yang dikirim dengan yang di email akunnya. Terima kasih.</div>
                                         </div>
-                                    </div>
-                                    
-                                    <div className="flex w-full bg-white rounded-lg p-6 gap-6">
-                                        <div className="flex w-full flex-col">
-                                            <div className="flex gap-2">
-                                                <div className="text-base font-bold w-2/3">Produk</div>
-                                                <div className="text-base font-bold text-right w-1/3">Total</div>
-                                            </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#6E6C85]">Akun Canva -  1 Bulan x1</span>
-                                                    <span className="text-xs font-normal text-[#8E8E9A]">Berakhir pada 23 Desember 2022</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 35.000</div>
-                                            </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#6E6C85]">Akun Icounscout -  1 Bulan x1</span>
-                                                    <span className="text-xs font-normal text-[#8E8E9A]">Berakhir pada 23 Desember 2022</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 40.000</div>
-                                            </div>
 
-                                            <div className="border-b-[1px] mt-6 mt- mb-6"></div>
+                                        <div className="border-b-[1px] mt-6 mb-6"></div>
 
-                                            <div className="flex gap-2">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Subtotal</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 75.000</div>
+                                        <div className="flex flex-col gap-1">
+                                            <span className="font-bold text-sm mb-2">Lampiran</span>
+                                            <div className="flex gap-1 items-center">
+                                                <RiImageLine />
+                                                <span className="text-sm font-normal">Screenshot_Login.jpg</span>
                                             </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Kode Pembayaran</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 602</div>
+                                            <div className="flex gap-1 items-center">
+                                                <RiImageLine />
+                                                <span className="text-sm font-normal">Screenshot_Login2.jpg</span>
                                             </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Metode Pembayaran</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Bank Transfer (BCA)</div>
+                                            <div className="flex gap-1 items-center">
+                                                <RiImageLine />
+                                                <span className="text-sm font-normal">Screenshot_Login3.jpg</span>
                                             </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Total Pembayaran</span>
+                                        </div>
+
+                                        <div className="border-b-[1px] mt-6 mb-6"></div>
+
+                                        <div className="flex mt-5">
+                                            <div className="w-1/3 flex items-center gap-2">
+                                                <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
+                                                    <AiOutlineUser className="text-xs" />
                                                 </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 75.602</div>
+                                                <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
+                                            </div>
+                                            <div className="w-2/3 flex items-center justify-end gap-2">
+                                                <div className="flex items-center gap-1">
+                                                    <AiOutlineTag className="text-xs" />
+                                                    <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <GrAttachment className="text-xs" />
+                                                    <span className="text-xs font-normal text-[#3F0071]">3</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <HiOutlineChatAlt className="text-xs" />
+                                                    <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowDetail(false);}}>
-                                        Kembali
-                                    </div>
+
+                                    {showForm ? (
+                                        <>
+                                            <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowForm(false);}}>
+                                                Batal Balas Tiket
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                                <div className="flex">
+                                                    <div className="mt-3">
+                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                                        <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                        
+                                    ) : (
+                                        <div className="h-[37px] px-[24px] bg-[#FF5C6F] w-fit rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {setShowForm(true)}}>
+                                            Balas Tiket
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
