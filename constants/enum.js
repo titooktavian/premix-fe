@@ -86,7 +86,7 @@ export const NAVIGATIONS = [
 
 export const USER_NAVIGATIONS = [
     { name: "Dashboard", link: "/dashboard", isActive: false },
-    { name: "Order", link: "/", isActive: false },
+    { name: "Order", link: "/order", isActive: false },
     { name: "Bantuan", link: "/", isActive: false },
     { name: "Akun", link: "/", isActive: false },
 ]

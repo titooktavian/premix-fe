@@ -6,9 +6,16 @@ import propTypes from "prop-types";
 import { useState } from "react";
 import { AiOutlineDashboard, AiOutlineMessage, AiOutlineMinus, AiOutlinePlus, AiOutlinePoweroff, AiOutlineUser } from "react-icons/ai";
 import { HiOutlineShoppingCart } from "react-icons/hi";
+import { useRouter } from "next/router";
 
 const Sidebar = ({ title, icon, children }) => {
     const { userLogin } = useStateContext();
+    const router = useRouter();
+
+    const checkActiveMenu = (currentMenu) => {
+        if (currentMenu === router.pathname) return true;
+        return false;
+    }
 
     const renderIcon = (name) => {
         switch (name) {
@@ -41,8 +48,8 @@ const Sidebar = ({ title, icon, children }) => {
             <div className="flex flex-col gap-2 mt-8">
                 {USER_SIDEBAR.map( (userNav, index) =>(
                     <Link href={userNav.link} key={`sidebar-nav-${index}`}>
-                        <div className={`flex cursor-pointer items-center gap-4 px-8 py-3 ${userNav.isActive ? 'bg-[#272541] text-white' : ''}`}>
-                            <div className={`flex w-10 h-10 items-center justify-center ${userNav.isActive ? 'bg-[#FF5C6F] text-white' : 'bg-white text-[#03053D]'} rounded-xl`}>
+                        <div className={`flex cursor-pointer items-center gap-4 px-8 py-3 ${checkActiveMenu(userNav.link) ? 'bg-[#272541] text-white' : ''}`}>
+                            <div className={`flex w-10 h-10 items-center justify-center ${checkActiveMenu(userNav.link) ? 'bg-[#FF5C6F] text-white' : 'bg-white text-[#03053D]'} rounded-xl`}>
                                 {renderIcon(userNav.link)}
                             </div>
                             <div>
