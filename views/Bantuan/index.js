@@ -1,10 +1,8 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
-import { AlertService } from "services";
-import { SectionTitle, Sidebar } from "components";
+import { Sidebar, TextEditor } from "components";
 import { useState } from "react";
 import { catchError } from "helpers/formatter";
-import Table from "components/Table/Table";
 import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
@@ -12,6 +10,8 @@ import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/
 import { AiOutlineTag, AiOutlineUser } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import { RiImageLine } from "react-icons/ri";
+// import { Editor } from "react-draft-wysiwyg";
+// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const Index = ({
     pageTitle,
@@ -19,67 +19,10 @@ const Index = ({
     const { setLoading, userLogin } = useStateContext();
     const [showDetail, setShowDetail] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
-
-    const content = [
-        {
-            id: 1,
-            name: 'Akun Canva',
-            purchase_date: '2022-11-25',
-            status: 1,
-            duration: 30,
-            total: 50000,
-        },
-        {
-            id: 2,
-            name: 'Akun Iconscout',
-            purchase_date: '2022-11-25',
-            status: 1,
-            duration: 7,
-            total: 100000,
-        },
-        {
-            id: 1,
-            name: 'Akun Vecteezy',
-            purchase_date: '2022-11-25',
-            status: 2,
-            duration: 30,
-            total: 150000,
-        }
-    ];
-
-    const headerContent = [
-        {
-            name: 'Nama Akun',
-            selector: 'name',
-        },
-        {
-            name: 'Tanggal Beli',
-            selector: 'purchase_date',
-        },
-        {
-            name: 'Status',
-            selector: 'status',
-            customComponent: (data) => (
-                <StatusColumn data={data.status} />
-            ),
-        },
-        {
-            name: 'Total',
-            selector: 'total',
-            customComponent: (data) => (
-                <CurrencyColumn data={data.total} />
-            ),
-        },
-        {
-            name: 'Aksi',
-            selector: 'name',
-            customComponent: (data) => (
-                <ActionColumn data={data.id} clickHandler={(id) => { rowClickHandler(id) }} />
-            ),
-        },
-    ];
+    const [nama, setNama] = useState('');
+    const [subjek, setSubjek] = useState('');
+    const [pesan, setPesan] = useState('');
 
     const rowClickHandler = (id) => {
         setShowDetail(true);
@@ -152,7 +95,7 @@ const Index = ({
 
                                             <div className="flex flex-col mt-5 gap-2">
                                                 <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                <div className="text-sm font-normal font-bold text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
+                                                <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
                                             </div>
 
                                             <div className="flex mt-5">
@@ -193,7 +136,7 @@ const Index = ({
 
                                             <div className="flex flex-col mt-5 gap-2">
                                                 <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                <div className="text-sm font-normal font-bold text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
+                                                <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
                                             </div>
 
                                             <div className="flex mt-5">
@@ -228,13 +171,13 @@ const Index = ({
                                                 </div>
                                                 <div className="w-1/2 flex items-center justify-end gap-2">
                                                     <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                    <div className="bg-[#DFDFDF] rounded-full text-white py-1 px-2 w-fit text-xs font-bold text-[#272541]">Selesai</div>
+                                                    <div className="bg-[#DFDFDF] rounded-full py-1 px-2 w-fit text-xs font-bold text-[#272541]">Selesai</div>
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col mt-5 gap-2">
                                                 <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                <div className="text-sm font-normal font-bold text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
+                                                <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
                                             </div>
 
                                             <div className="flex mt-5">
@@ -279,7 +222,7 @@ const Index = ({
 
                                         <div className="flex flex-col mt-5 gap-2">
                                             <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                            <div className="text-sm font-normal font-bold text-[#6E6C85]">Kenapa pada saat saya login password saya salah terus, padahal sama dengan yang dikirim dengan yang di email akunnya. Terima kasih.</div>
+                                            <div className="text-sm font-normal text-[#6E6C85]">Kenapa pada saat saya login password saya salah terus, padahal sama dengan yang dikirim dengan yang di email akunnya. Terima kasih.</div>
                                         </div>
 
                                         <div className="border-b-[1px] mt-6 mb-6"></div>
@@ -333,10 +276,50 @@ const Index = ({
                                             </div>
 
                                             <div className="flex flex-col">
-                                                <div className="flex">
-                                                    <div className="mt-3">
-                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                                <div className="flex gap-4">
+                                                    <div className="mt-3 w-1/2">
+                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
+                                                        <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nama" value={nama} onChange={(e) => { setNama(e.target.value) }} />
+                                                    </div>
+                                                    <div className="mt-3 w-1/2">
+                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
                                                         <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-4 mt-3">
+                                                    <div className="mt-3 w-full">
+                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Subjek</label>
+                                                        <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan subjek" value={subjek} onChange={(e) => { setSubjek(e.target.value) }} />
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col mt-3">
+                                                    <div className="mt-3 w-full">
+                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Pesan</label>
+                                                        <TextEditor editorState={pesan} changeEvent={setPesan} />
+                                                    </div>
+                                                    <div className="w-full">
+                                                        <label htmlFor="formFile" className="block mb-2 text-sm font-medium text-gray-900">Lampiran</label>
+                                                        <input className="form-control
+                                                            block
+                                                            w-full
+                                                            px-3
+                                                            py-1.5
+                                                            text-base
+                                                            font-normal
+                                                            text-gray-700
+                                                            bg-white bg-clip-padding
+                                                            border border-solid border-gray-300
+                                                            rounded
+                                                            transition
+                                                            ease-in-out
+                                                            m-0
+                                                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" type="file" id="formFile"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="flex mt-4">
+                                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {}}>
+                                                        Kirim Tiket
                                                     </div>
                                                 </div>
                                             </div>
