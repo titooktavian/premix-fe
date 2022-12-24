@@ -130,8 +130,8 @@ export const NAVIGATIONS = [
 export const USER_NAVIGATIONS = [
     { name: "Dashboard", link: "/dashboard", isActive: false },
     { name: "Order", link: "/order", isActive: false },
-    { name: "Bantuan", link: "/", isActive: false },
-    { name: "Akun", link: "/", isActive: false },
+    { name: "Bantuan", link: "/bantuan", isActive: false },
+    { name: "Akun", link: "/akun", isActive: false },
 ]
 
 export const USER_SIDEBAR = [
@@ -184,18 +184,9 @@ export const VERIF_METHOD_TYPE = {
 };
 
 export const TRANSACTION_STATUS = {
-    UNPROCESSED: 0,
-    MENUNGGU_PEMBAYARAN: 1,
-    PEMBAYARAN_BERHASIL: 2,
-    PESANAN_DIPROSES: 3,
-    PROSES_PENGIRIMAN: 4,
-    PESANAN_SELESAI: 5,
-    PESANAN_DIBATALKAN: 6,
-    PESANAN_DITOLAK: 7,
-    FAILED_SHIPMENT: 8,
-    FAILED_BILLER: 9,
-    FAILED_AGGREGATOR: 10,
-    MENUNGGU_KASIR: 11,
+    WAITING: 1,
+    ACTIVE: 2,
+    REJECT: 3,
 };
 
 export const TRANSACTION_STATUS_LABEL = {

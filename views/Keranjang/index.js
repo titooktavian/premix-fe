@@ -5,11 +5,14 @@ import { toRupiah } from "helpers/formatter";
 import { AddCart } from "components";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
+import { useEffect, useState } from "react";
 
 const Index = ({
     pageTitle,
 }) => {
     const { cartItems, onResetCart, onAddToCart, setLoading } = useStateContext();
+    const [total, setTotal] = useState(cartItems.price || 0);
+    const [promoTotal, setPromoTotal] = useState(0);
     const router = useRouter();
 
     const changeCartValue = async (qty, productId, variant, name) => {
@@ -42,6 +45,20 @@ const Index = ({
             AlertService.error('Tidak ada item di keranjang anda');
         }
     }
+
+    const countTransaction = () => {
+        let tempPromo = 0;
+        cartItems.data.map((cart) => {
+            tempPromo += (parseFloat(cart.promo) / 100) * parseFloat(cart.subtotal);
+        });
+
+        setPromoTotal(tempPromo);
+        setTotal(parseFloat(cartItems.price) - tempPromo);
+    }
+
+    useEffect(() => {
+        countTransaction();
+    }, [cartItems]);
 
     return (
         <div 
@@ -105,7 +122,14 @@ const Index = ({
                                             </div>
                                         </td>
                                         <td className="py-4 px-6">
-                                            {toRupiah(items.subtotal)}
+                                            <div className="flex flex-col">
+                                                <div>
+                                                    {toRupiah(items.subtotal)}
+                                                </div>
+                                                <div className="text-[#FF5C6F]">
+                                                    {`- ${toRupiah((parseFloat(items.promo) / 100) * items.subtotal)}`}
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 )) : (
@@ -141,12 +165,20 @@ const Index = ({
                                     {toRupiah(cartItems.price)}
                                 </div>
                             </div>
+                            <div className="flex w-full">
+                                <div className="flex w-1/3">
+                                    Promo
+                                </div>
+                                <div className="w-2/3 text-right text-[#FF5C6F]">
+                                    {`- ${toRupiah(promoTotal)}`}
+                                </div>
+                            </div>
                             <div className="flex w-full font-bold">
                                 <div className="flex w-1/3">
                                     Total
                                 </div>
                                 <div className="w-2/3 text-right">
-                                    {toRupiah(cartItems.price)}
+                                    {toRupiah(total)}
                                 </div>
                             </div>
                             <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {goCheckout();}}>

@@ -25,9 +25,7 @@ const Navbar = () => {
     };
 
     const { 
-        cartItems, 
-        // cartItems.total, 
-        // outlet, 
+        cartItems,
         setIsConfirmLogin,
         userLogin,
         handleLogout,

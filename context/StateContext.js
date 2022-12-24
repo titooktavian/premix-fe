@@ -63,6 +63,7 @@ export const StateContext = ({ children }) => {
             price: selectedVariant[0].price,
             variant: selectedVariant[0].duration_value,
             imgURL: getProductDetail.data.img_url[0], 
+            promo: getProductDetail.data.promo_percentage,
         };
 
         let newItem = [];
@@ -139,8 +140,8 @@ export const StateContext = ({ children }) => {
         localStorage.setItem('cart_user', JSON.stringify(cartData));
     }
 
-    const onResetCart = async () => {
-        if (userLogin) {
+    const onResetCart = async (resetServer = true) => {
+        if (userLogin && resetServer) {
             const payload = {
                 id_user: userLogin.id_user || null,
                 total: 0,
@@ -188,8 +189,8 @@ export const StateContext = ({ children }) => {
 
     const handleLogout = async () => {
         await fetch("/api/logout");
-        setUserLogin(null);
-        onResetCart();
+        await setUserLogin(null);
+        await onResetCart(false);
         AlertService.success("Logout Berhasil");
     };
 

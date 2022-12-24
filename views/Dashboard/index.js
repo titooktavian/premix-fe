@@ -2,57 +2,129 @@ import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
-import { SectionTitle, Sidebar } from "components";
+import { Pagination, Sidebar } from "components";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import fetchApi from "helpers/config";
 import { catchError } from "helpers/formatter";
 import { setTokenLocalStorage } from "helpers/utils";
+import { getAccountDashboard, getSummary } from "helpers/api";
+import Table from "components/Table/Table";
+import DateColumn from "components/Table/components/DateColumn";
+import StatusColumn from "components/Table/components/StatusColumn";
+import CurrencyColumn from "components/Table/components/CurrencyColumn";
+import ActionColumn from "components/Table/components/ActionColumn";
 
 const Index = ({
     pageTitle,
 }) => {
     const { setLoading, userLogin } = useStateContext();
+    const [showDetail, setShowDetail] = useState(false);
+    const [limit, setLimit] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(0);
+    const [accountList, setAccountList] = useState([]);
+    const [accountDetail, setAccountDetail] = useState(null);
+    const [transactionCount, setTransactionCount] = useState(0);
+    const [transactionConfirmed, setTransactionConfirmed] = useState(0);
+    const [transactionWaiting, setTransactionWaiting] = useState(0);
 
-    const router = useRouter();
-
-    const expiredAccount = [
+    const headerContent = [
         {
-            id: 1,
-            name: 'Akun Canva',
-            purchase_date: '2022-11-25',
-            expired_date: '2022-11-27',
-            status: 1,
-            duration: 30,
+            name: 'No. Order',
+            selector: 'order_number',
         },
         {
-            id: 2,
-            name: 'Akun Iconscout',
-            purchase_date: '2022-11-25',
-            expired_date: '2022-11-27',
-            status: 1,
-            duration: 7,
+            name: 'Tanggal Beli',
+            selector: 'created_at',
+            customComponent: (data) => (
+                <DateColumn data={data.created_at} />
+            )
         },
         {
-            id: 1,
-            name: 'Akun Vecteezy',
-            purchase_date: '2022-11-25',
-            expired_date: '2022-11-27',
-            status: 2,
-            duration: 30,
-        }
+            name: 'Tanggal Berakhir',
+            selector: 'expired_date',
+            customComponent: (data) => (
+                <DateColumn data={data.expired_date} />
+            )
+        },
+        {
+            name: 'Status',
+            selector: 'status',
+            customComponent: (data) => (
+                <StatusColumn data={data.id_status} />
+            ),
+        },
+        {
+            name: 'Aksi',
+            selector: 'name',
+            customComponent: (data) => (
+                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} />
+            ),
+        },
     ];
 
-    const renderStatus = (status) => {
-        switch (status) {
-            case 1:
-                return ( <div className="bg-[#66AE76] rounded-md text-white py-1 px-2 w-fit text-xs">Aktif</div> );
-            case 2:
-                return ( <div className="bg-[#8E8E9A] rounded-md text-white py-1 px-2 w-fit text-xs">Tidak Aktif</div> );
-            default:
-                return null;
-        }
+    const changePageHandler = (event) => {
+        fetchData(event.selected);
     }
+
+    const fetchData = async (page) => {
+        setLoading(true);
+        try {
+            const res = await getAccountDashboard({
+                limit: limit,
+                page: page + 1,
+            });
+
+            if (!res.status) throw Error(res.msg);
+
+            const {
+                data,
+                meta: {
+                    last_page,
+                    per_page,
+                    current_page,
+                },
+            } = res;
+
+            setAccountList(data);
+            setCurrentPage(current_page);
+            setLimit(per_page);
+            setTotalPage(last_page);
+            setLoading(false);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+    };
+
+    const fetchSummary = async () => {
+        setLoading(true);
+        try {
+            const res = await getSummary({});
+
+            if (!res.status) throw Error(res.msg);
+
+            const {
+                data: {
+                    transaction_count,
+                    transaction_confirmed,
+                    transaction_waiting,
+                }
+            } = res;
+
+            setTransactionCount(transaction_count);
+            setTransactionConfirmed(transaction_confirmed);
+            setTransactionWaiting(transaction_waiting);
+            setLoading(false);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+    };
+
+    useEffect(() => {
+        fetchData(0);
+        fetchSummary();
+    }, []);
 
     return (
         <div 
@@ -82,62 +154,24 @@ const Index = ({
                         <div className="flex gap-3">
                             <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
                                 <div className="text-sm text-normal text-[#6E6C85]">Akun</div>
-                                <div className="text-[#FF5C6F] text-2xl font-bold">2</div>
+                                <div className="text-[#FF5C6F] text-2xl font-bold">{transactionCount}</div>
                             </div>
                             <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
-                                <div className="text-sm text-normal text-[#6E6C85]">Belum Lunas</div>
-                                <div className="text-[#F8CA56] text-2xl font-bold">2</div>
+                                <div className="text-sm text-normal text-[#6E6C85]">Menunggu</div>
+                                <div className="text-[#F8CA56] text-2xl font-bold">{transactionWaiting}</div>
                             </div>
                             <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
                                 <div className="text-sm text-normal text-[#6E6C85]">Lunas</div>
-                                <div className="text-[#66AE76] text-2xl font-bold">2</div>
+                                <div className="text-[#66AE76] text-2xl font-bold">{transactionConfirmed}</div>
                             </div>
                         </div>
                         <div className="text-base font-bold mt-6">Akun yang akan berakhir</div>
 
                         <div className="overflow-x-auto relative">
-                            <table className="w-full text-sm text-left">
-                                <thead className="text-base text-[#272541] bg-white">
-                                    <tr>
-                                        <th scope="col" className="py-5 px-6">
-                                            Nama Akun
-                                        </th>
-                                        <th scope="col" className="py-5 px-6">
-                                            Tanggal Beli
-                                        </th>
-                                        <th scope="col" className="py-5 px-6">
-                                            Tanggal Berakhir
-                                        </th>
-                                        <th scope="col" className="py-5 px-6">
-                                            Status
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {expiredAccount.length > 0 ? expiredAccount.map((items) => (
-                                        <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <td className="py-4 px-6">
-                                                {items.name}
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                {items.purchase_date}
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                {items.expired_date}
-                                            </td>
-                                            <td className="py-4 px-6">
-                                                {renderStatus(items.status)}
-                                            </td>
-                                        </tr>
-                                    )) : (
-                                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                            <td colSpan="4" className="py-4 px-6 text-center">
-                                                Tidak ada data
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                            <Table header={headerContent} content={accountList} />
+                            <div className="w-full px-4 flex justify-center mt-5">
+                                <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
+                            </div>
                         </div>
                     </div>
                 </div>

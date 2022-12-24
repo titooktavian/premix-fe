@@ -8,16 +8,13 @@ const Index = ({
     pageTitle,
 }) => {
     const { setLoading, userLogin } = useStateContext();
-    const [showDetail, setShowDetail] = useState(false);
-    const [nama, setNama] = useState('');
-    const [email, setEmail] = useState('');
-    const [telp, setTelp] = useState('');
-    const [alamat, setAlamat] = useState('');
+    const [nama, setNama] = useState(userLogin.name || '');
+    const [email, setEmail] = useState(userLogin.email || '');
+    const [telp, setTelp] = useState(userLogin.phone_number || '');
     const [password, setPassword] = useState('');
+    const [rePassword, setRePassword] = useState('');
 
-    const rowClickHandler = (id) => {
-        setShowDetail(true);
-    }
+    console.log(userLogin)
 
     return (
         <div 
@@ -60,12 +57,12 @@ const Index = ({
                                     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nomor handphone" value={telp} onChange={(e) => { setTelp(e.target.value) }} />
                                 </div>
                                 <div className="mt-3 w-full">
-                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Alamat</label>
-                                    <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan alamat" value={alamat} onChange={(e) => { setAlamat(e.target.value) }} />
-                                </div>
-                                <div className="mt-3 w-full">
                                     <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Password Baru</label>
                                     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan password baru" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                                </div>
+                                <div className="mt-3 w-full">
+                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Ulangi Password Baru</label>
+                                    <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan password baru" value={rePassword} onChange={(e) => { setRePassword(e.target.value) }} />
                                 </div>
                                 <div className="flex mt-4">
                                     <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {}}>

@@ -1,61 +1,45 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { SectionTitle, Sidebar } from "components";
-import { useState } from "react";
-import { catchError } from "helpers/formatter";
+import { Pagination, SectionTitle, Sidebar } from "components";
+import { useEffect, useState } from "react";
+import { catchError, toRupiah } from "helpers/formatter";
 import Table from "components/Table/Table";
 import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
+import { getTransactionList } from "helpers/api";
+import DateColumn from "components/Table/components/DateColumn";
+import moment from "moment";
 
 const Index = ({
     pageTitle,
 }) => {
-    const { setLoading, userLogin } = useStateContext();
+    const { setLoading } = useStateContext();
     const [showDetail, setShowDetail] = useState(false);
-
-    const content = [
-        {
-            id: 1,
-            name: 'Akun Canva',
-            purchase_date: '2022-11-25',
-            status: 1,
-            duration: 30,
-            total: 50000,
-        },
-        {
-            id: 2,
-            name: 'Akun Iconscout',
-            purchase_date: '2022-11-25',
-            status: 1,
-            duration: 7,
-            total: 100000,
-        },
-        {
-            id: 1,
-            name: 'Akun Vecteezy',
-            purchase_date: '2022-11-25',
-            status: 2,
-            duration: 30,
-            total: 150000,
-        }
-    ];
+    const [limit, setLimit] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(0);
+    const [orderList, setOrderList] = useState([]);
+    const [orderDetail, setOrderDetail] = useState(null);
 
     const headerContent = [
         {
-            name: 'Nama Akun',
-            selector: 'name',
+            name: 'No. Order',
+            selector: 'order_number',
         },
         {
             name: 'Tanggal Beli',
-            selector: 'purchase_date',
+            selector: 'created_at',
+            customComponent: (data) => (
+                <DateColumn data={data.created_at} />
+            )
         },
         {
             name: 'Status',
             selector: 'status',
             customComponent: (data) => (
-                <StatusColumn data={data.status} />
+                <StatusColumn data={data.id_status} />
             ),
         },
         {
@@ -69,14 +53,52 @@ const Index = ({
             name: 'Aksi',
             selector: 'name',
             customComponent: (data) => (
-                <ActionColumn data={data.id} clickHandler={(id) => { rowClickHandler(id) }} />
+                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} />
             ),
         },
     ];
 
-    const rowClickHandler = (id) => {
+    const rowClickHandler = (data) => {
+        setOrderDetail(data);
         setShowDetail(true);
     }
+
+    const changePageHandler = (event) => {
+        fetchData(event.selected);
+    }
+
+    const fetchData = async (page) => {
+        setLoading(true);
+        try {
+            const res = await getTransactionList({
+                limit: limit,
+                page: page + 1,
+            });
+
+            if (!res.status) throw Error(res.msg);
+
+            const {
+                data,
+                meta: {
+                    last_page,
+                    per_page,
+                    current_page,
+                },
+            } = res;
+
+            setOrderList(data);
+            setCurrentPage(current_page);
+            setLimit(per_page);
+            setTotalPage(last_page);
+            setLoading(false);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+    };
+
+    useEffect(() => {
+        fetchData(0)
+    }, []);
 
     return (
         <div 
@@ -106,7 +128,12 @@ const Index = ({
 
                         <div className="relative">
                             {!showDetail && (
-                                <Table header={headerContent} content={content} />
+                                <>
+                                    <Table header={headerContent} content={orderList} />
+                                    <div className="w-full px-4 flex justify-center mt-5">
+                                        <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
+                                    </div>
+                                </>
                             )}
                             {showDetail && (
                                 <div className="w-full flex flex-col gap-4">
@@ -119,16 +146,16 @@ const Index = ({
                                         <div className="flex flex-col">
                                             <div className="flex gap-2">
                                                 <span className="text-base font-bold">No. Order</span>
-                                                <div className="bg-[#66AE76] rounded-md text-white py-1 px-2 w-fit text-xs">Aktif</div>
+                                                <StatusColumn data={orderDetail.id_status} />
                                             </div>
-                                            <div className="text-base font-normal">0004</div>
+                                            <div className="text-base font-normal">{orderDetail.order_number}</div>
                                         </div>
 
                                         <div className="flex flex-col">
                                             <div className="flex gap-2">
                                                 <span className="text-base font-bold">Tanggal Pembelian</span>
                                             </div>
-                                            <div className="text-base font-normal">23 November 2022</div>
+                                            <div className="text-base font-normal">{moment(orderDetail.created_at).format('DD MMMM YYYY')}</div>
                                         </div>
                                     </div>
                                     
@@ -138,20 +165,20 @@ const Index = ({
                                                 <div className="text-base font-bold w-2/3">Produk</div>
                                                 <div className="text-base font-bold text-right w-1/3">Total</div>
                                             </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#6E6C85]">Akun Canva -  1 Bulan x1</span>
-                                                    <span className="text-xs font-normal text-[#8E8E9A]">Berakhir pada 23 Desember 2022</span>
+                                            {orderDetail.transaction_details && orderDetail.transaction_details.map((detail) => (
+                                                <div className="flex gap-2 mt-4" key={`detail-${detail.id_transaction_detail}`}>
+                                                    <div className="flex flex-col w-2/3">
+                                                        <span className="text-sm font-bold text-[#6E6C85]">{`${detail.product.product_name} - ${detail.product_duration.duration_value} Hari x${detail.qty}`}</span>
+                                                        {detail.expired_date && (
+                                                            <span className="text-xs font-normal text-[#8E8E9A]">{`Berakhir pada ${moment(detail.expired_date).format('DD MMMM YYYY')}`}</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-sm font-normal flex flex-col text-right w-1/3">
+                                                        <div className="text-[#6E6C85]">{toRupiah(detail.subtotal)}</div>
+                                                        <div className="text-[#FF5C6F]">{`- ${toRupiah(detail.promo_value)}`}</div>
+                                                    </div>
                                                 </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 35.000</div>
-                                            </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#6E6C85]">Akun Icounscout -  1 Bulan x1</span>
-                                                    <span className="text-xs font-normal text-[#8E8E9A]">Berakhir pada 23 Desember 2022</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 40.000</div>
-                                            </div>
+                                            ))}
 
                                             <div className="border-b-[1px] mt-6 mt- mb-6"></div>
 
@@ -159,25 +186,25 @@ const Index = ({
                                                 <div className="flex flex-col w-2/3">
                                                     <span className="text-sm font-bold text-[#272541]">Subtotal</span>
                                                 </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 75.000</div>
+                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">{toRupiah(orderDetail.subtotal)}</div>
                                             </div>
                                             <div className="flex gap-2 mt-4">
                                                 <div className="flex flex-col w-2/3">
                                                     <span className="text-sm font-bold text-[#272541]">Kode Pembayaran</span>
                                                 </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 602</div>
+                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">{toRupiah(orderDetail.unique_code)}</div>
                                             </div>
-                                            <div className="flex gap-2 mt-4">
+                                            {/* <div className="flex gap-2 mt-4">
                                                 <div className="flex flex-col w-2/3">
                                                     <span className="text-sm font-bold text-[#272541]">Metode Pembayaran</span>
                                                 </div>
                                                 <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Bank Transfer (BCA)</div>
-                                            </div>
+                                            </div> */}
                                             <div className="flex gap-2 mt-4">
                                                 <div className="flex flex-col w-2/3">
                                                     <span className="text-sm font-bold text-[#272541]">Total Pembayaran</span>
                                                 </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Rp 75.602</div>
+                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">{toRupiah(orderDetail.total)}</div>
                                             </div>
                                         </div>
                                     </div>

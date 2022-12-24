@@ -1,12 +1,15 @@
 import propTypes from "prop-types";
+import { TRANSACTION_STATUS } from "constants/enum";
 
 const StatusColumn = ({ data }) => {
     const renderStatus = (status) => {
         switch (status) {
-            case 1:
+            case TRANSACTION_STATUS.WAITING:
+                return ( <div className="bg-[#F8CA56] rounded-md text-[#272541] py-1 px-2 w-fit text-xs">Belum dibayar</div> );
+            case TRANSACTION_STATUS.ACTIVE:
                 return ( <div className="bg-[#66AE76] rounded-md text-white py-1 px-2 w-fit text-xs">Aktif</div> );
-            case 2:
-                return ( <div className="bg-[#8E8E9A] rounded-md text-white py-1 px-2 w-fit text-xs">Tidak Aktif</div> );
+            case TRANSACTION_STATUS.REJECT:
+                return ( <div className="bg-[#D64949] rounded-md text-white py-1 px-2 w-fit text-xs">Batal</div> );
             default:
                 return null;
         }

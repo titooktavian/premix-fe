@@ -53,6 +53,7 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
     useEffect(() => {
         fetchData(0)
     }, [category]);
+
     return (
         <>
             {!loadingState ? (

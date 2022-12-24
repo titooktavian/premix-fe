@@ -6,20 +6,24 @@ import { Accordion, AddCart, SectionTitle } from "components";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { BANK_LIST } from "constants/enum";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createTransaction } from "helpers/api";
+import moment from "moment/moment";
 
 const Index = ({
     pageTitle,
 }) => {
+    const { cartItems, onResetCart, onAddToCart, setLoading, userLogin } = useStateContext();
     const [checkoutStatus, setCheckoutStatus] = useState(false);
     const [checkoutData, setCheckoutData] = useState(null);
     const [email, setEmail] = useState('');
     const [nama, setNama] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [paymentMethod, setPaymentMethod] = useState(BANK_LIST[0]);
-
-    const { cartItems, onResetCart, onAddToCart, setLoading, userLogin } = useStateContext();
+    const [total, setTotal] = useState(cartItems.price || 0);
+    const [promoTotal, setPromoTotal] = useState(0);
+    const [kodePembayaran, setKodePembayaran] = useState(0);
+    
     const router = useRouter();
 
     const doCheckout = async () => {
@@ -32,6 +36,7 @@ const Index = ({
                     id_product_duration: cart.id_product_duration,
                     qty: cart.qty,
                     subtotal: cart.subtotal,
+                    promo_value: (parseFloat(cart.promo) / 100) * parseFloat(cart.subtotal),
                 }
 
                 transactionDetail.push(detail);
@@ -40,8 +45,9 @@ const Index = ({
             const res = await createTransaction({
                 id_user_buyer: userLogin.id_user,
                 subtotal: cartItems.price,
-                total: cartItems.price,
+                total: total,
                 details: transactionDetail,
+                unique_code: kodePembayaran,
             });
 
             if (!res.status) throw Error(res.msg);
@@ -59,6 +65,29 @@ const Index = ({
     const confirmOrder = () => {
         router.push(`/konfirmasi-pesanan?payment=${paymentMethod.id}`);
     }
+
+    const countTransaction = () => {
+        let tempPromo = 0;
+        cartItems.data.map((cart) => {
+            tempPromo += (parseFloat(cart.promo) / 100) * parseFloat(cart.subtotal);
+        });
+        const grandTotal = parseFloat(cartItems.price) - tempPromo;
+
+        setPromoTotal(tempPromo);
+        setTotal(grandTotal);
+
+        generateKodePembayaran(grandTotal);
+    }
+
+    const generateKodePembayaran = (grandTotal) => {
+        const randomNum = Math.floor(Math.random() * 1000) + 1;
+        setKodePembayaran(randomNum);
+        setTotal(grandTotal + randomNum);
+    }
+
+    useEffect(() => {
+        countTransaction();
+    }, [cartItems]);
 
     return (
         <div 
@@ -138,7 +167,14 @@ const Index = ({
                                                     {items.qty}
                                                 </td>
                                                 <td className="py-4 pl-6 text-right">
-                                                    {toRupiah(items.subtotal)}
+                                                    <div className="flex flex-col">
+                                                        <div>
+                                                            {toRupiah(items.subtotal)}
+                                                        </div>
+                                                        <div className="text-[#FF5C6F]">
+                                                            {`- ${toRupiah((parseFloat(items.promo) / 100) * items.subtotal)}`}
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         )) : (
@@ -151,13 +187,37 @@ const Index = ({
                                     </tbody>
                                 </table>
                             </div>
-
-                            <div className="flex w-full font-bold mt-6">
+                            
+                            <div className="flex w-full font-normal mt-6 text-sm">
+                                <div className="flex w-1/3">
+                                    Subtotal
+                                </div>
+                                <div className="w-2/3 text-right">
+                                    {toRupiah(cartItems.price)}
+                                </div>
+                            </div>
+                            <div className="flex w-full font-normal text-sm">
+                                <div className="flex w-1/3">
+                                    Promo
+                                </div>
+                                <div className="w-2/3 text-right text-[#FF5C6F]">
+                                    {`- ${toRupiah(promoTotal)}`}
+                                </div>
+                            </div>
+                            <div className="flex w-full font-normal text-sm">
+                                <div className="flex w-1/3">
+                                    Kode Pembayaran
+                                </div>
+                                <div className="w-2/3 text-right">
+                                    {toRupiah(kodePembayaran)}
+                                </div>
+                            </div>
+                            <div className="flex w-full font-bold">
                                 <div className="flex w-1/3">
                                     Total
                                 </div>
                                 <div className="w-2/3 text-right">
-                                    {toRupiah(cartItems.price)}
+                                    {toRupiah(total)}
                                 </div>
                             </div>
                             <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {doCheckout();}}>
@@ -177,13 +237,13 @@ const Index = ({
                                     <div className="font-bold text-2xl text-[#272541]">Detail Order</div>
 
                                     <div className="text-sm text-[#272541] font-normal mt-5">Nomor Order</div>
-                                    <div className="text-base text-[#272541] font-bold">2001098</div>
+                                    <div className="text-base text-[#272541] font-bold">{checkoutData.order_number}</div>
 
                                     <div className="text-sm text-[#272541] font-normal mt-5">Tanggal Order</div>
-                                    <div className="text-base text-[#272541] font-bold">23 November 2022</div>
+                                    <div className="text-base text-[#272541] font-bold">{moment(checkoutData.created_at).format('DD MMMM YYYY')}</div>
 
                                     <div className="text-sm text-[#272541] font-normal mt-5">Email</div>
-                                    <div className="text-base text-[#272541] font-bold">shamanta@gmail.com</div>
+                                    <div className="text-base text-[#272541] font-bold">{email}</div>
                                 </div>
 
                                 <div className="flex flex-col w-2/3">
@@ -245,10 +305,17 @@ const Index = ({
                                                     
                                                 </td>
                                                 <td className="py-4 px-6">
-                                                    {`${items.qty.length} Akun`}
+                                                    {`${items.qty} Akun`}
                                                 </td>
                                                 <td className="py-4 px-6 text-right">
-                                                    {toRupiah(items.subtotal)}
+                                                    <div className="flex flex-col">
+                                                        <div>
+                                                            {toRupiah(items.subtotal)}
+                                                        </div>
+                                                        <div className="text-[#FF5C6F]">
+                                                            {`- ${toRupiah(items.promo_value)}`}
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         )) : (
@@ -282,6 +349,14 @@ const Index = ({
                                         </div>
                                         <div className="w-2/3 text-right">
                                             {paymentMethod.bankName}
+                                        </div>
+                                    </div>
+                                    <div className="flex w-full">
+                                        <div className="flex w-1/3">
+                                            Kode Pembayaran
+                                        </div>
+                                        <div className="w-2/3 text-right">
+                                            {toRupiah(checkoutData.unique_code)}
                                         </div>
                                     </div>
                                 </div>

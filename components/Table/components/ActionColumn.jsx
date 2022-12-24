@@ -25,11 +25,7 @@ const ActionColumn = ({ data, clickHandler }) => {
 };
 
 ActionColumn.propTypes = {
-    data: propTypes.number,
-};
-
-ActionColumn.defaultProps = {
-    data: 0,
+    data: propTypes.shape().isRequired,
 };
 
 export default ActionColumn;

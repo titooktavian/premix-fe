@@ -9,6 +9,9 @@ const endpoints = {
     authenticate: () => 'authenticate',
     register: () => 'register',
     transaction: () => 'transaction',
+    getTransaction: () => 'transactions',
+    getAccountDashboard: () => 'transaction-details',
+    getSummary: () => 'summary',
     cart: () => 'carts',
 };
 
@@ -30,3 +33,9 @@ export const getCartUser = () =>
     fetchApi(endpoints.cart(), {}, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const updateUserCart = (payload) =>
     fetchApi(endpoints.cart(), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getTransactionList = (payload) =>
+    fetchApi(endpoints.getTransaction(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getAccountDashboard = (payload) =>
+    fetchApi(endpoints.getAccountDashboard(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getSummary = (payload) =>
+    fetchApi(endpoints.getSummary(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);

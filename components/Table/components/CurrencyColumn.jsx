@@ -8,7 +8,10 @@ const CurrencyColumn = ({ data }) => {
 };
 
 CurrencyColumn.propTypes = {
-    data: propTypes.number,
+    data: propTypes.oneOfType([
+        propTypes.string,
+        propTypes.number,
+    ]),
 };
 
 CurrencyColumn.defaultProps = {

@@ -1,7 +1,6 @@
 import propTypes from "prop-types";
 
 const Table = ({ header, content }) => {
-    console.log(header)
     return (
         <>
             <table className="w-full text-sm text-left">
@@ -29,7 +28,7 @@ const Table = ({ header, content }) => {
                         </tr>
                     )) : (
                         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td colSpan="4" className="py-4 px-6 text-center">
+                            <td colSpan={header.length} className="py-4 px-6 text-center">
                                 Tidak ada data
                             </td>
                         </tr>
@@ -43,7 +42,6 @@ const Table = ({ header, content }) => {
 Table.propTypes = {
     title: propTypes.string,
     icon: propTypes.string,
-    children: propTypes.node.isRequired,
 };
 
 Table.defaultProps = {
