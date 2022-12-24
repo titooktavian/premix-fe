@@ -14,6 +14,7 @@ import DateColumn from "components/Table/components/DateColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
 import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
+import AccountColumn from "components/Table/components/AccountColumn";
 
 const Index = ({
     pageTitle,
@@ -33,6 +34,13 @@ const Index = ({
         {
             name: 'No. Order',
             selector: 'order_number',
+        },
+        {
+            name: 'Nama Akun',
+            selector: 'id_product',
+            customComponent: (data) => (
+                <AccountColumn data={data} />
+            )
         },
         {
             name: 'Tanggal Beli',

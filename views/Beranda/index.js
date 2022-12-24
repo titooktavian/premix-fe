@@ -122,9 +122,9 @@ const Index = ({
                 </div>
             </section>
 
-            <ProductSection title="Produk Terlaris" subtitle="Ayo jangan sampai kelewatan produk terlaris kami" perPage={4} category="1" withPagination={false} />
+            <ProductSection title="Produk Terlaris" subtitle="Ayo jangan sampai kelewatan produk terlaris kami" perPage={4} withPagination={false} sort="3" />
 
-            <ProductSection title="Produk Terbaru" subtitle="Produk yang baru kami rilis di minggu ini" perPage={4} category="2" withPagination={false} sort="1" />
+            <ProductSection title="Produk Terbaru" subtitle="Produk yang baru kami rilis di minggu ini" perPage={4} withPagination={false} sort="1" />
         </div>
     );
 };

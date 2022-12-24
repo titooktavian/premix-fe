@@ -96,7 +96,7 @@ const Index = ({
                                         >
                                             <option value="all">Pilih Kategori</option>
                                             {categoryList.map((catItem) => (
-                                                <option value={catItem.id_product_category.toString()}>{catItem.category_name}</option>
+                                                <option key={`cat-${catItem.id_product_category}`} value={catItem.id_product_category.toString()}>{catItem.category_name}</option>
                                             ))}
                                         </select>
                                     </div>

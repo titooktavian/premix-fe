@@ -31,9 +31,11 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
 
             const {
                 data,
-                last_page,
-                per_page,
-                current_page,
+                meta: {
+                    last_page,
+                    per_page,
+                    current_page,
+                },
             } = res;
 
             setProductList(data);
