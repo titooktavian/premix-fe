@@ -77,11 +77,54 @@ export const USER_INFO = "USER_INFO";
 export const VERIF_METHOD_IDENTITY = "VERIF_METHOD_IDENTITY";
 export const VALID_OTP_DATA = "VALID_OTP_DATA";
 export const ERROR_MESSAGE_VERIFY_LIMIT = "Anda sudah melebihi limit 3 kali untuk kirim kode verifikasi hari ini silahkan ulangi pada besok hari";
+export const INFORMATION_NAVIGATIONS = [
+    {
+        name: "Cara Bayar",
+        link: "/cara-bayar",
+        isActive: false,
+    },
+    {
+        name: "Peraturan Akun Desain",
+        link: "/peraturan-akun-desain",
+        isActive: false,
+    },
+    {
+        name: "Peraturan File Hosting",
+        link: "/peraturan-akun-hosting",
+        isActive: false,
+    },
+    {
+        name: "Peraturan Multi Hosting",
+        link: "/peraturan-multi-hosting",
+        isActive: false,
+    },
+];
+
 export const NAVIGATIONS = [
-    { name: "Home", link: "/", isActive: true },
-    { name: "Product", link: "/produk", isActive: false },
-    { name: "Information", link: "/information", isActive: false },
-    { name: "Contact", link: "/contact", isActive: false },
+    {
+        name: "Home",
+        link: "/",
+        isActive: true,
+        detail: null,
+    },
+    { 
+        name: "Product",
+        link: "/produk",
+        isActive: false,
+        detail: null,
+    },
+    {
+        name: "Information",
+        link: "/information",
+        isActive: false,
+        detail: [...INFORMATION_NAVIGATIONS],
+    },
+    {
+        name: "Contact",
+        link: "/contact",
+        isActive: false,
+        detail: null,
+    },
 ];
 
 export const USER_NAVIGATIONS = [

@@ -46,6 +46,7 @@ const Index = ({
 
             if (!res.status) throw Error(res.msg);
 
+            onResetCart();
             setCheckoutData(res.data);
             setCheckoutStatus(true);
             AlertService.success('Terima kasih. Pesananmu diterima');

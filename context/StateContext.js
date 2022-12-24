@@ -1,5 +1,5 @@
-import { getDetailProduct, getOutletProductDetail, getUserCart, updateUserCart } from "helpers/api";
-import { generateRandomId } from "helpers/utils";
+import { getDetailProduct, getUserCart, updateUserCart } from "helpers/api";
+// import { generateRandomId } from "helpers/utils";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 import { catchError } from "rxjs";
@@ -85,7 +85,7 @@ export const StateContext = ({ children }) => {
             newItem = [...clonedCart];
         } else {
             newItem.push(selectedProduct)
-        };
+        }
 
         const totalPriceCart = newItem.reduce((total, item) => {
             return (total += parseInt(item.subtotal));
@@ -113,7 +113,6 @@ export const StateContext = ({ children }) => {
     };
 
     const onReplaceCart = async (param, userId) => {
-        console.log(param)
         const totalPriceCart = param.reduce((total, item) => {
             return (total += parseInt(item.subtotal, 10));
         }, 0);
@@ -141,20 +140,18 @@ export const StateContext = ({ children }) => {
     }
 
     const onResetCart = async () => {
-        // if (userLogin) {
-        //     cartItems.data.forEach((x) => {
-        //         const payload = {
-        //             ...x,
-        //             quantity: 0,
-        //             add_on_detail_id: x.add_on_detail_id,
-        //             product_id: x.id_product,
-        //             customer_no: userLogin.customer_no
-        //         };
-        //         updateUserCart(cartItems.merchantCode, userLogin.customer_no, payload);
-        //     })
-        // }
+        if (userLogin) {
+            const payload = {
+                id_user: userLogin.id_user || null,
+                total: 0,
+                items: [],
+            }
+
+            updateUserCart(payload);
+        }
+
         const cartData = {
-            id_user: null,
+            id_user: userLogin.id_user || null,
             price: 0,
             data: [],
         };

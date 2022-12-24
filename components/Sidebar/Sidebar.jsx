@@ -37,9 +37,9 @@ const Sidebar = ({ title, icon, children }) => {
     return (
         <div className="flex flex-col w-full bg-[#F4F4FD] rounded-3xl py-8">
             <div className="flex gap-4 px-8">
-                <div className="relative h-12 w-12">
+                {/* <div className="relative h-12 w-12">
                     <Image src="/profile.png" className="rounded-lg" layout='fill' objectFit='contain'/>
-                </div>
+                </div> */}
                 <div>
                     <p className="text-base font-bold text-[#272541]">{userLogin?.name}</p>
                     <p className="text-sm text-[#6E6C85]">Customer</p>

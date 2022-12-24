@@ -1,4 +1,6 @@
+import { INFORMATION_NAVIGATIONS } from "constants/enum";
 import Image from "next/image";
+import Link from "next/link";
 import { AiOutlineFacebook, AiOutlineInstagram } from "react-icons/ai";
 import { RiTelegramLine, RiWhatsappLine, RiMailLine, RiTwitterLine} from "react-icons/ri";
 
@@ -66,18 +68,13 @@ const Footer = () => {
                     </div>
                     <div className="flex flex-col w-1/3 gap-2">
                         <div className="font-bold text-base mb-3">Menu Lain</div>
-                        <div className="flex text-sm font-normal gap-2 cursor-pointer">
-                            Cara Bayar
-                        </div>
-                        <div className="flex text-sm font-normal gap-2 cursor-pointer">
-                            Pengaturan Akun Desain
-                        </div>
-                        <div className="flex text-sm font-normal gap-2 cursor-pointer">
-                            Pengaturan File  Hosting
-                        </div>
-                        <div className="flex text-sm font-normal gap-2 cursor-pointer">
-                            Pengaturan Multi  Hosting
-                        </div>
+                        {INFORMATION_NAVIGATIONS.map((info) => (
+                            <Link href={info.link} key={info.link}>
+                                <div className="flex text-sm font-normal gap-2 cursor-pointer">
+                                    {info.name}
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>

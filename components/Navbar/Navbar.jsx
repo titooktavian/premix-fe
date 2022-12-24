@@ -114,6 +114,19 @@ const Navbar = () => {
                             <Link href={nav.link}>
                                 <a className="block h-full" onClick={() => activeMenu(nav.link)}>{nav.name}</a>
                             </Link>
+                            {nav.detail && (
+                                <div className="absolute right-0 top-full w-[200px] z-cart hidden h-fit rounded-b-2xl bg-white shadow-md md:group-hover:block">
+                                    <ul className="flex flex-col whitespace-nowrap">
+                                        {nav.detail.map( (detailNav, index) =>(
+                                            <li key={`user-nav-${index}`} className="p-3 group relative w-full h-full cursor-pointer text-sm font-medium hover:font-bold">
+                                                <Link href={detailNav.link}>
+                                                    <a className="block h-full">{detailNav.name}</a>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>
