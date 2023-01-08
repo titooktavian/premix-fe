@@ -1,18 +1,13 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
-import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { Pagination, Sidebar } from "components";
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import fetchApi from "helpers/config";
 import { catchError } from "helpers/formatter";
-import { setTokenLocalStorage } from "helpers/utils";
 import { getAccountDashboard, getSummary } from "helpers/api";
 import Table from "components/Table/Table";
 import DateColumn from "components/Table/components/DateColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
-import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
 import AccountColumn from "components/Table/components/AccountColumn";
 
@@ -71,6 +66,11 @@ const Index = ({
             ),
         },
     ];
+
+    const rowClickHandler = (data) => {
+        setAccountDetail(data);
+        setShowDetail(true);
+    }
 
     const changePageHandler = (event) => {
         fetchData(event.selected);
@@ -175,7 +175,7 @@ const Index = ({
                         </div>
                         <div className="text-base font-bold mt-6">Akun yang akan berakhir</div>
 
-                        <div className="overflow-x-auto relative">
+                        <div className="relative">
                             <Table header={headerContent} content={accountList} />
                             <div className="w-full px-4 flex justify-center mt-5">
                                 <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />

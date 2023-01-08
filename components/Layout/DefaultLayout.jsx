@@ -76,7 +76,7 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
                     </Link>
                 </div>
             </Modal> */}
-            <div className="flex min-h-screen w-full flex-col bg-[url('/background.jpeg')] bg-fill bg-no-repeat">
+            <div className="flex min-h-screen w-full flex-col bg-[url('/background.jpeg')] bg-contain bg-no-repeat">
                 <Head>
                     <link
                         rel="shortcut icon"

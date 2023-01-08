@@ -115,7 +115,7 @@ export const NAVIGATIONS = [
     },
     {
         name: "Information",
-        link: "/information",
+        link: "/",
         isActive: false,
         detail: [...INFORMATION_NAVIGATIONS],
     },

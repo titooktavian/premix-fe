@@ -13,6 +13,7 @@ const endpoints = {
     getAccountDashboard: () => 'transaction-details',
     getSummary: () => 'summary',
     cart: () => 'carts',
+    complaintData: () => 'complaints',
 };
 
 export const getListProduct = (payload) =>
@@ -39,3 +40,7 @@ export const getAccountDashboard = (payload) =>
     fetchApi(endpoints.getAccountDashboard(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const getSummary = (payload) =>
     fetchApi(endpoints.getSummary(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getComplaint = (payload) =>
+    fetchApi(endpoints.complaintData(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const createComplaint = (payload) =>
+    fetchApi(endpoints.complaintData(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);

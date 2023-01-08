@@ -9,7 +9,6 @@ import { HiOutlineShoppingCart, HiOutlineSearch } from "react-icons/hi";
 import { GrClose } from "react-icons/gr";
 import { useStateContext } from "context/StateContext";
 import { NAVIGATIONS, USER_NAVIGATIONS } from "constants/enum";
-import { toRupiah } from "helpers/formatter";
 
 const Navbar = () => {
     const router = useRouter();

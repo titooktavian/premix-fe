@@ -189,9 +189,13 @@ export const StateContext = ({ children }) => {
 
     const handleLogout = async () => {
         await fetch("/api/logout");
+        
         await setUserLogin(null);
         await onResetCart(false);
+
         AlertService.success("Logout Berhasil");
+
+        router.push('login');
     };
 
     useEffect(() => {

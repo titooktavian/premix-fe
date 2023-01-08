@@ -13,7 +13,7 @@ const Sidebar = ({ title, icon, children }) => {
     const router = useRouter();
 
     const checkActiveMenu = (currentMenu) => {
-        if (currentMenu === router.pathname) return true;
+        if (router.pathname.includes(currentMenu)) return true;
         return false;
     }
 

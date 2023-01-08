@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { Sidebar, TextEditor } from "components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
@@ -10,6 +10,9 @@ import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/
 import { AiOutlineTag, AiOutlineUser } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import { RiImageLine } from "react-icons/ri";
+import { getComplaint } from "helpers/api";
+import { AlertService } from "services";
+import { useRouter } from "next/router";
 // import { Editor } from "react-draft-wysiwyg";
 // import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -23,10 +26,46 @@ const Index = ({
     const [nama, setNama] = useState('');
     const [subjek, setSubjek] = useState('');
     const [pesan, setPesan] = useState('');
+    const [limit, setLimit] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(0);
+    const [complaintList, setComplaintList] = useState([]);
+    const [orderDetail, setOrderDetail] = useState(null);
 
-    const rowClickHandler = (id) => {
-        setShowDetail(true);
-    }
+    const router = useRouter();
+
+    const fetchData = async (page) => {
+        setLoading(true);
+        try {
+            const res = await getComplaint({
+                limit: limit,
+                page: page + 1,
+            });
+
+            if (!res.status) throw Error(res.msg);
+
+            const {
+                data,
+                meta: {
+                    last_page,
+                    per_page,
+                    current_page,
+                },
+            } = res;
+
+            setComplaintList(data);
+            setCurrentPage(current_page);
+            setLimit(per_page);
+            setTotalPage(last_page);
+            setLoading(false);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+    };
+
+    useEffect(() => {
+        fetchData(0)
+    }, []);
 
     return (
         <div 
@@ -56,7 +95,7 @@ const Index = ({
                             <div className="font-bold w-2/3 text-2xl">{showDetail ? 'Detail Tiket' : 'Bantuan'}</div>
                             {!showDetail && (
                                 <div className="w-1/3 flex justify-end">
-                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {}}>
+                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => { router.push('bantuan/buat') }}>
                                         Buat Tiket
                                     </div>
                                 </div>
@@ -67,8 +106,8 @@ const Index = ({
                                 <div className="w-full flex flex-col gap-4">
                                     <div className="flex">
                                         <div className="text-[#272541] cursor-pointer font-bold p-2 text-center border-b-2 border-[#272541] px-5">Semua Tiket</div>
+                                        <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Belum Selesai</div>
                                         <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Dijawab</div>
-                                        <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Dibaca</div>
                                         <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Selesai</div>
                                     </div>
 
@@ -81,128 +120,90 @@ const Index = ({
                                     </label>
 
                                     <div className="flex flex-col w-full gap-3">
-                                        <div className="rounded-lg bg-white p-4 flex flex-col w-full">
-                                            <div className="flex">
-                                                <div className="w-1/2 flex items-center gap-2">
-                                                    <HiOutlineTicket />
-                                                    <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
+                                        {complaintList.length > 0 && complaintList.map((complaint) => (
+                                            <div key={`complaint-${complaint.id_complain}`} className="rounded-lg bg-white p-4 flex flex-col w-full">
+                                                <div className="flex">
+                                                    <div className="w-1/2 flex items-center gap-2">
+                                                        <HiOutlineTicket />
+                                                        <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
+                                                    </div>
+                                                    <div className="w-1/2 flex items-center justify-end gap-2">
+                                                        <span className="text-xs text-[#6E6C85]">12:00 AM</span>
+                                                        <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
+                                                    </div>
                                                 </div>
-                                                <div className="w-1/2 flex items-center justify-end gap-2">
-                                                    <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                    <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
-                                                </div>
-                                            </div>
 
-                                            <div className="flex flex-col mt-5 gap-2">
-                                                <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
-                                            </div>
+                                                <div className="flex flex-col mt-5 gap-2">
+                                                    <div className="text-base font-bold">Tidak bisa login ke member area</div>
+                                                    <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
+                                                </div>
 
-                                            <div className="flex mt-5">
-                                                <div className="w-1/3 flex items-center gap-2">
-                                                    <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
-                                                        <AiOutlineUser className="text-xs" />
+                                                <div className="flex mt-5">
+                                                    <div className="w-1/3 flex items-center gap-2">
+                                                        <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
+                                                            <AiOutlineUser className="text-xs" />
+                                                        </div>
+                                                        <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
                                                     </div>
-                                                    <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
-                                                </div>
-                                                <div className="w-2/3 flex items-center justify-end gap-2">
-                                                    <div className="flex items-center gap-1">
-                                                        <AiOutlineTag className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <GrAttachment className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">3</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <HiOutlineChatAlt className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                    <div className="w-2/3 flex items-center justify-end gap-2">
+                                                        <div className="flex items-center gap-1">
+                                                            <AiOutlineTag className="text-xs" />
+                                                            <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <GrAttachment className="text-xs" />
+                                                            <span className="text-xs font-normal text-[#3F0071]">3</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <HiOutlineChatAlt className="text-xs" />
+                                                            <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ))}
+                                        {complaintList.length <= 0 && (
+                                            <div className="rounded-lg bg-white p-4 flex flex-col w-full">
+                                                <div className="flex">
+                                                    <div className="w-1/2 flex items-center gap-2">
+                                                        <HiOutlineTicket />
+                                                        <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
+                                                    </div>
+                                                    <div className="w-1/2 flex items-center justify-end gap-2">
+                                                        <span className="text-xs text-[#6E6C85]">12:00 AM</span>
+                                                        <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
+                                                    </div>
+                                                </div>
 
-                                        <div className="rounded-lg bg-white p-4 flex flex-col w-full">
-                                            <div className="flex">
-                                                <div className="w-1/2 flex items-center gap-2">
-                                                    <HiOutlineTicket />
-                                                    <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
+                                                <div className="flex flex-col mt-5 gap-2">
+                                                    <div className="text-base font-bold">Tidak bisa login ke member area</div>
+                                                    <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
                                                 </div>
-                                                <div className="w-1/2 flex items-center justify-end gap-2">
-                                                    <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                    <div className="bg-[#66AE76] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dijawab</div>
-                                                </div>
-                                            </div>
 
-                                            <div className="flex flex-col mt-5 gap-2">
-                                                <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
-                                            </div>
-
-                                            <div className="flex mt-5">
-                                                <div className="w-1/3 flex items-center gap-2">
-                                                    <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
-                                                        <AiOutlineUser className="text-xs" />
+                                                <div className="flex mt-5">
+                                                    <div className="w-1/3 flex items-center gap-2">
+                                                        <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
+                                                            <AiOutlineUser className="text-xs" />
+                                                        </div>
+                                                        <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
                                                     </div>
-                                                    <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
-                                                </div>
-                                                <div className="w-2/3 flex items-center justify-end gap-2">
-                                                    <div className="flex items-center gap-1">
-                                                        <AiOutlineTag className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <GrAttachment className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">3</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <HiOutlineChatAlt className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                    <div className="w-2/3 flex items-center justify-end gap-2">
+                                                        <div className="flex items-center gap-1">
+                                                            <AiOutlineTag className="text-xs" />
+                                                            <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <GrAttachment className="text-xs" />
+                                                            <span className="text-xs font-normal text-[#3F0071]">3</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <HiOutlineChatAlt className="text-xs" />
+                                                            <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div className="rounded-lg bg-white p-4 flex flex-col w-full">
-                                            <div className="flex">
-                                                <div className="w-1/2 flex items-center gap-2">
-                                                    <HiOutlineTicket />
-                                                    <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
-                                                </div>
-                                                <div className="w-1/2 flex items-center justify-end gap-2">
-                                                    <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                    <div className="bg-[#DFDFDF] rounded-full py-1 px-2 w-fit text-xs font-bold text-[#272541]">Selesai</div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col mt-5 gap-2">
-                                                <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
-                                            </div>
-
-                                            <div className="flex mt-5">
-                                                <div className="w-1/3 flex items-center gap-2">
-                                                    <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
-                                                        <AiOutlineUser className="text-xs" />
-                                                    </div>
-                                                    <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
-                                                </div>
-                                                <div className="w-2/3 flex items-center justify-end gap-2">
-                                                    <div className="flex items-center gap-1">
-                                                        <AiOutlineTag className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <GrAttachment className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">3</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <HiOutlineChatAlt className="text-xs" />
-                                                        <span className="text-xs font-normal text-[#3F0071]">12</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
