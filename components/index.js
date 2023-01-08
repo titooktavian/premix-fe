@@ -19,3 +19,4 @@ export { default as Pagination } from "./Pagination/Pagination";
 export { default as Accordion } from "./Accordion/Accordion";
 export { default as Sidebar } from "./Sidebar/Sidebar";
 export { default as TextEditor } from "./TextEditor/TextEditor";
+export { default as ComplaintStatus } from "./ComplaintStatus/ComplaintStatus";

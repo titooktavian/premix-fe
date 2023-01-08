@@ -233,4 +233,10 @@ export const BANK_LIST = [
         rekening: '12345678',
         receiverName: 'Aku',
     },
-]
+];
+
+export const COMPLAINT_STATUS = {
+    BELUM_SELESAI: '1',
+    DIBALAS: '2',
+    SELESAI: '3',
+}

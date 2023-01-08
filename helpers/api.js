@@ -14,6 +14,7 @@ const endpoints = {
     getSummary: () => 'summary',
     cart: () => 'carts',
     complaintData: () => 'complaints',
+    complaintDetail: (idComplaint) => `complaintDetails/${idComplaint}`,
 };
 
 export const getListProduct = (payload) =>
@@ -44,3 +45,5 @@ export const getComplaint = (payload) =>
     fetchApi(endpoints.complaintData(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const createComplaint = (payload) =>
     fetchApi(endpoints.complaintData(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getDetailComplaint = (idComplaint, payload) =>
+    fetchApi(endpoints.complaintDetail(idComplaint), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);

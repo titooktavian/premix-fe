@@ -76,10 +76,12 @@ const Form = ({
             if (!res.status) throw Error(res.msg);
 
             setLoading(false);
-
-            router.push({
-                pathname: '/bantuan',
-            })
+            AlertService.success('Berhasil membuat tiket');
+            setTimeout(() => {
+                router.push({
+                    pathname: '/bantuan',
+                })
+            }, 500);
         } catch (error) {
             AlertService.error(catchError(error));
         }

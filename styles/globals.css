@@ -490,3 +490,7 @@ abbr[title] {
     padding-left: 16px;
     padding-right: 16px;
 }
+
+.quill {
+    background: white;
+}

@@ -1,20 +1,17 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
-import { Sidebar, TextEditor } from "components";
+import { ComplaintStatus, Pagination, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
-import CurrencyColumn from "components/Table/components/CurrencyColumn";
-import StatusColumn from "components/Table/components/StatusColumn";
-import ActionColumn from "components/Table/components/ActionColumn";
 import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/hi";
 import { AiOutlineTag, AiOutlineUser } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import { RiImageLine } from "react-icons/ri";
-import { getComplaint } from "helpers/api";
+import { getComplaint, getDetailComplaint } from "helpers/api";
 import { AlertService } from "services";
 import { useRouter } from "next/router";
-// import { Editor } from "react-draft-wysiwyg";
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import moment from "moment";
+import { getTokenLocalStorage } from "helpers/utils";
 
 const Index = ({
     pageTitle,
@@ -22,17 +19,24 @@ const Index = ({
     const { setLoading, userLogin } = useStateContext();
     const [showDetail, setShowDetail] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [email, setEmail] = useState('');
-    const [nama, setNama] = useState('');
     const [subjek, setSubjek] = useState('');
+    const [lampiran, setLampiran] = useState([]);
     const [pesan, setPesan] = useState('');
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(3);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [complaintList, setComplaintList] = useState([]);
-    const [orderDetail, setOrderDetail] = useState(null);
+    const [complaintDetailList, setComplaintDetailList] = useState([]);
+    const [limitDetail, setLimitDetail] = useState(3);
+    const [currentPageDetail, setCurrentPageDetail] = useState(0);
+    const [totalPageDetail, setTotalPageDetail] = useState(0);
+    const [complaintDetail, setComplaintDetail] = useState(null);
 
     const router = useRouter();
+
+    const changePageHandler = (event) => {
+        fetchData(event.selected);
+    }
 
     const fetchData = async (page) => {
         setLoading(true);
@@ -62,6 +66,72 @@ const Index = ({
             AlertService.error(catchError(error));
         }
     };
+
+    const doShowDetail = async (complaint, page) => {
+        setLoading(true);
+        try {
+            const res = await getDetailComplaint(complaint.id_complain, {
+                limit: limit,
+                page: page + 1,
+            });
+
+            if (!res.status) throw Error(res.msg);
+
+            const {
+                data,
+                meta: {
+                    last_page,
+                    per_page,
+                    current_page,
+                },
+            } = res;
+
+            setComplaintDetail(complaint);
+            setComplaintDetailList(data);
+            setCurrentPageDetail(current_page);
+            setLimitDetail(per_page);
+            setTotalPageDetail(last_page);
+            setLoading(false);
+            setShowDetail(true);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+    }
+
+    const handleUploadFile = async (e) => {
+        setLoading(true);
+        try {
+            const image = e.target.files[0];
+            const formdata = new FormData();
+            formdata.append("images[]", image);
+
+            const headers = {
+                access_token: getTokenLocalStorage(),
+            };
+            const response = await fetch("https://api.nusahabbat.com/api/image-upload", {
+                method: "POST",
+                headers,
+                body: formdata,
+            });
+
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                data = null;
+            }
+
+            if (!data.status) throw Error(data.msg);
+
+            const tempLampiran = lampiran;
+            tempLampiran.push(data.data[0]);
+
+            setLampiran(tempLampiran);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+        setLoading(false);
+    }
 
     useEffect(() => {
         fetchData(0)
@@ -125,17 +195,17 @@ const Index = ({
                                                 <div className="flex">
                                                     <div className="w-1/2 flex items-center gap-2">
                                                         <HiOutlineTicket />
-                                                        <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
+                                                        <span className="text-sm font-bold cursor-pointer" onClick={() => { doShowDetail(complaint, 0) }}>{`Tiket #${complaint.id_complain}`}</span>
                                                     </div>
                                                     <div className="w-1/2 flex items-center justify-end gap-2">
-                                                        <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                        <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
+                                                        <span className="text-xs text-[#6E6C85]">{moment(complaint.created_at).format('DD MMM YYYY HH:mm') }</span>
+                                                        <ComplaintStatus status={complaint.status} />
                                                     </div>
                                                 </div>
 
                                                 <div className="flex flex-col mt-5 gap-2">
-                                                    <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                    <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
+                                                    <div className="text-base font-bold">{complaint.subject}</div>
+                                                    <div className="text-sm font-normal text-[#6E6C85]" dangerouslySetInnerHTML={{__html: complaint.complain_details[0].message_value}} />
                                                 </div>
 
                                                 <div className="flex mt-5">
@@ -143,20 +213,20 @@ const Index = ({
                                                         <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
                                                             <AiOutlineUser className="text-xs" />
                                                         </div>
-                                                        <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
+                                                        <span className="text-xs font-normal text-[#3F0071]">{complaint.customer_name}</span>
                                                     </div>
                                                     <div className="w-2/3 flex items-center justify-end gap-2">
-                                                        <div className="flex items-center gap-1">
+                                                        {/* <div className="flex items-center gap-1">
                                                             <AiOutlineTag className="text-xs" />
                                                             <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                        </div>
+                                                        </div> */}
                                                         <div className="flex items-center gap-1">
                                                             <GrAttachment className="text-xs" />
-                                                            <span className="text-xs font-normal text-[#3F0071]">3</span>
+                                                            <span className="text-xs font-normal text-[#3F0071]">{complaint.complain_details[0].file_url.length}</span>
                                                         </div>
                                                         <div className="flex items-center gap-1">
                                                             <HiOutlineChatAlt className="text-xs" />
-                                                            <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                            <span className="text-xs font-normal text-[#3F0071]">{complaint.complain_details.length}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -164,46 +234,12 @@ const Index = ({
                                         ))}
                                         {complaintList.length <= 0 && (
                                             <div className="rounded-lg bg-white p-4 flex flex-col w-full">
-                                                <div className="flex">
-                                                    <div className="w-1/2 flex items-center gap-2">
-                                                        <HiOutlineTicket />
-                                                        <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
-                                                    </div>
-                                                    <div className="w-1/2 flex items-center justify-end gap-2">
-                                                        <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                        <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-col mt-5 gap-2">
-                                                    <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                                    <div className="text-sm font-normal text-[#6E6C85]">Kenapa ya pada saat saya login password saya salah terus, padahal sama dengan yang...</div>
-                                                </div>
-
-                                                <div className="flex mt-5">
-                                                    <div className="w-1/3 flex items-center gap-2">
-                                                        <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
-                                                            <AiOutlineUser className="text-xs" />
-                                                        </div>
-                                                        <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
-                                                    </div>
-                                                    <div className="w-2/3 flex items-center justify-end gap-2">
-                                                        <div className="flex items-center gap-1">
-                                                            <AiOutlineTag className="text-xs" />
-                                                            <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-1">
-                                                            <GrAttachment className="text-xs" />
-                                                            <span className="text-xs font-normal text-[#3F0071]">3</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-1">
-                                                            <HiOutlineChatAlt className="text-xs" />
-                                                            <span className="text-xs font-normal text-[#3F0071]">12</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                Belum ada Tiket
                                             </div>
                                         )}
+                                        <div className="w-full px-4 flex justify-center mt-5">
+                                            <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -213,58 +249,74 @@ const Index = ({
                                         <div className="flex">
                                             <div className="w-1/2 flex items-center gap-2">
                                                 <HiOutlineTicket />
-                                                <span className="text-sm font-bold cursor-pointer" onClick={() => { setShowDetail(true) }}>Tiket #0002</span>
+                                                <span className="text-sm font-bold cursor-pointer">{`Tiket #${complaintDetail.id_complain}`}</span>
                                             </div>
                                             <div className="w-1/2 flex items-center justify-end gap-2">
-                                                <span className="text-xs text-[#6E6C85]">12:00 AM</span>
-                                                <div className="bg-[#272541] rounded-full text-white py-1 px-2 w-fit text-xs font-bold">Dibaca</div>
+                                                <span className="text-xs text-[#6E6C85]">{moment(complaintDetail.created_at).format('DD MMM YYYY HH:mm') }</span>
+                                                <ComplaintStatus status={complaintDetail.status} />
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col mt-5 gap-2">
-                                            <div className="text-base font-bold">Tidak bisa login ke member area</div>
-                                            <div className="text-sm font-normal text-[#6E6C85]">Kenapa pada saat saya login password saya salah terus, padahal sama dengan yang dikirim dengan yang di email akunnya. Terima kasih.</div>
+                                            <div className="text-base font-bold">{complaintDetail.subject}</div>
+                                            <div className="text-sm font-normal text-[#6E6C85]" dangerouslySetInnerHTML={{__html: complaintDetail.complain_details[0].message_value}} />
                                         </div>
 
                                         <div className="border-b-[1px] mt-6 mb-6"></div>
 
                                         <div className="flex flex-col gap-1">
                                             <span className="font-bold text-sm mb-2">Lampiran</span>
-                                            <div className="flex gap-1 items-center">
-                                                <RiImageLine />
-                                                <span className="text-sm font-normal">Screenshot_Login.jpg</span>
-                                            </div>
-                                            <div className="flex gap-1 items-center">
-                                                <RiImageLine />
-                                                <span className="text-sm font-normal">Screenshot_Login2.jpg</span>
-                                            </div>
-                                            <div className="flex gap-1 items-center">
-                                                <RiImageLine />
-                                                <span className="text-sm font-normal">Screenshot_Login3.jpg</span>
-                                            </div>
+                                            {complaintDetail.complain_details[0].file_url.map((attach, i) => (
+                                                <a href={attach} key={`attachment-${i}`} rel="noopener noreferrer" target="_blank">
+                                                    <div className="flex gap-1">
+                                                        <RiImageLine />
+                                                        <span className="text-sm font-normal underline cursor-pointer">{`Lampiran ${i+1}`}</span>
+                                                    </div>
+                                                </a>
+                                            ))}
                                         </div>
 
                                         <div className="border-b-[1px] mt-6 mb-6"></div>
 
-                                        <div className="flex mt-5">
+                                        {complaintDetailList.map((detail) => {
+                                            if (detail.id_complain_detail === complaintDetail.complain_details[0].id_complain_detail) {
+                                                return null;
+                                            }
+
+                                            return (
+                                                <div key={`com-det-${detail.id_complain_detail}`} className="flex flex-col rounded-lg border-[1px] border-[#E2E2E7] p-3">
+                                                    <div className="flex">
+                                                        <div className="w-1/2 text-xs font-bold">
+                                                            Samsul Arif
+                                                        </div>
+                                                        <div className="w-1/2 text-right text-xs text-[#6E6C85]">
+                                                            {moment(detail.created_at).format('DD MMM YYYY HH:mm')}
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-sm font-normal text-[#6E6C85] mt-2" dangerouslySetInnerHTML={{__html: detail.message_value}} />
+                                                </div>
+                                            )
+                                        })}
+
+                                        <div className="flex">
                                             <div className="w-1/3 flex items-center gap-2">
                                                 <div className="rounded-full w-6 h-6 bg-[#F4F4FD] flex items-center justify-center">
                                                     <AiOutlineUser className="text-xs" />
                                                 </div>
-                                                <span className="text-xs font-normal text-[#3F0071]">Samsul Arif</span>
+                                                <span className="text-xs font-normal text-[#3F0071]">{complaintDetail.customer_name}</span>
                                             </div>
                                             <div className="w-2/3 flex items-center justify-end gap-2">
-                                                <div className="flex items-center gap-1">
+                                                {/* <div className="flex items-center gap-1">
                                                     <AiOutlineTag className="text-xs" />
                                                     <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                </div>
+                                                </div> */}
                                                 <div className="flex items-center gap-1">
                                                     <GrAttachment className="text-xs" />
-                                                    <span className="text-xs font-normal text-[#3F0071]">3</span>
+                                                    <span className="text-xs font-normal text-[#3F0071]">{complaintDetail.complain_details[0].file_url.length}</span>
                                                 </div>
                                                 <div className="flex items-center gap-1">
                                                     <HiOutlineChatAlt className="text-xs" />
-                                                    <span className="text-xs font-normal text-[#3F0071]">12</span>
+                                                    <span className="text-xs font-normal text-[#3F0071]">{complaintDetail.complain_details.length}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -277,22 +329,6 @@ const Index = ({
                                             </div>
 
                                             <div className="flex flex-col">
-                                                <div className="flex gap-4">
-                                                    <div className="mt-3 w-1/2">
-                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
-                                                        <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nama" value={nama} onChange={(e) => { setNama(e.target.value) }} />
-                                                    </div>
-                                                    <div className="mt-3 w-1/2">
-                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                                                        <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
-                                                    </div>
-                                                </div>
-                                                <div className="flex gap-4 mt-3">
-                                                    <div className="mt-3 w-full">
-                                                        <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Subjek</label>
-                                                        <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan subjek" value={subjek} onChange={(e) => { setSubjek(e.target.value) }} />
-                                                    </div>
-                                                </div>
                                                 <div className="flex flex-col mt-3">
                                                     <div className="mt-3 w-full">
                                                         <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Pesan</label>
@@ -300,21 +336,11 @@ const Index = ({
                                                     </div>
                                                     <div className="w-full">
                                                         <label htmlFor="formFile" className="block mb-2 text-sm font-medium text-gray-900">Lampiran</label>
-                                                        <input className="form-control
-                                                            block
-                                                            w-full
-                                                            px-3
-                                                            py-1.5
-                                                            text-base
-                                                            font-normal
-                                                            text-gray-700
-                                                            bg-white bg-clip-padding
-                                                            border border-solid border-gray-300
-                                                            rounded
-                                                            transition
-                                                            ease-in-out
-                                                            m-0
-                                                            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" type="file" id="formFile"
+                                                        <input 
+                                                            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                                            type="file"
+                                                            id="formFile"
+                                                            onChange={handleUploadFile}
                                                         />
                                                     </div>
                                                 </div>
