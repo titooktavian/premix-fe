@@ -68,6 +68,8 @@ const Form = ({
                 detail: {
                     message_value: pesan,
                     file_url: lampiran,
+                    user_name: userLogin.name,
+                    user_email: userLogin.email,
                 }
             }
 

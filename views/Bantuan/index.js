@@ -7,7 +7,7 @@ import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/
 import { AiOutlineTag, AiOutlineUser } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import { RiImageLine } from "react-icons/ri";
-import { getComplaint, getDetailComplaint } from "helpers/api";
+import { getComplaint, getDetailComplaint, updateComplaint } from "helpers/api";
 import { AlertService } from "services";
 import { useRouter } from "next/router";
 import moment from "moment";
@@ -27,7 +27,7 @@ const Index = ({
     const [totalPage, setTotalPage] = useState(0);
     const [complaintList, setComplaintList] = useState([]);
     const [complaintDetailList, setComplaintDetailList] = useState([]);
-    const [limitDetail, setLimitDetail] = useState(3);
+    const [limitDetail, setLimitDetail] = useState(5);
     const [currentPageDetail, setCurrentPageDetail] = useState(0);
     const [totalPageDetail, setTotalPageDetail] = useState(0);
     const [complaintDetail, setComplaintDetail] = useState(null);
@@ -36,6 +36,10 @@ const Index = ({
 
     const changePageHandler = (event) => {
         fetchData(event.selected);
+    }
+
+    const changePageHandlerDetail = (event) => {
+        doShowDetail(complaintDetail, event.selected);
     }
 
     const fetchData = async (page) => {
@@ -71,7 +75,7 @@ const Index = ({
         setLoading(true);
         try {
             const res = await getDetailComplaint(complaint.id_complain, {
-                limit: limit,
+                limit: limitDetail,
                 page: page + 1,
             });
 
@@ -131,6 +135,30 @@ const Index = ({
             AlertService.error(catchError(error));
         }
         setLoading(false);
+    }
+
+    const doKirimTiket = async () => {
+        setLoading(true);
+        try {
+            const payload = {
+                status: 1,
+                message_value: pesan,
+                file_url: lampiran,
+                user_name: userLogin.name,
+                user_email: userLogin.email,
+            }
+
+            const res = await updateComplaint(complaintDetail.id_complain, payload);
+
+            if (!res.status) throw Error(res.msg);
+
+            setLoading(false);
+            AlertService.success('Berhasil membalas tiket');
+            
+            doShowDetail(complaintDetail, currentPageDetail - 1);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
     }
 
     useEffect(() => {
@@ -277,26 +305,32 @@ const Index = ({
                                         </div>
 
                                         <div className="border-b-[1px] mt-6 mb-6"></div>
+                                        
+                                        <div className="flex flex-col gap-3">
+                                            {complaintDetailList.map((detail) => {
+                                                if (detail.id_complain_detail === complaintDetail.complain_details[0].id_complain_detail) {
+                                                    return null;
+                                                }
 
-                                        {complaintDetailList.map((detail) => {
-                                            if (detail.id_complain_detail === complaintDetail.complain_details[0].id_complain_detail) {
-                                                return null;
-                                            }
-
-                                            return (
-                                                <div key={`com-det-${detail.id_complain_detail}`} className="flex flex-col rounded-lg border-[1px] border-[#E2E2E7] p-3">
-                                                    <div className="flex">
-                                                        <div className="w-1/2 text-xs font-bold">
-                                                            Samsul Arif
+                                                return (
+                                                    <div key={`com-det-${detail.id_complain_detail}`} className="flex flex-col rounded-lg border-[1px] border-[#E2E2E7] p-3">
+                                                        <div className="flex">
+                                                            <div className="w-1/2 text-xs font-bold">
+                                                                {detail.user_name}
+                                                            </div>
+                                                            <div className="w-1/2 text-right text-xs text-[#6E6C85]">
+                                                                {moment(detail.created_at).format('DD MMM YYYY HH:mm')}
+                                                            </div>
                                                         </div>
-                                                        <div className="w-1/2 text-right text-xs text-[#6E6C85]">
-                                                            {moment(detail.created_at).format('DD MMM YYYY HH:mm')}
-                                                        </div>
+                                                        <div className="text-sm font-normal text-[#6E6C85] mt-2" dangerouslySetInnerHTML={{__html: detail.message_value}} />
                                                     </div>
-                                                    <div className="text-sm font-normal text-[#6E6C85] mt-2" dangerouslySetInnerHTML={{__html: detail.message_value}} />
-                                                </div>
-                                            )
-                                        })}
+                                                )
+                                            })}
+                                        </div>
+
+                                        <div className="w-full px-4 flex justify-center mt-5 mb-5">
+                                            <Pagination handlePageClick={changePageHandlerDetail} pageCount={totalPageDetail} perPage={limitDetail} currentPage={currentPageDetail} />
+                                        </div>
 
                                         <div className="flex">
                                             <div className="w-1/3 flex items-center gap-2">
@@ -324,8 +358,13 @@ const Index = ({
 
                                     {showForm ? (
                                         <>
-                                            <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowForm(false);}}>
-                                                Batal Balas Tiket
+                                            <div className="flex gap-3">
+                                                <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowForm(false);}}>
+                                                    Batal Balas Tiket
+                                                </div>
+                                                <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowDetail(false);}}>
+                                                    Kembali
+                                                </div>
                                             </div>
 
                                             <div className="flex flex-col">
@@ -345,7 +384,7 @@ const Index = ({
                                                     </div>
                                                 </div>
                                                 <div className="flex mt-4">
-                                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {}}>
+                                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {doKirimTiket();}}>
                                                         Kirim Tiket
                                                     </div>
                                                 </div>
@@ -353,8 +392,13 @@ const Index = ({
                                         </>
                                         
                                     ) : (
-                                        <div className="h-[37px] px-[24px] bg-[#FF5C6F] w-fit rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {setShowForm(true)}}>
-                                            Balas Tiket
+                                        <div className="flex gap-3">
+                                            <div className="h-[37px] px-[24px] bg-[#FF5C6F] w-fit rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {setShowForm(true)}}>
+                                                Balas Tiket
+                                            </div>
+                                            <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowDetail(false);}}>
+                                                Kembali
+                                            </div>
                                         </div>
                                     )}
                                 </div>

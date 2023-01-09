@@ -195,7 +195,7 @@ export const StateContext = ({ children }) => {
 
         AlertService.success("Logout Berhasil");
 
-        router.push('login');
+        router.replace({ pathname: 'login' });
     };
 
     useEffect(() => {

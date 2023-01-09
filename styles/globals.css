@@ -494,3 +494,7 @@ abbr[title] {
 .quill {
     background: white;
 }
+
+.ql-editor {
+    height: 200px !important;
+}
