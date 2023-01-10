@@ -14,8 +14,8 @@ const Table = ({ header, content }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {content.length > 0 ? content.map((items) => (
-                        <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    {content.length > 0 ? content.map((items, i) => (
+                        <tr key={`${items.id_product}-${items.id_product_duration}-${i}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                             {header.map((headToItem, i) => (
                                 <td key={`item-column-${i}`} className="py-4 px-6">
                                     {headToItem.customComponent ? (

@@ -5,6 +5,7 @@ import { Pagination, Sidebar } from "components";
 import { useState, useEffect } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
+import { useRouter } from "next/router";
 import Table from "components/Table/Table";
 import DateColumn from "components/Table/components/DateColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
@@ -24,6 +25,7 @@ const Index = ({
     const [transactionCount, setTransactionCount] = useState(0);
     const [transactionConfirmed, setTransactionConfirmed] = useState(0);
     const [transactionWaiting, setTransactionWaiting] = useState(0);
+    const router = useRouter();
 
     const headerContent = [
         {
@@ -68,8 +70,9 @@ const Index = ({
     ];
 
     const rowClickHandler = (data) => {
-        setAccountDetail(data);
-        setShowDetail(true);
+        router.replace({
+            pathname: 'order'
+        })
     }
 
     const changePageHandler = (event) => {
