@@ -141,7 +141,7 @@ const Index = ({
         setLoading(true);
         try {
             const payload = {
-                status: 1,
+                status: 2,
                 message_value: pesan,
                 file_url: lampiran,
                 user_name: userLogin.name,
