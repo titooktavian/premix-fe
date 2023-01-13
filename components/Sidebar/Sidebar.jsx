@@ -1,4 +1,4 @@
-import { USER_SIDEBAR } from "constants/enum";
+import { ADMIN_SIDEBAR, USER_PERMISSION, USER_SIDEBAR } from "constants/enum";
 import { useStateContext } from "context/StateContext";
 import Link from "next/link";
 import propTypes from "prop-types";
@@ -6,7 +6,7 @@ import { AiOutlineCheckCircle, AiOutlineDashboard, AiOutlineGroup, AiOutlineLapt
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { useRouter } from "next/router";
 
-const Sidebar = ({ title, icon, children }) => {
+const Sidebar = () => {
     const { userLogin, handleLogout } = useStateContext();
     const router = useRouter();
 
@@ -38,6 +38,8 @@ const Sidebar = ({ title, icon, children }) => {
         }
     }
 
+    const sidebarList = userLogin?.id_permission === USER_PERMISSION.ADMIN ? ADMIN_SIDEBAR : USER_SIDEBAR;
+
     return (
         <div className="flex flex-col w-full bg-[#F4F4FD] rounded-3xl py-8">
             <div className="flex gap-4 px-8">
@@ -46,11 +48,11 @@ const Sidebar = ({ title, icon, children }) => {
                 </div> */}
                 <div>
                     <p className="text-base font-bold text-[#272541]">{userLogin?.name}</p>
-                    <p className="text-sm text-[#6E6C85]">Customer</p>
+                    <p className="text-sm text-[#6E6C85]">{userLogin?.id_permission === USER_PERMISSION.ADMIN ? 'Admin' : 'Customer'}</p>
                 </div>
             </div>
             <div className="flex flex-col gap-2 mt-8">
-                {USER_SIDEBAR.map( (userNav, index) => {
+                {sidebarList.map( (userNav, index) => {
                     if (userNav.link === '/logout') {
                         return (
                             <div onClick={() => {handleLogout()}} key={`sidebar-nav-${index}`}>
@@ -82,16 +84,6 @@ const Sidebar = ({ title, icon, children }) => {
             </div>
         </div>
     );
-};
-
-Sidebar.propTypes = {
-    title: propTypes.string,
-    icon: propTypes.string,
-};
-
-Sidebar.defaultProps = {
-    title: "",
-    icon: "",
 };
 
 export default Sidebar;

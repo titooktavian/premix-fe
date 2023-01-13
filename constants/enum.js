@@ -140,9 +140,17 @@ export const USER_SIDEBAR = [
     { name: "Bantuan", link: "/bantuan", isActive: false },
     { name: "Akun", link: "/akun", isActive: false },
     { name: "Logout", link: "/logout", isActive: false },
-    // { name: "Produk", link: "/master-product", isActive: false },
-    // { name: "Input Transaksi", link: "/input-transaction", isActive: false },
-    // { name: "Konfirmasi Pembayaran", link: "/payment-confirmation", isActive: false },
+]
+
+export const ADMIN_SIDEBAR = [
+    { name: "Dashboard", link: "/dashboard", isActive: true },
+    { name: "Order", link: "/order", isActive: false },
+    { name: "Bantuan", link: "/bantuan", isActive: false },
+    { name: "Akun", link: "/akun", isActive: false },
+    { name: "Produk", link: "/master-product", isActive: false },
+    { name: "Input Transaksi", link: "/input-transaction", isActive: false },
+    { name: "Konfirmasi Pembayaran", link: "/payment-confirmation", isActive: false },
+    { name: "Logout", link: "/logout", isActive: false },
 ]
 
 export const POPUP_BACKGROUND = {
@@ -242,4 +250,9 @@ export const COMPLAINT_STATUS = {
     BELUM_SELESAI: '1',
     DIBALAS: '2',
     SELESAI: '3',
+}
+
+export const USER_PERMISSION = {
+    ADMIN: '1',
+    CUSTOMER: '2',
 }
