@@ -140,6 +140,9 @@ export const USER_SIDEBAR = [
     { name: "Bantuan", link: "/bantuan", isActive: false },
     { name: "Akun", link: "/akun", isActive: false },
     { name: "Logout", link: "/logout", isActive: false },
+    // { name: "Produk", link: "/master-product", isActive: false },
+    // { name: "Input Transaksi", link: "/input-transaction", isActive: false },
+    // { name: "Konfirmasi Pembayaran", link: "/payment-confirmation", isActive: false },
 ]
 
 export const POPUP_BACKGROUND = {

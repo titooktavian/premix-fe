@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
-import { ComplaintStatus, Pagination, Sidebar, TextEditor } from "components";
+import { ComplaintStatus, ContentHeader, Pagination, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/hi";
@@ -169,19 +169,7 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div
-                        className="flex flex-col w-full h-[220px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-3xl text-white justify-center p-10"
-                        style={{
-                            backgroundImage: `url('/images/carousel/bg.png')`,
-                        }}
-                    >
-                        <div className="font-bold text-3xl">Dashboard</div>
-                        <div className="font-normal text-base">Selamat datang di dashboard customer Premix Store</div>
-                    </div>
-                </div>
-            </section>
+            <ContentHeader title="Bantuan" subtitle="Lihat daftar tiket komplain anda di sini" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">

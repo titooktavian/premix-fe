@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { Pagination, Sidebar } from "components";
+import { ContentHeader, Pagination, Sidebar } from "components";
 import { useState, useEffect } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
@@ -141,19 +141,7 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div
-                        className="flex flex-col w-full h-[220px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-3xl text-white justify-center p-10"
-                        style={{
-                            backgroundImage: `url('/images/carousel/bg.png')`,
-                        }}
-                    >
-                        <div className="font-bold text-3xl">Dashboard</div>
-                        <div className="font-normal text-base">Selamat datang di dashboard customer Premix Store</div>
-                    </div>
-                </div>
-            </section>
+            <ContentHeader title="Dashboard" subtitle="Selamat datang di dashboard customer Premix Store" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">

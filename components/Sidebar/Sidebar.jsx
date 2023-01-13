@@ -1,10 +1,8 @@
 import { USER_SIDEBAR } from "constants/enum";
 import { useStateContext } from "context/StateContext";
-import Image from "next/image";
 import Link from "next/link";
 import propTypes from "prop-types";
-import { useState } from "react";
-import { AiOutlineDashboard, AiOutlineMessage, AiOutlinePoweroff, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineCheckCircle, AiOutlineDashboard, AiOutlineGroup, AiOutlineLaptop, AiOutlineMessage, AiOutlinePoweroff, AiOutlineUser } from "react-icons/ai";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { useRouter } from "next/router";
 
@@ -29,6 +27,12 @@ const Sidebar = ({ title, icon, children }) => {
                     return ( <AiOutlineUser className="text-xl" /> );
             case '/logout':
                 return ( <AiOutlinePoweroff className="text-xl" /> );
+            case '/master-product':
+                return ( <AiOutlineLaptop className="text-xl" /> );
+            case '/input-transaction':
+                return ( <AiOutlineGroup className="text-xl" /> );
+            case '/payment-confirmation':
+                return ( <AiOutlineCheckCircle className="text-xl" /> );
             default:
                 return null;
         }
