@@ -5,6 +5,7 @@ import { getListProduct } from "helpers/api";
 import { AlertService } from "services";
 import { catchError } from "helpers/formatter";
 import ProductSectionSkeleton from "./ProductSectionSkeleton";
+import { useStateContext } from "context/StateContext";
 
 const ProductSection = ({ title, subtitle, perPage, category, withPagination, sort }) => {
     const [productList, setProductList] = useState([]);
@@ -12,6 +13,7 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [loadingState, setLoadingState] = useState(true);
+    const { searchValue } = useStateContext();
 
     const changePageHandler = (event) => {
         fetchData(event.selected);
@@ -25,6 +27,7 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
                 limit: limit,
                 page: withPagination ? page + 1 : 1,
                 ...sort && { sort_by: sort },
+                name: searchValue,
             });
 
             if (!res.status) throw Error(res.msg);
@@ -55,6 +58,10 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
     useEffect(() => {
         fetchData(0)
     }, [category]);
+
+    useEffect(() => {
+        fetchData(0)
+    }, [searchValue]);
 
     return (
         <>

@@ -200,6 +200,11 @@ export const TRANSACTION_STATUS = {
     REJECT: 3,
 };
 
+export const PRODUCT_STATUS = {
+    INACTIVE: '0',
+    ACTIVE: '1',
+};
+
 export const TRANSACTION_STATUS_LABEL = {
     0: "Unprocessed",
     1: "Menunggu Pembayaran",

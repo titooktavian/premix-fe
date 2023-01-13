@@ -14,6 +14,9 @@ const Navbar = () => {
     const router = useRouter();
     const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
     const [navigations, setNavigations] = useState(NAVIGATIONS);
+
+    let typingTimeout = 0;
+
     const activeMenu = (link) => {
         let menus;
         menus = navigations.map((nav) => {
@@ -29,6 +32,7 @@ const Navbar = () => {
         userLogin,
         handleLogout,
         setLoginParam,
+        setSearchValue,
     } = useStateContext();
 
     const openPopupLogin = () =>{
@@ -59,6 +63,17 @@ const Navbar = () => {
     });
 
     const [navBackground, setNavBackground] = useState("");
+
+    const handleChangeSearch = (e) => {
+        clearTimeout(typingTimeout);
+
+        typingTimeout = setTimeout(() => {
+            setSearchValue(e.target.value)
+            router.replace({
+               pathname: '/produk'
+            });
+        }, 500);
+    }
 
     useEffect(() => {
         if (clientScroll > 60) {
@@ -94,7 +109,7 @@ const Navbar = () => {
                         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                             <HiOutlineSearch />
                         </span>
-                        <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari" type="text" name="search"/>
+                        <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari" type="text" name="search" onChange={(e) => {handleChangeSearch(e)}}/>
                     </label>
                 </div>
             </div>

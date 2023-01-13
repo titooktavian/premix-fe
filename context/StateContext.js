@@ -30,6 +30,7 @@ export const StateContext = ({ children }) => {
     const [bgColor, setBgColor] = useState("bg-white");
     const [isConfirmLogin, setIsConfirmLogin] = useState(false);
     const [loginParam, setLoginParam] = useState('');
+    const [searchValue, setSearchValue] = useState('');
     const [userLogin, setUserLogin] = useState(null);
     const [selectedOutlet, setSelectedOutlet] = useState(null);
     const [transactionNumber, setTransactionNumber] = useState(null);
@@ -281,6 +282,8 @@ export const StateContext = ({ children }) => {
                 promoRequestId,
                 setPromoRequestId,
                 onReplaceCart,
+                searchValue,
+                setSearchValue,
             }}
         >
             {children}

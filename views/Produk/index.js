@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { AlertService } from "services";
 import { catchError } from "helpers/formatter";
 import { getAllCategories } from "helpers/api";
+import { useStateContext } from "context/StateContext";
 
 const Index = ({
     pageTitle,
@@ -14,6 +15,9 @@ const Index = ({
     const [selectedCategory, setSelectedCategory] = useState('');
     const router = useRouter();
     const { query: { kategori } } = router;
+    const { searchValue, setSearchValue } = useStateContext();
+
+    let typingTimeout = 0;
 
     const fetchCategory = async () => {
         try {
@@ -38,6 +42,14 @@ const Index = ({
             pathname: '/produk',
             query: { kategori: e.target.value },
         })
+    }
+
+    const handleChangeSearch = (e) => {
+        clearTimeout(typingTimeout);
+
+        typingTimeout = setTimeout(() => {
+            setSearchValue(e.target.value)
+        }, 500);
     }
 
     useEffect(() => {
@@ -81,7 +93,7 @@ const Index = ({
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                                     <HiOutlineSearch />
                                 </span>
-                                <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari" type="text" name="search"/>
+                                <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari" type="text" name="search" onChange={(e) => {handleChangeSearch(e)}}/>
                             </label>
                         </div>
                         <div className="flex w-1/2 justify-end">
@@ -105,7 +117,7 @@ const Index = ({
                         </div>
                     </div>
                 </div>
-                <ProductSection perPage={12} withPagination category={kategori} />
+                <ProductSection perPage={12} withPagination category={kategori} search={searchValue} />
             </section>
         </div>
     );
