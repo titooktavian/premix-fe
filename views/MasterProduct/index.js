@@ -8,7 +8,7 @@ import Table from "components/Table/Table";
 import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
-import { createProduct, getAllCategories, getListProduct, getTransactionList } from "helpers/api";
+import { createProduct, getAllCategories, getListProduct, getTransactionList, updateProduct } from "helpers/api";
 import DateColumn from "components/Table/components/DateColumn";
 import moment from "moment";
 import ProductStatusColumn from "components/Table/components/ProductStatusColumn";
@@ -27,7 +27,7 @@ const Index = ({
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [orderList, setOrderList] = useState([]);
-    const [orderDetail, setOrderDetail] = useState(null);
+    const [productDetail, setProductDetail] = useState(null);
     const [productName, setProductName] = useState('');
     const [productPromo, setProductPromo] = useState('');
     const [deskripsi, setDeskripsi] = useState('');
@@ -42,6 +42,7 @@ const Index = ({
     }]);
     const [categoryList, setCategoryList] = useState([]);
     const [formType, setFormType] = useState('add');
+    const [productId, setProductId] = useState('');
 
     const headerContent = [
         {
@@ -69,7 +70,29 @@ const Index = ({
     ];
 
     const rowClickHandler = (data) => {
-        setOrderDetail(data);
+        setProductDetail(data);
+        setProductName(data.product_name);
+        setProductPromo(data.promo_percentage);
+        setSelectedCategory(data.id_product_category);
+        setDeskripsi(data.description);
+        setProductImage(data.img_url);
+        setProductStatus(data.is_active === '1' ? true : false);
+        setProductId(data.id_product);
+
+        const newProductDuration = data.product_durations.map((dur) => {
+            const newObj = {
+                id: dur.id_product_duration,
+                duration: dur.duration_value,
+                price: dur.price,
+                stock: dur.stock,
+            }
+
+            return newObj;
+        });
+
+        setProductDuration(newProductDuration);
+
+        setFormType('edit');
         setShowDetail(true);
     }
 
@@ -209,21 +232,34 @@ const Index = ({
                 promo_percentage: productPromo,
                 product_duration: [...newDuration],
                 images: [...productImage],
+                ...formType === 'edit' && {
+                    id_product: productId,
+                }
             };
 
-            console.log(payload)
 
-            const res = await createProduct(payload);
+            let formAction = createProduct;
+            if (formType === 'edit') formAction = updateProduct;
+
+            const res = await formAction(payload);
 
             if (!res.status) throw Error(res.msg);
 
-            AlertService.error('Berhasil membuat produk baru');
+            const messageUser = formType === 'edit' ? 'Berhasil mengubah produk' : 'Berhasil membuat produk baru';
+            AlertService.error(messageUser);
+            fetchData(0);
             setShowDetail(false);
         } catch (error) {
             console.log(error)
             AlertService.error(catchError(error));
         }
         setLoading(false);
+    }
+
+    const removeImageProduct = (imgProduct) => {
+        const filteredImage = productImage.filter(e => e !== imgProduct);
+
+        setProductImage(filteredImage);
     }
 
     useEffect(() => {
@@ -287,7 +323,7 @@ const Index = ({
                                                                 backgroundImage: `url(${img})`,
                                                             }}
                                                         >
-                                                            <AiFillCloseCircle />
+                                                            <AiFillCloseCircle onClick={() => { removeImageProduct(img) }} />
                                                         </div>
                                                     ))}
                                                 </div>

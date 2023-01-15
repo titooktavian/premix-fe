@@ -24,6 +24,7 @@ module.exports = {
         domains: [
             "via.placeholder.com",
             "api.nusahabbat.com",
+            "localhost:8000",
         ]
     }
 };

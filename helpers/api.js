@@ -56,3 +56,5 @@ export const updateUser = (idUser, payload) =>
     fetchApi(endpoints.updateUser(idUser), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const createProduct = (payload) =>
     fetchApi(endpoints.product(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const updateProduct = (payload) =>
+    fetchApi(endpoints.product(), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);
