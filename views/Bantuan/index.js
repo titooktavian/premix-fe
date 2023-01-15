@@ -20,7 +20,6 @@ const Index = ({
     const { setLoading, userLogin } = useStateContext();
     const [showDetail, setShowDetail] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [subjek, setSubjek] = useState('');
     const [lampiran, setLampiran] = useState([]);
     const [pesan, setPesan] = useState('');
     const [limit, setLimit] = useState(3);
@@ -33,6 +32,8 @@ const Index = ({
     const [totalPageDetail, setTotalPageDetail] = useState(0);
     const [complaintDetail, setComplaintDetail] = useState(null);
     const [statusFilter, setStatusFilter] = useState('0');
+    const [searchValue, setSearchValue] = useState('');
+    let typingTimeout = 0;
 
     const router = useRouter();
 
@@ -51,6 +52,7 @@ const Index = ({
                 limit: limit,
                 page: page + 1,
                 ...statusFilter !== '0' && { status: statusFilter },
+                ...searchValue !== '' && { name: searchValue },
             });
 
             if (!res.status) throw Error(res.msg);
@@ -168,6 +170,14 @@ const Index = ({
         setStatusFilter(status);
     }
 
+    const handleChangeSearch = (e) => {
+        clearTimeout(typingTimeout);
+
+        typingTimeout = setTimeout(() => {
+            setSearchValue(e.target.value)
+        }, 500);
+    }
+
     useEffect(() => {
         fetchData(0)
     }, []);
@@ -175,6 +185,10 @@ const Index = ({
     useEffect(() => {
         fetchData(0)
     }, [statusFilter]);
+
+    useEffect(() => {
+        fetchData(0)
+    }, [searchValue]);
 
     return (
         <div 
@@ -223,7 +237,7 @@ const Index = ({
                                         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                                             <HiOutlineSearch />
                                         </span>
-                                        <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari Tiket" type="text" name="search"/>
+                                        <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari Tiket" type="text" name="search" onChange={(e) => {handleChangeSearch(e)}}/>
                                     </label>
 
                                     <div className="flex flex-col w-full gap-3">
