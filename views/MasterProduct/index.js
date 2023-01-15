@@ -1,20 +1,15 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, Pagination, SectionTitle, Sidebar, TextEditor } from "components";
+import { ContentHeader, Pagination, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
 import { catchError, toRupiah } from "helpers/formatter";
 import Table from "components/Table/Table";
-import CurrencyColumn from "components/Table/components/CurrencyColumn";
-import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
-import { createProduct, getAllCategories, getListProduct, getTransactionList, updateProduct } from "helpers/api";
-import DateColumn from "components/Table/components/DateColumn";
-import moment from "moment";
+import { createProduct, getAllCategories, getListProduct, updateProduct } from "helpers/api";
 import ProductStatusColumn from "components/Table/components/ProductStatusColumn";
-import { AiFillCloseCircle, AiOutlineEdit, AiOutlineEye } from "react-icons/ai";
+import { AiFillCloseCircle } from "react-icons/ai";
 import { getTokenLocalStorage, generateRandomId } from "helpers/utils";
-import Image from "next/image";
 import Switch from "react-switch";
 import { HiTrash } from "react-icons/hi";
 

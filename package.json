@@ -16,6 +16,7 @@
     "dependencies": {
         "@reach/combobox": "^0.17.0",
         "@react-google-maps/api": "^2.12.1",
+        "chart.js": "^4.1.2",
         "classnames": "^2.3.1",
         "flickity": "^2.3.0",
         "formik": "^2.2.9",
@@ -27,6 +28,7 @@
         "prop-types": "^15.8.1",
         "react": "17.0.2",
         "react-calendar": "^3.7.0",
+        "react-chartjs-2": "^5.2.0",
         "react-copy-to-clipboard": "^5.1.0",
         "react-dom": "17.0.2",
         "react-flickity-component": "^3.6.2",

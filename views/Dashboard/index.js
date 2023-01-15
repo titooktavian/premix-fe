@@ -11,6 +11,27 @@ import DateColumn from "components/Table/components/DateColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
 import AccountColumn from "components/Table/components/AccountColumn";
+import { USER_PERMISSION } from "constants/enum";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from "react-chartjs-2";
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 const Index = ({
     pageTitle,
@@ -25,6 +46,7 @@ const Index = ({
     const [transactionCount, setTransactionCount] = useState(0);
     const [transactionConfirmed, setTransactionConfirmed] = useState(0);
     const [transactionWaiting, setTransactionWaiting] = useState(0);
+    const [filteredChart, setFilteredChart] = useState('minggu');
     const router = useRouter();
 
     const headerContent = [
@@ -137,6 +159,29 @@ const Index = ({
         fetchSummary();
     }, []);
 
+    const chartData = {
+        labels: ["Januari", "februari", "maret"],
+        datasets: [
+            {
+                data: [10, 35, 70],
+                borderColor: 'rgb(53, 162, 235)',
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            }
+        ]
+    }
+
+    const options = {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          title: {
+            display: false,
+          },
+        },
+    };
+
     return (
         <div 
             className="mb-6 md:mt-3 mt-0"
@@ -164,6 +209,20 @@ const Index = ({
                                 <div className="text-[#66AE76] text-2xl font-bold">{transactionConfirmed}</div>
                             </div>
                         </div>
+
+                        {userLogin?.id_permission === USER_PERMISSION.ADMIN && (
+                            <>
+                                <div className="text-base font-bold mt-6">Grafik Total Penjualan</div>
+                                <div className="bg-white p-4 rounded-lg flex flex-col gap-3">
+                                    <div className="flex w-full justify-end">
+                                        <div className="border-[#8581B7] text-[#8581B7] cursor-pointer border-y-[1px] border-l-[1px] p-1 text-xs px-3">Minggu</div>
+                                        <div className="bg-[#8581B7] border-[#8581B7] text-[white] cursor-pointer border-[1px] p-1 text-xs px-3">Bulan</div>
+                                    </div>
+                                    <Line data={chartData} width={100} height={40} options={options} />
+                                </div>
+                            </>
+                        )}
+
                         <div className="text-base font-bold mt-6">Akun yang akan berakhir</div>
 
                         <div className="relative">
