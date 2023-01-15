@@ -261,3 +261,22 @@ export const USER_PERMISSION = {
     ADMIN: '1',
     CUSTOMER: '2',
 }
+
+export const COMPLAINT_TYPE = [
+    {
+        id: '0',
+        name: 'Semua Tiket'
+    },
+    {
+        id: COMPLAINT_STATUS.BELUM_SELESAI,
+        name: 'Belum Selesai',
+    },
+    {
+        id: COMPLAINT_STATUS.DIBALAS,
+        name: 'Dijawab',
+    },
+    {
+        id: COMPLAINT_STATUS.SELESAI,
+        name: 'Selesai',
+    }
+]

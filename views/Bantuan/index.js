@@ -12,6 +12,7 @@ import { AlertService } from "services";
 import { useRouter } from "next/router";
 import moment from "moment";
 import { getTokenLocalStorage } from "helpers/utils";
+import { COMPLAINT_STATUS, COMPLAINT_TYPE } from "constants/enum";
 
 const Index = ({
     pageTitle,
@@ -31,6 +32,7 @@ const Index = ({
     const [currentPageDetail, setCurrentPageDetail] = useState(0);
     const [totalPageDetail, setTotalPageDetail] = useState(0);
     const [complaintDetail, setComplaintDetail] = useState(null);
+    const [statusFilter, setStatusFilter] = useState('0');
 
     const router = useRouter();
 
@@ -48,6 +50,7 @@ const Index = ({
             const res = await getComplaint({
                 limit: limit,
                 page: page + 1,
+                ...statusFilter !== '0' && { status: statusFilter },
             });
 
             if (!res.status) throw Error(res.msg);
@@ -161,9 +164,17 @@ const Index = ({
         }
     }
 
+    const changeFilterStatusHandler = (status) => {
+        setStatusFilter(status);
+    }
+
     useEffect(() => {
         fetchData(0)
     }, []);
+
+    useEffect(() => {
+        fetchData(0)
+    }, [statusFilter]);
 
     return (
         <div 
@@ -191,10 +202,20 @@ const Index = ({
                             {!showDetail && (
                                 <div className="w-full flex flex-col gap-4">
                                     <div className="flex">
-                                        <div className="text-[#272541] cursor-pointer font-bold p-2 text-center border-b-2 border-[#272541] px-5">Semua Tiket</div>
-                                        <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Belum Selesai</div>
-                                        <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Dijawab</div>
-                                        <div className="text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5">Selesai</div>
+                                        {COMPLAINT_TYPE.map((comp) => {
+                                            let statusClass = 'text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5';
+                                            if (comp.id === statusFilter) statusClass = 'text-[#272541] cursor-pointer font-bold p-2 text-center border-b-2 border-[#272541] px-5';
+
+                                            return (
+                                                <div
+                                                    key={`complaint-status-${comp.id}`}
+                                                    className={statusClass}
+                                                    onClick={() => { changeFilterStatusHandler(comp.id) }}
+                                                >
+                                                    {comp.name}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
 
                                     <label className="relative block">
