@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
 import { ContentHeader, Pagination, Sidebar } from "components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
 import { useRouter } from "next/router";
@@ -32,6 +32,8 @@ ChartJS.register(
     Tooltip,
     Legend
 );
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Index = ({
     pageTitle,
@@ -47,6 +49,8 @@ const Index = ({
     const [transactionConfirmed, setTransactionConfirmed] = useState(0);
     const [transactionWaiting, setTransactionWaiting] = useState(0);
     const [filteredChart, setFilteredChart] = useState('minggu');
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const router = useRouter();
 
     const headerContent = [
@@ -182,6 +186,18 @@ const Index = ({
         },
     };
 
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+    };
+
+    const ButtonDatepicker = forwardRef(({ value, onClick }, ref) => (
+        <button className="border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs w-[150px]" onClick={onClick} ref={ref}>
+          {value}
+        </button>
+    ));
+
     return (
         <div 
             className="mb-6 md:mt-3 mt-0"
@@ -212,9 +228,20 @@ const Index = ({
 
                         {userLogin?.id_permission === USER_PERMISSION.ADMIN && (
                             <>
-                                <div className="text-base font-bold mt-6">Grafik Total Penjualan</div>
-                                <div className="bg-white p-4 rounded-lg flex flex-col gap-3">
+                                
+                                <div className="bg-white p-4 rounded-lg flex flex-col gap-3 mt-6">
                                     <div className="flex w-full justify-end">
+                                        <div className="text-base font-bold w-full">Grafik Total Penjualan</div>
+                                        <div className="mr-2 text-xs">
+                                            <DatePicker
+                                                selected={startDate}
+                                                onChange={onChange}
+                                                startDate={startDate}
+                                                endDate={endDate}
+                                                selectsRange
+                                                customInput={<ButtonDatepicker />}
+                                            />
+                                        </div>
                                         <div className="border-[#8581B7] text-[#8581B7] cursor-pointer border-y-[1px] border-l-[1px] p-1 text-xs px-3">Minggu</div>
                                         <div className="bg-[#8581B7] border-[#8581B7] text-[white] cursor-pointer border-[1px] p-1 text-xs px-3">Bulan</div>
                                     </div>
