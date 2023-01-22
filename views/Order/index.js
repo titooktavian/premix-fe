@@ -158,7 +158,7 @@ const Index = ({
                                                     <div className="flex flex-col w-2/3">
                                                         <span className="text-sm font-bold text-[#6E6C85]">{`${detail.product.product_name} - ${detail.product_duration.duration_value} Hari x${detail.qty}`}</span>
                                                         {detail.expired_date && (
-                                                            <span className="text-xs font-normal text-[#8E8E9A]">{`Berakhir pada ${moment(detail.expired_date).format('DD MMMM YYYY')}`}</span>
+                                                            <span className="text-xs font-normal text-[#8E8E9A]">{`Berakhir pada ${moment(detail.expired_date, 'DD-MM-YYYY').format('DD MMMM YYYY')}`}</span>
                                                         )}
                                                     </div>
                                                     <div className="text-sm font-normal flex flex-col text-right w-1/3">

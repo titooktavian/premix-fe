@@ -77,7 +77,7 @@ const Index = ({
             name: 'Tanggal Berakhir',
             selector: 'expired_date',
             customComponent: (data) => (
-                <DateColumn data={data.expired_date} />
+                <DateColumn data={data.expired_date} format="DD-MM-YYYY" />
             )
         },
         {
