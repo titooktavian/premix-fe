@@ -11,7 +11,6 @@ import { getConfirmPayment } from "helpers/api";
 import DateColumn from "components/Table/components/DateColumn";
 import Image from "next/image";
 import TransactionDetail from "components/Modal/Content/TransactionDetail";
-import { Router } from "next/router";
 
 const Index = ({
     pageTitle,

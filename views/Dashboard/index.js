@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, Pagination, Sidebar } from "components";
+import { ContentHeader, OrderDetail, Pagination, Sidebar } from "components";
 import { useState, useEffect, forwardRef } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
@@ -51,7 +51,9 @@ const Index = ({
     const [filteredChart, setFilteredChart] = useState('1');
     const [startDate, setStartDate] = useState(moment().subtract(1, 'months').toDate());
     const [endDate, setEndDate] = useState(moment().toDate());
-    const [chartData, setChartData] = useState(null)
+    const [chartData, setChartData] = useState(null);
+    const [showDetail, setShowDetail] = useState(false);
+    const [transactionId, setTransactionId] = useState('');
     const router = useRouter();
 
     const headerContent = [
@@ -97,9 +99,8 @@ const Index = ({
     ];
 
     const rowClickHandler = (data) => {
-        router.replace({
-            pathname: 'order'
-        })
+        setTransactionId(data.id_transaction);
+        setShowDetail(true);
     }
 
     const changePageHandler = (event) => {
@@ -283,55 +284,63 @@ const Index = ({
                         <Sidebar />
                     </div>
                     <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
-                        <div><span>Halo, <label className="font-bold">{userLogin?.name}!</label></span></div>
-                        <div className="flex gap-3">
-                            <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
-                                <div className="text-sm text-normal text-[#6E6C85]">Akun</div>
-                                <div className="text-[#FF5C6F] text-2xl font-bold">{transactionCount}</div>
-                            </div>
-                            <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
-                                <div className="text-sm text-normal text-[#6E6C85]">Menunggu</div>
-                                <div className="text-[#F8CA56] text-2xl font-bold">{transactionWaiting}</div>
-                            </div>
-                            <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
-                                <div className="text-sm text-normal text-[#6E6C85]">Lunas</div>
-                                <div className="text-[#66AE76] text-2xl font-bold">{transactionConfirmed}</div>
-                            </div>
-                        </div>
-
-                        {userLogin?.id_permission === USER_PERMISSION.ADMIN && (
+                        {!showDetail && (
                             <>
-                                
-                                <div className="bg-white p-4 rounded-lg flex flex-col gap-3 mt-6">
-                                    <div className="flex w-full justify-end">
-                                        <div className="text-base font-bold w-full">Grafik Total Penjualan</div>
-                                        <div className="mr-2 text-xs">
-                                            <DatePicker
-                                                selected={startDate}
-                                                onChange={onChange}
-                                                startDate={startDate}
-                                                endDate={endDate}
-                                                selectsRange
-                                                customInput={<ButtonDatepicker />}
-                                            />
-                                        </div>
-                                        <ChartFilter changeEvent={ setFilteredChart } />
+                                <div><span>Halo, <label className="font-bold">{userLogin?.name}!</label></span></div>
+                                <div className="flex gap-3">
+                                    <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
+                                        <div className="text-sm text-normal text-[#6E6C85]">Akun</div>
+                                        <div className="text-[#FF5C6F] text-2xl font-bold">{transactionCount}</div>
                                     </div>
-                                    {chartData && (
-                                        <Line data={chartData} width={100} height={40} options={options} />
-                                    )}
+                                    <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
+                                        <div className="text-sm text-normal text-[#6E6C85]">Menunggu</div>
+                                        <div className="text-[#F8CA56] text-2xl font-bold">{transactionWaiting}</div>
+                                    </div>
+                                    <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
+                                        <div className="text-sm text-normal text-[#6E6C85]">Lunas</div>
+                                        <div className="text-[#66AE76] text-2xl font-bold">{transactionConfirmed}</div>
+                                    </div>
+                                </div>
+    
+                                {userLogin?.id_permission === USER_PERMISSION.ADMIN && (
+                                    <>
+                                        
+                                        <div className="bg-white p-4 rounded-lg flex flex-col gap-3 mt-6">
+                                            <div className="flex w-full justify-end">
+                                                <div className="text-base font-bold w-full">Grafik Total Penjualan</div>
+                                                <div className="mr-2 text-xs">
+                                                    <DatePicker
+                                                        selected={startDate}
+                                                        onChange={onChange}
+                                                        startDate={startDate}
+                                                        endDate={endDate}
+                                                        selectsRange
+                                                        customInput={<ButtonDatepicker />}
+                                                    />
+                                                </div>
+                                                <ChartFilter changeEvent={ setFilteredChart } />
+                                            </div>
+                                            {chartData && (
+                                                <Line data={chartData} width={100} height={40} options={options} />
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+        
+                                <div className="text-base font-bold mt-6">Akun yang akan berakhir</div>
+        
+                                <div className="relative">
+                                    <Table header={headerContent} content={accountList} />
+                                    <div className="w-full px-4 flex justify-center mt-5">
+                                        <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
+                                    </div>
                                 </div>
                             </>
                         )}
-
-                        <div className="text-base font-bold mt-6">Akun yang akan berakhir</div>
-
-                        <div className="relative">
-                            <Table header={headerContent} content={accountList} />
-                            <div className="w-full px-4 flex justify-center mt-5">
-                                <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
-                            </div>
-                        </div>
+                        
+                        {showDetail && (
+                            <OrderDetail transactionId={transactionId} callbackAction={() => { setShowDetail(false) }} />
+                        )}
                     </div>
                 </div>
             </section>

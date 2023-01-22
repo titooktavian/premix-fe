@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, Pagination, SectionTitle, Sidebar } from "components";
+import { ContentHeader, OrderDetail, Pagination, SectionTitle, Sidebar } from "components";
 import { useEffect, useState } from "react";
 import { catchError, toRupiah } from "helpers/formatter";
 import Table from "components/Table/Table";
@@ -124,83 +124,7 @@ const Index = ({
                                 </>
                             )}
                             {showDetail && (
-                                <div className="w-full flex flex-col gap-4">
-                                    <div
-                                        className="flex w-full h-[94px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-lg text-white items-center p-6 gap-6"
-                                        style={{
-                                            backgroundImage: `url('/images/bg-dashboard.png')`,
-                                        }}
-                                    >
-                                        <div className="flex flex-col">
-                                            <div className="flex gap-2">
-                                                <span className="text-base font-bold">No. Order</span>
-                                                <StatusColumn data={orderDetail.id_status} />
-                                            </div>
-                                            <div className="text-base font-normal">{orderDetail.order_number}</div>
-                                        </div>
-
-                                        <div className="flex flex-col">
-                                            <div className="flex gap-2">
-                                                <span className="text-base font-bold">Tanggal Pembelian</span>
-                                            </div>
-                                            <div className="text-base font-normal">{moment(orderDetail.created_at).format('DD MMMM YYYY')}</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex w-full bg-white rounded-lg p-6 gap-6">
-                                        <div className="flex w-full flex-col">
-                                            <div className="flex gap-2">
-                                                <div className="text-base font-bold w-2/3">Produk</div>
-                                                <div className="text-base font-bold text-right w-1/3">Total</div>
-                                            </div>
-                                            {orderDetail.transaction_details && orderDetail.transaction_details.map((detail) => (
-                                                <div className="flex gap-2 mt-4" key={`detail-${detail.id_transaction_detail}`}>
-                                                    <div className="flex flex-col w-2/3">
-                                                        <span className="text-sm font-bold text-[#6E6C85]">{`${detail.product.product_name} - ${detail.product_duration.duration_value} Hari x${detail.qty}`}</span>
-                                                        {detail.expired_date && (
-                                                            <span className="text-xs font-normal text-[#8E8E9A]">{`Berakhir pada ${moment(detail.expired_date, 'DD-MM-YYYY').format('DD MMMM YYYY')}`}</span>
-                                                        )}
-                                                    </div>
-                                                    <div className="text-sm font-normal flex flex-col text-right w-1/3">
-                                                        <div className="text-[#6E6C85]">{toRupiah(detail.subtotal)}</div>
-                                                        <div className="text-[#FF5C6F]">{`- ${toRupiah(detail.promo_value)}`}</div>
-                                                    </div>
-                                                </div>
-                                            ))}
-
-                                            <div className="border-b-[1px] mt-6 mt- mb-6"></div>
-
-                                            <div className="flex gap-2">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Subtotal</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">{toRupiah(orderDetail.subtotal)}</div>
-                                            </div>
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Kode Pembayaran</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">{toRupiah(orderDetail.unique_code)}</div>
-                                            </div>
-                                            {/* <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Metode Pembayaran</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">Bank Transfer (BCA)</div>
-                                            </div> */}
-                                            <div className="flex gap-2 mt-4">
-                                                <div className="flex flex-col w-2/3">
-                                                    <span className="text-sm font-bold text-[#272541]">Total Pembayaran</span>
-                                                </div>
-                                                <div className="text-sm font-normal text-[#6E6C85] text-right w-1/3">{toRupiah(orderDetail.total)}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowDetail(false);}}>
-                                        Kembali
-                                    </div>
-                                </div>
+                                <OrderDetail transactionId={orderDetail.id_transaction} callbackAction={() => {setShowDetail(false)}} />
                             )}
                         </div>
                     </div>
