@@ -11,6 +11,7 @@ const endpoints = {
     transaction: () => 'transaction',
     getTransaction: () => 'transactions',
     getAccountDashboard: () => 'transaction-details',
+    getTransactionDetail: (transactionId) => `transaction-details/${transactionId}`,
     getSummary: () => 'summary',
     cart: () => 'carts',
     complaintData: () => 'complaints',
@@ -19,6 +20,7 @@ const endpoints = {
     updateUser: (idUser) => `user/${idUser}`,
     product: () => 'product',
     confirmPayment: () => 'paymentconfirm',
+    acceptTransaction: () => 'transaction-acceptance',
 };
 
 export const getListProduct = (payload) =>
@@ -63,3 +65,7 @@ export const confirmPayment = (payload) =>
     fetchApi(endpoints.confirmPayment(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const getConfirmPayment = (payload) =>
     fetchApi(endpoints.confirmPayment(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getTransactionDetail = (transactionId, payload) =>
+    fetchApi(endpoints.getTransactionDetail(transactionId), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const acceptTransaction = (payload) =>
+    fetchApi(endpoints.acceptTransaction(), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);

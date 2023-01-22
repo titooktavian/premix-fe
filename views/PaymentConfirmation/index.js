@@ -10,6 +10,7 @@ import ActionColumn from "components/Table/components/ActionColumn";
 import { getConfirmPayment } from "helpers/api";
 import DateColumn from "components/Table/components/DateColumn";
 import Image from "next/image";
+import TransactionDetail from "components/Modal/Content/TransactionDetail";
 
 const Index = ({
     pageTitle,
@@ -94,32 +95,6 @@ const Index = ({
     };
 
     const openConfirmTransaction = async () => {
-        // setLoading(true);
-        // try {
-        //     const res = await getConfirmPayment({
-        //         limit: limit,
-        //         page: page + 1,
-        //     });
-
-        //     if (!res.status) throw Error(res.msg);
-
-        //     const {
-        //         data,
-        //         meta: {
-        //             last_page,
-        //             per_page,
-        //             current_page,
-        //         },
-        //     } = res;
-
-        //     setOrderList(data);
-        //     setCurrentPage(current_page);
-        //     setLimit(per_page);
-        //     setTotalPage(last_page);
-        //     setLoading(false);
-        // } catch (error) {
-        //     AlertService.error(catchError(error));
-        // }
         setShowModal(true);
     };
 
@@ -201,10 +176,10 @@ const Index = ({
                 isPlainPopup={true}
                 title="Detail Promo"
                 type="fullscreen"
-                popupClassName={`md:w-[530px]`}
+                popupClassName={`md:w-[720px]`}
                 onClosePopup={() => {setShowModal(false)}}
             >
-                aosdkoaskod
+                <TransactionDetail transactionId={orderDetail ? orderDetail.id_transaction : ''} callbackAction={() => {setShowModal(false)}} />
             </Modal>
         </div>
     );
