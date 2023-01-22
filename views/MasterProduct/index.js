@@ -3,7 +3,7 @@ import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
 import { ContentHeader, Pagination, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
-import { catchError, toRupiah } from "helpers/formatter";
+import { catchError } from "helpers/formatter";
 import Table from "components/Table/Table";
 import ActionColumn from "components/Table/components/ActionColumn";
 import { createProduct, getAllCategories, getListProduct, updateProduct } from "helpers/api";
@@ -22,7 +22,6 @@ const Index = ({
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [orderList, setOrderList] = useState([]);
-    const [productDetail, setProductDetail] = useState(null);
     const [productName, setProductName] = useState('');
     const [productPromo, setProductPromo] = useState('');
     const [deskripsi, setDeskripsi] = useState('');
@@ -65,7 +64,6 @@ const Index = ({
     ];
 
     const rowClickHandler = (data) => {
-        setProductDetail(data);
         setProductName(data.product_name);
         setProductPromo(data.promo_percentage);
         setSelectedCategory(data.id_product_category);
@@ -125,6 +123,7 @@ const Index = ({
     };
 
     const showForm = (type) => {
+        setFormType(type);
         setShowDetail(true);
     }
 

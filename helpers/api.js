@@ -18,6 +18,7 @@ const endpoints = {
     updateComplaint: (idComplaint) => `complaint/${idComplaint}`,
     updateUser: (idUser) => `user/${idUser}`,
     product: () => 'product',
+    confirmPayment: () => 'paymentconfirm',
 };
 
 export const getListProduct = (payload) =>
@@ -58,3 +59,5 @@ export const createProduct = (payload) =>
     fetchApi(endpoints.product(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const updateProduct = (payload) =>
     fetchApi(endpoints.product(), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const confirmPayment = (payload) =>
+    fetchApi(endpoints.confirmPayment(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);

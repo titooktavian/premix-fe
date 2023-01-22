@@ -3,12 +3,10 @@ import { useStateContext } from "context/StateContext";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { SectionTitle } from "components";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import fetchApi from "helpers/config";
 import { catchError } from "helpers/formatter";
-import { getTokenLocalStorage, setTokenLocalStorage } from "helpers/utils";
-import { getCartUser, imageUploader } from "helpers/api";
+import { getTokenLocalStorage } from "helpers/utils";
+import { confirmPayment } from "helpers/api";
 import { BANK_LIST } from "constants/enum";
 import Image from "next/image";
 import { AiOutlineEdit, AiOutlineEye } from "react-icons/ai";
@@ -16,14 +14,14 @@ import { AiOutlineEdit, AiOutlineEye } from "react-icons/ai";
 const Index = ({
     pageTitle,
 }) => {
-    const { cartItems, onResetCart, onReplaceCart, setLoading, setUserLogin } = useStateContext();
+    const { setLoading } = useStateContext();
     const [pemilikRekening, setPemilikRekening] = useState('');
     const [nominal, setNominal] = useState('0');
     const [paymentType, setPaymentType] = useState('');
     const [buktiBayar, setBuktiBayar] = useState('');
 
     const router = useRouter();
-    const { query: { payment } } = router;
+    const { query: { payment, transaction } } = router;
 
     const handleUploadFile = async (e) => {
         setLoading(true);
@@ -51,6 +49,28 @@ const Index = ({
             if (!data.status) throw Error(data.msg);
 
             setBuktiBayar(data.data[0]);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+        setLoading(false);
+    }
+
+    const doConfirmPayment = async () => {
+        setLoading(true);
+
+        const bankList = BANK_LIST.filter(item => item.id == paymentType);
+        try {
+            const res = await confirmPayment({
+                id_transaction: transaction,
+                account_name: pemilikRekening,
+                transfer_nominal: nominal,
+                destination_account: bankList[0].bankName || '',
+                img_url: buktiBayar,
+            });
+
+            if (!res.status) throw Error(res.msg);
+
+            AlertService.success('Pesanan anda telah terkonfirmasi, silahkan tunggu informasi dari admin');
         } catch (error) {
             AlertService.error(catchError(error));
         }
@@ -90,7 +110,7 @@ const Index = ({
                             >
                                 <option value="">Pilih Kategori</option>
                                 {BANK_LIST.map((bank) => (
-                                    <option value={bank.id.toString()}>{bank.bankName}</option>
+                                    <option key={`bank-${bank.id}`} value={bank.id.toString()}>{bank.bankName}</option>
                                 ))}
                             </select>
                         </div>
@@ -123,7 +143,7 @@ const Index = ({
                             </div> 
                         </div>
 
-                        <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {doLogin()}}>
+                        <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {doConfirmPayment()}}>
                             Konfirmasi Pembayaran
                         </div>
                     </div>

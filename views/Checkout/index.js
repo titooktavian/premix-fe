@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import Image from "next/image";
 import { useStateContext } from "context/StateContext";
 import { catchError, toRupiah } from "helpers/formatter";
-import { Accordion, AddCart, SectionTitle } from "components";
+import { Accordion, SectionTitle } from "components";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { BANK_LIST } from "constants/enum";
@@ -13,7 +13,7 @@ import moment from "moment/moment";
 const Index = ({
     pageTitle,
 }) => {
-    const { cartItems, onResetCart, onAddToCart, setLoading, userLogin } = useStateContext();
+    const { cartItems, onResetCart, setLoading, userLogin } = useStateContext();
     const [checkoutStatus, setCheckoutStatus] = useState(false);
     const [checkoutData, setCheckoutData] = useState(null);
     const [email, setEmail] = useState(userLogin ? userLogin.email : '');
@@ -63,7 +63,7 @@ const Index = ({
     }
 
     const confirmOrder = () => {
-        router.push(`/konfirmasi-pesanan?payment=${paymentMethod.id}`);
+        router.push(`/konfirmasi-pesanan?payment=${paymentMethod.id}&transaction=${checkoutData.id_transaction}`);
     }
 
     const countTransaction = () => {
