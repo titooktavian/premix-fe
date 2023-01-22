@@ -11,6 +11,7 @@ import { getConfirmPayment } from "helpers/api";
 import DateColumn from "components/Table/components/DateColumn";
 import Image from "next/image";
 import TransactionDetail from "components/Modal/Content/TransactionDetail";
+import { Router } from "next/router";
 
 const Index = ({
     pageTitle,
@@ -98,6 +99,12 @@ const Index = ({
         setShowModal(true);
     };
 
+    const callbackAction = () => {
+        setShowModal(false);
+        setShowDetail(false);
+        fetchData(0);
+    }
+
     useEffect(() => {
         fetchData(0)
     }, []);
@@ -179,7 +186,7 @@ const Index = ({
                 popupClassName={`md:w-[720px]`}
                 onClosePopup={() => {setShowModal(false)}}
             >
-                <TransactionDetail transactionId={orderDetail ? orderDetail.id_transaction : ''} callbackAction={() => {setShowModal(false)}} />
+                <TransactionDetail transactionId={orderDetail ? orderDetail.id_transaction : ''} callbackAction={() => {callbackAction()}} />
             </Modal>
         </div>
     );
