@@ -280,3 +280,22 @@ export const COMPLAINT_TYPE = [
         name: 'Selesai',
     }
 ]
+
+export const CHART_FILTER = [
+    {
+        id: '1',
+        name: 'Minggu',
+        additionalClass: {
+            borderTopLeftRadius: 6,
+            borderBottomLeftRadius: 6,
+        },
+    },
+    {
+        id: '2',
+        name: 'Bulan',
+        additionalClass: {
+            borderTopRightRadius: 6,
+            borderBottomRightRadius: 6,
+        },
+    }
+]

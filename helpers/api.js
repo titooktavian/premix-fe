@@ -61,3 +61,5 @@ export const updateProduct = (payload) =>
     fetchApi(endpoints.product(), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const confirmPayment = (payload) =>
     fetchApi(endpoints.confirmPayment(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const getConfirmPayment = (payload) =>
+    fetchApi(endpoints.confirmPayment(), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);

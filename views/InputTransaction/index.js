@@ -20,7 +20,7 @@ const Index = ({
         setLoading(true);
         try {
             const res = await getListProduct({
-                limit: 10,
+                limit: -1,
                 page: page + 1,
             });
 

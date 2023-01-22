@@ -34,23 +34,24 @@ ChartJS.register(
 );
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import ChartFilter from "components/ChartFilter/ChartFilter";
 
 const Index = ({
     pageTitle,
 }) => {
     const { setLoading, userLogin } = useStateContext();
-    const [showDetail, setShowDetail] = useState(false);
     const [limit, setLimit] = useState(5);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [accountList, setAccountList] = useState([]);
-    const [accountDetail, setAccountDetail] = useState(null);
     const [transactionCount, setTransactionCount] = useState(0);
     const [transactionConfirmed, setTransactionConfirmed] = useState(0);
     const [transactionWaiting, setTransactionWaiting] = useState(0);
-    const [filteredChart, setFilteredChart] = useState('minggu');
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [filteredChart, setFilteredChart] = useState('1');
+    const [startDate, setStartDate] = useState(moment().subtract(1, 'months').toDate());
+    const [endDate, setEndDate] = useState(moment().toDate());
+    const [chartData, setChartData] = useState(null)
     const router = useRouter();
 
     const headerContent = [
@@ -137,7 +138,11 @@ const Index = ({
     const fetchSummary = async () => {
         setLoading(true);
         try {
-            const res = await getSummary({});
+            const res = await getSummary({
+                from_date: moment(startDate, 'MM/DD/YYYY').format('DD-MM-YYYY'),
+                to_date: moment(endDate, 'MM/DD/YYYY').format('DD-MM-YYYY'),
+                filter_type: '1'
+            });
 
             if (!res.status) throw Error(res.msg);
 
@@ -146,33 +151,101 @@ const Index = ({
                     transaction_count,
                     transaction_confirmed,
                     transaction_waiting,
+                    chart_data,
                 }
             } = res;
 
             setTransactionCount(transaction_count);
             setTransactionConfirmed(transaction_confirmed);
             setTransactionWaiting(transaction_waiting);
+            if (userLogin?.id_permission === USER_PERMISSION.ADMIN) {
+                reformatDataToChart(chart_data);
+            }
+            
             setLoading(false);
         } catch (error) {
             AlertService.error(catchError(error));
         }
     };
 
+    const reformatDataToChart = (data) => {
+        let labels = [];
+        let datasets = [];
+        let dates = [moment(startDate, 'DD-MM-YYYY').format('MM/DD/YYYY')];
+
+        let currDate = moment(startDate).startOf('day');
+        let lastDate = moment(endDate).startOf('day');
+
+        while(currDate.add(1, 'days').diff(lastDate) <= 0) {
+            dates.push(currDate.clone().format('MM/DD/YYYY'));
+        }
+
+        if (filteredChart === '1') {
+            dates.map((dateList) => {
+                data.map((chart) => {
+                    if (moment(chart.date, 'DD-MM-YYYY').format('MM/DD/YYYY') === dateList) {
+                        datasets.push(parseFloat(chart.total_sales));
+                    } else {
+                        datasets.push(0);
+                    }
+
+                    labels.push(dateList);
+                })
+            })
+        } else if (filteredChart === '2') {
+            const groups = dates.reduce((acc, date) => {
+                const yearWeek = `${moment(date).year()}-${moment(date).week()}`;
+                if (!acc[yearWeek]) {
+                    acc[yearWeek] = [];
+                }
+
+                acc[yearWeek].push(date);
+                
+                return acc;
+            
+            }, {});
+
+            Object.keys(groups).forEach((weekGroup) => {
+                const label = weekGroup.replace('-', ' Minggu ke ');
+                labels.push(label)
+
+                let totalTransaksi = 0;
+                groups[weekGroup].map(week => {
+                    data.map((chart) => {
+                        if (moment(chart.date, 'DD-MM-YYYY').format('MM/DD/YYYY') === week) {
+                            totalTransaksi += parseFloat(chart.total_sales);
+                        } else {
+                            totalTransaksi += 0;
+                        }
+                    })
+                })
+
+                datasets.push(totalTransaksi)
+            })
+        }
+
+        const dataFix = {
+            labels: labels,
+            datasets: [
+                {
+                    data: datasets,
+                    borderColor: 'rgb(53, 162, 235)',
+                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                }
+            ]
+        }
+
+        setChartData(dataFix);
+    }
+
     useEffect(() => {
         fetchData(0);
         fetchSummary();
     }, []);
 
-    const chartData = {
-        labels: ["Januari", "februari", "maret"],
-        datasets: [
-            {
-                data: [10, 35, 70],
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            }
-        ]
-    }
+    useEffect(() => {
+        fetchSummary();
+    }, [filteredChart, startDate, endDate]);
 
     const options = {
         responsive: true,
@@ -193,7 +266,7 @@ const Index = ({
     };
 
     const ButtonDatepicker = forwardRef(({ value, onClick }, ref) => (
-        <button className="border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs w-[150px]" onClick={onClick} ref={ref}>
+        <button className="border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs w-[170px] rounded-md" onClick={onClick} ref={ref}>
           {value}
         </button>
     ));
@@ -242,10 +315,11 @@ const Index = ({
                                                 customInput={<ButtonDatepicker />}
                                             />
                                         </div>
-                                        <div className="border-[#8581B7] text-[#8581B7] cursor-pointer border-y-[1px] border-l-[1px] p-1 text-xs px-3">Minggu</div>
-                                        <div className="bg-[#8581B7] border-[#8581B7] text-[white] cursor-pointer border-[1px] p-1 text-xs px-3">Bulan</div>
+                                        <ChartFilter changeEvent={ setFilteredChart } />
                                     </div>
-                                    <Line data={chartData} width={100} height={40} options={options} />
+                                    {chartData && (
+                                        <Line data={chartData} width={100} height={40} options={options} />
+                                    )}
                                 </div>
                             </>
                         )}
