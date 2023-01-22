@@ -76,7 +76,7 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
                                 {productList.map((list) => {
                                     const imgUrl = list.img_url[0];
                                     return (
-                                        <ProductCard key={`product-${list.id_product}`} productId={list.id_product} name={list.product_name} category={list.category_name} price="35000" discount="Disc 40$" imageUrl={imgUrl} />
+                                        <ProductCard key={`product-${list.id_product}`} productId={list.id_product} name={list.product_name} category={list.category_name} price={list.product_durations[0].price} discount="Disc 40$" imageUrl={imgUrl} />
                                     )}
                                 )}
                             </>
