@@ -5,7 +5,6 @@ import { ContentHeader, OrderDetail, Pagination, Sidebar } from "components";
 import { useState, useEffect, forwardRef } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
-import { useRouter } from "next/router";
 import Table from "components/Table/Table";
 import DateColumn from "components/Table/components/DateColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
@@ -54,7 +53,6 @@ const Index = ({
     const [chartData, setChartData] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
     const [transactionId, setTransactionId] = useState('');
-    const router = useRouter();
 
     const headerContent = [
         {

@@ -3,14 +3,13 @@ import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
 import { ContentHeader, OrderDetail, Pagination, SectionTitle, Sidebar } from "components";
 import { useEffect, useState } from "react";
-import { catchError, toRupiah } from "helpers/formatter";
+import { catchError } from "helpers/formatter";
 import Table from "components/Table/Table";
 import CurrencyColumn from "components/Table/components/CurrencyColumn";
 import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
 import { getTransactionList } from "helpers/api";
 import DateColumn from "components/Table/components/DateColumn";
-import moment from "moment";
 
 const Index = ({
     pageTitle,
