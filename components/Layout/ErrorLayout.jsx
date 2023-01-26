@@ -1,7 +1,7 @@
 const LayoutError = ({ children }) => {
     return (
         <>
-            <section className="grid h-screen w-screen place-content-center bg-[#F6FAF0]">
+            <section className="grid h-screen w-screen place-content-center bg-white bg-[url('/background.jpeg')] bg-contain bg-no-repeat">
                 {children}
             </section>
         </>
