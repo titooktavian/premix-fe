@@ -76,7 +76,13 @@ const Index = ({
                             </div>
                             <div className="w-1/2">
                                 <div className="font-bold text-3xl">{productDetail.product_name}</div>
-                                <div className="font-bold text-xl mt-2">{toRupiah(price)}</div>
+                                <div className="flex gap-2">
+                                    <div className="font-bold text-xl mt-2">{toRupiah(price)}</div>
+                                    <span className="py-1 px-2 bg-[#FF5C6F] rounded-2xl text-xs text-[#FFFFFF] font-bold h-fit mt-2">
+                                        {`Disc ${productDetail.promo_percentage}%`}
+                                    </span>
+                                </div>
+                                
                                 <div className="text-base font-normal text-[#6E6C85] mt-2" dangerouslySetInnerHTML={{__html: productDetail.description}} />
         
                                 <Variant label="Durasi" list={productDetail.product_durations} clickHandler={changeVariantHandler} selectedVariant={selectedVariant} />

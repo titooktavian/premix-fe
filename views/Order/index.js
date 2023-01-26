@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, OrderDetail, Pagination, SectionTitle, Sidebar } from "components";
+import { ContentHeader, Modal, OrderDetail, Pagination, SectionTitle, Sidebar } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import Table from "components/Table/Table";
@@ -10,6 +10,7 @@ import StatusColumn from "components/Table/components/StatusColumn";
 import ActionColumn from "components/Table/components/ActionColumn";
 import { getTransactionList } from "helpers/api";
 import DateColumn from "components/Table/components/DateColumn";
+import TransactionDetail from "components/Modal/Content/TransactionDetail";
 
 const Index = ({
     pageTitle,
@@ -21,6 +22,7 @@ const Index = ({
     const [totalPage, setTotalPage] = useState(0);
     const [orderList, setOrderList] = useState([]);
     const [orderDetail, setOrderDetail] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     const headerContent = [
         {
@@ -52,7 +54,7 @@ const Index = ({
             name: 'Aksi',
             selector: 'name',
             customComponent: (data) => (
-                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} />
+                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} confirmHandler={(data) => openConfirmTransaction(data)} />
             ),
         },
     ];
@@ -60,6 +62,17 @@ const Index = ({
     const rowClickHandler = (data) => {
         setOrderDetail(data);
         setShowDetail(true);
+    }
+
+    const openConfirmTransaction = (data) => {
+        setOrderDetail(data);
+        setShowModal(true);
+    }
+
+    const callbackAction = () => {
+        setShowModal(false);
+        setShowDetail(false);
+        fetchData(0);
     }
 
     const changePageHandler = (event) => {
@@ -129,6 +142,16 @@ const Index = ({
                     </div>
                 </div>
             </section>
+            <Modal
+                show={showModal}
+                isPlainPopup={true}
+                title="Detail Promo"
+                type="fullscreen"
+                popupClassName={`md:w-[720px]`}
+                onClosePopup={() => {setShowModal(false)}}
+            >
+                <TransactionDetail transactionId={orderDetail ? orderDetail.id_transaction : ''} callbackAction={() => {callbackAction()}} />
+            </Modal>
         </div>
     );
 };

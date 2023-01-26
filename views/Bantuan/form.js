@@ -3,11 +3,7 @@ import { useStateContext } from "context/StateContext";
 import { ContentHeader, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
-import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/hi";
-import { AiOutlineTag, AiOutlineUser } from "react-icons/ai";
-import { GrAttachment } from "react-icons/gr";
-import { RiImageLine } from "react-icons/ri";
-import { createComplaint, getComplaint, getTransactionList } from "helpers/api";
+import { createComplaint, getTransactionList } from "helpers/api";
 import { AlertService } from "services";
 import { getTokenLocalStorage } from "helpers/utils";
 import { useRouter } from "next/router";
@@ -59,8 +55,23 @@ const Form = ({
     }
     
     const doCreateComplaint = async () => {
-        setLoading(true);
         try {
+            if (subjek === '') {
+                AlertService.error('Subjek tidak boleh kosong');
+                return;
+            }
+            
+            if (selectedTransaction === '') {
+                AlertService.error('Pilih transaksi terlebih dahulu');
+                return;
+            }
+
+            if (pesan === '') {
+                AlertService.error('Pesan tidak boleh kosong');
+                return;
+            }
+
+            setLoading(true);
             const payload = {
                 id_transaction: selectedTransaction,
                 status: 1,

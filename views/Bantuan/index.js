@@ -70,10 +70,11 @@ const Index = ({
             setCurrentPage(current_page);
             setLimit(per_page);
             setTotalPage(last_page);
-            setLoading(false);
         } catch (error) {
             AlertService.error(catchError(error));
         }
+
+        setLoading(false);
     };
 
     const doShowDetail = async (complaint, page) => {
@@ -100,11 +101,12 @@ const Index = ({
             setCurrentPageDetail(current_page);
             setLimitDetail(per_page);
             setTotalPageDetail(last_page);
-            setLoading(false);
             setShowDetail(true);
         } catch (error) {
             AlertService.error(catchError(error));
         }
+
+        setLoading(false);
     }
 
     const handleUploadFile = async (e) => {
@@ -142,13 +144,19 @@ const Index = ({
         setLoading(false);
     }
 
-    const doKirimTiket = async () => {
-        setLoading(true);
+    const doKirimTiket = async (type = 'balas') => {
         try {
+            if (type === 'balas' && pesan === '') {
+                AlertService.error('Pesan tidak boleh kosong');
+                return;
+            }
+            
+            setLoading(true);
+
             const payload = {
-                status: 2,
-                message_value: pesan,
-                file_url: lampiran,
+                status: type === 'balas' ? COMPLAINT_STATUS.DIBALAS : COMPLAINT_STATUS.SELESAI,
+                message_value: type === 'balas' ? pesan : 'Tiket telah diselesaikan',
+                file_url: type === 'balas' ? lampiran : [],
                 user_name: userLogin.name,
                 user_email: userLogin.email,
             }
@@ -157,13 +165,18 @@ const Index = ({
 
             if (!res.status) throw Error(res.msg);
 
-            setLoading(false);
             AlertService.success('Berhasil membalas tiket');
             
+            if (type === 'selesai') {
+                setShowDetail(false);
+                fetchData(0);
+                return;
+            }
             doShowDetail(complaintDetail, currentPageDetail - 1);
         } catch (error) {
             AlertService.error(catchError(error));
         }
+        setLoading(false);
     }
 
     const changeFilterStatusHandler = (status) => {
@@ -208,6 +221,13 @@ const Index = ({
                                 <div className="w-1/3 flex justify-end">
                                     <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => { router.push('bantuan/buat') }}>
                                         Buat Tiket
+                                    </div>
+                                </div>
+                            )}
+                            {showDetail && (
+                                <div className="w-1/3 flex justify-end">
+                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {doKirimTiket('selesai');}}>
+                                        Selesaikan Tiket
                                     </div>
                                 </div>
                             )}
@@ -416,9 +436,12 @@ const Index = ({
                                         
                                     ) : (
                                         <div className="flex gap-3">
-                                            <div className="h-[37px] px-[24px] bg-[#FF5C6F] w-fit rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {setShowForm(true)}}>
-                                                Balas Tiket
-                                            </div>
+                                            {complaintDetail.status !== COMPLAINT_STATUS.SELESAI && (
+                                                <div className="h-[37px] px-[24px] bg-[#FF5C6F] w-fit rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {setShowForm(true)}}>
+                                                    Balas Tiket
+                                                </div>
+                                            )}
+                                            
                                             <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowDetail(false);}}>
                                                 Kembali
                                             </div>

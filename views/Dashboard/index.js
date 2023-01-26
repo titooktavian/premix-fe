@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, OrderDetail, Pagination, Sidebar } from "components";
+import { ContentHeader, Modal, OrderDetail, Pagination, Sidebar } from "components";
 import { useState, useEffect, forwardRef } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
@@ -35,6 +35,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import ChartFilter from "components/ChartFilter/ChartFilter";
+import TransactionDetail from "components/Modal/Content/TransactionDetail";
 
 const Index = ({
     pageTitle,
@@ -53,6 +54,7 @@ const Index = ({
     const [chartData, setChartData] = useState(null);
     const [showDetail, setShowDetail] = useState(false);
     const [transactionId, setTransactionId] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
     const headerContent = [
         {
@@ -91,7 +93,7 @@ const Index = ({
             name: 'Aksi',
             selector: 'name',
             customComponent: (data) => (
-                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} />
+                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} confirmHandler={(data) => openConfirmTransaction(data)} />
             ),
         },
     ];
@@ -99,6 +101,18 @@ const Index = ({
     const rowClickHandler = (data) => {
         setTransactionId(data.id_transaction);
         setShowDetail(true);
+    }
+
+    const openConfirmTransaction = (data) => {
+        setTransactionId(data.id_transaction);
+        setShowModal(true);
+    }
+
+    const callbackAction = () => {
+        setShowModal(false);
+        setShowDetail(false);
+        fetchData(0);
+        fetchSummary();
     }
 
     const changePageHandler = (event) => {
@@ -342,6 +356,16 @@ const Index = ({
                     </div>
                 </div>
             </section>
+            <Modal
+                show={showModal}
+                isPlainPopup={true}
+                title="Detail Promo"
+                type="fullscreen"
+                popupClassName={`md:w-[720px]`}
+                onClosePopup={() => {setShowModal(false)}}
+            >
+                <TransactionDetail transactionId={transactionId ? transactionId : ''} callbackAction={() => {callbackAction()}} />
+            </Modal>
         </div>
     );
 };

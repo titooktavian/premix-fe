@@ -1,8 +1,11 @@
+import { TRANSACTION_STATUS, USER_PERMISSION } from "constants/enum";
+import { useStateContext } from "context/StateContext";
 import propTypes from "prop-types";
 import { useState } from "react";
 import { RiMoreFill } from "react-icons/ri";
 
-const ActionColumn = ({ data, clickHandler }) => {
+const ActionColumn = ({ data, clickHandler, confirmHandler }) => {
+    const { userLogin } = useStateContext();
     const [openDetail, setOpenDetail] = useState(false);
     const hideDropdown = () => {
         if (openDetail) {
@@ -16,8 +19,11 @@ const ActionColumn = ({ data, clickHandler }) => {
                 <RiMoreFill />
             </div>
             {openDetail && (
-                <div className="absolute shadow bg-white p-4 w-28 z-10">
+                <div className="absolute shadow bg-white p-4 w-28 z-10 flex flex-col gap-2">
                     <div className="cursor-pointer" onClick={() => {clickHandler(data)}}>Lihat Detail</div>
+                    {confirmHandler && userLogin?.id_permission === USER_PERMISSION.ADMIN && data.id_status === TRANSACTION_STATUS.WAITING && (
+                        <div className="cursor-pointer" onClick={() => {confirmHandler(data)}}>Konfirmasi</div>
+                    )}
                 </div>
             )}
         </div>
@@ -26,6 +32,11 @@ const ActionColumn = ({ data, clickHandler }) => {
 
 ActionColumn.propTypes = {
     data: propTypes.shape().isRequired,
+    confirmHandler: propTypes.func,
+};
+
+ActionColumn.defaultProps = {
+    confirmHandler: undefined,
 };
 
 export default ActionColumn;
