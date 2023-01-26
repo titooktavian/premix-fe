@@ -121,7 +121,7 @@ export const NAVIGATIONS = [
     },
     {
         name: "Contact",
-        link: "/contact",
+        link: "/contact-us",
         isActive: false,
         detail: null,
     },

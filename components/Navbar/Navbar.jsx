@@ -20,7 +20,8 @@ const Navbar = () => {
     const activeMenu = (link) => {
         let menus;
         menus = navigations.map((nav) => {
-            nav.isActive = nav.link === link ? true : false;
+            if (!nav.detail) nav.isActive = nav.link === link ? true : false;
+            
             return { ...nav };
         });
         setNavigations(menus);
