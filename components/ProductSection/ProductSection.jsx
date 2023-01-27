@@ -70,7 +70,7 @@ const ProductSection = ({ title, subtitle, perPage, category, withPagination, so
                     <div className="md:mx-auto md:max-w-[1110px] px-4">
                         <SectionTitle title={title} subtitle={subtitle} />
 
-                        <div className="grid gap-4 grid-cols-4 my-4">
+                        <div className="grid gap-4 grid-cols-2 md:grid-cols-4 my-4">
                         {productList.length > 0 ? (
                             <>
                                 {productList.map((list) => {

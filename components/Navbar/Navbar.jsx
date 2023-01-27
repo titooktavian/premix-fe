@@ -88,7 +88,7 @@ const Navbar = () => {
         <div
             className={`${navBackground} transition-all duration-250`}
         >
-            <div className="relative z-50 flex h-[60px] items-center justify-between  px-4 md:mx-auto md:max-w-[1110px]">
+            <div className="relative z-50 flex h-[60px] items-center justify-between  px-4 md:mx-auto md:max-w-[1110px] w-full">
                 <Link href={"/"}>
                     <a
                         className="flex items-center space-x-4"
@@ -104,7 +104,7 @@ const Navbar = () => {
                         </div>
                     </a>
                 </Link>
-                <div className="flex items-center space-x-6 ">
+                <div className="flex items-center space-x-6 hidden md:flex">
                     <label className="relative block">
                         <span className="sr-only">Search</span>
                         <span className="absolute inset-y-0 left-0 flex items-center pl-2">

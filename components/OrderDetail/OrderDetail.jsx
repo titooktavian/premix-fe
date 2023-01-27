@@ -1,3 +1,5 @@
+import { Modal } from "components";
+import Review from "components/Modal/Content/Review";
 import StatusColumn from "components/Table/components/StatusColumn";
 import { useStateContext } from "context/StateContext";
 import { getTransactionDetail } from "helpers/api";
@@ -11,6 +13,10 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
     const { setLoading } = useStateContext();
     const [transactionDetail, setTransactionDetail] = useState([]);
     const [transaction, setTransaction] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [idTransactionDetail, setIdTransactionDetail] = useState(null);
+    const [idProduct, setIdProduct] = useState('');
+    const [productName, setProductName] = useState('');
 
     const fetchData = async () => {
         setLoading(true);
@@ -26,6 +32,18 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
 
         setLoading(false);
     };
+
+    const callbackActionReview = () => {
+        setShowModal(false);
+        fetchData();
+    }
+
+    const openPreviewModal = (transactionDetailId, productId, name) => {
+        setIdTransactionDetail(transactionDetailId);
+        setIdProduct(productId);
+        setProductName(name);
+        setShowModal(true);
+    }
 
     useEffect(() => {
         fetchData();
@@ -77,6 +95,14 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
                                     <div className="text-[#FF5C6F]">{`- ${toRupiah(detail.promo_value)}`}</div>
                                 </div>
                             </div>
+                            {detail.is_reviewed === '0' && (
+                                <div className="flex justify-end">
+                                    <div className="h-[26px] px-[16px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {openPreviewModal(detail.id_transaction_detail, detail.id_product, detail.product.product_name);}}>
+                                        Tulis Ulasan
+                                    </div>
+                                </div>
+                            )}
+                            
                             {detail.account_value && (
                                 <div className="flex gap-2 mt-2">
                                     <div className="text-sm font-bold w-full">Daftar Akun</div>
@@ -130,6 +156,17 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
             <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {callbackAction();}}>
                 Kembali
             </div>
+
+            <Modal
+                show={showModal}
+                isPlainPopup={true}
+                title="Detail Promo"
+                type="fullscreen"
+                popupClassName={`md:w-[720px]`}
+                onClosePopup={() => {setShowModal(false)}}
+            >
+                <Review idTransactionDetail={idTransactionDetail} idProduct={idProduct} callbackAction={() => {callbackActionReview()}} productName={productName} />
+            </Modal>
         </div>
     )
 };

@@ -42,41 +42,10 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
             return 'Home';
         }
     };
-    // const closeLoginPopup = ()=>{
-    //     setIsConfirmLogin(!isConfirmLogin);
-    // }
 
     return (
         <>
-            {/* <Modal
-                isPopup={isConfirmLogin}
-                title="Masuk ke Akun Web Store"
-                type="halfscreen"
-                onRequestClose={closeLoginPopup}
-                isDivider={false}
-                isShowClose={false}
-                subtitle="Kamu perlu masuk ke akun Web Store untuk melanjutkan"
-            >
-                <div className="flex flex-col-reverse gap-4 mt-4 md:grid md:mt-6 md:grid-cols-2">
-                    <Button
-                        label="Batal"
-                        variant="secondary"
-                        size="lg"
-                        full
-                        onClick={() => closeLoginPopup()}
-                    />
-                    <Link href={urlLogin}>
-                        <a  onClick={() => closeLoginPopup()}>
-                            <Button
-                                label="Masuk"
-                                size="lg"
-                                full
-                            />
-                        </a>
-                    </Link>
-                </div>
-            </Modal> */}
-            <div className="flex min-h-screen w-full flex-col bg-[url('/background.jpeg')] bg-contain bg-no-repeat">
+            <div className="grid h-screen w-screen bg-white bg-[url('/background.jpeg')] bg-fill md:bg-contain bg-no-repeat">
                 <Head>
                     <link
                         rel="shortcut icon"
@@ -87,7 +56,7 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
                 <header className="top-0 z-10">
                     <Navbar />
                 </header>
-                <main className={`mb-4 flex-1 px-4  md:mb-0 md:px-0 md:py-4`}>
+                <main className={`mb-4 flex-1 px-4 md:mb-0 md:px-0 md:py-4`}>
                     {children}
                 </main>
                 <footer>

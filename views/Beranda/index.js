@@ -95,7 +95,7 @@ const Index = ({
                 <section className="-mx-4 mb-4 p-4 md:mx-0 ">
                     <div className="md:mx-auto md:max-w-[1110px] px-4">
                         <SectionTitle title="Promo Hari Ini" subtitle="Ayo buruan beli akun sekarang, sebelum kehabisan" />
-                        <div className="grid gap-4 grid-cols-3 my-4">
+                        <div className="grid gap-4 grid-cols-1 md:grid-cols-3 my-4">
                             {productPromo.map((promo) => (
                                 <PromoCard key={`promo-${promo.id_product}`} idProduct={promo.id_product} name={promo.product_name} category={promo.category_name} price={promo.product_durations[0].price} discount={promo.promo_percentage} imageUrl={promo.img_url[0]} />
                             ))}
@@ -107,7 +107,7 @@ const Index = ({
             <section className="-mx-4 mb-4 p-4 md:mx-0 ">
                 <div className="md:mx-auto md:max-w-[1110px] px-4">
                     <SectionTitle title="Kategori Produk" subtitle="Kami memiliki beberapa produk spesial buat kamu" />
-                    <div className="grid gap-4 grid-cols-4 my-4">
+                    <div className="grid gap-4 grid-cols-2 md:grid-cols-4 my-4">
                         {categoryList.map((category) => (
                             <CategoryCard
                                 key={`category-${category.id_product_category}`}

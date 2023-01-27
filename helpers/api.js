@@ -21,6 +21,7 @@ const endpoints = {
     product: () => 'product',
     confirmPayment: () => 'paymentconfirm',
     acceptTransaction: () => 'transaction-acceptance',
+    review: () => 'review',
 };
 
 export const getListProduct = (payload) =>
@@ -69,3 +70,5 @@ export const getTransactionDetail = (transactionId, payload) =>
     fetchApi(endpoints.getTransactionDetail(transactionId), payload, "get", { serviceDomainType: API_TARGET.PREMIX }, true);
 export const acceptTransaction = (payload) =>
     fetchApi(endpoints.acceptTransaction(), payload, "put", { serviceDomainType: API_TARGET.PREMIX }, true);
+export const addReview = (payload) =>
+    fetchApi(endpoints.review(), payload, "post", { serviceDomainType: API_TARGET.PREMIX }, true);
