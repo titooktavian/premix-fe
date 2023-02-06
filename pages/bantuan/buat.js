@@ -1,4 +1,4 @@
-import Form from "views/Bantuan/Form";
+import Form from "views/Bantuan/form";
 import { coreGSSP } from "helpers/CoreHOC";
 
 export const getServerSideProps = coreGSSP(async ({ req, res }) => {
