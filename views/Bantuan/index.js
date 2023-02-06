@@ -119,7 +119,7 @@ const Index = ({
             const headers = {
                 access_token: getTokenLocalStorage(),
             };
-            const response = await fetch("https://api.nusahabbat.com/api/image-upload", {
+            const response = await fetch("https://api.premixstore.com/api/image-upload", {
                 method: "POST",
                 headers,
                 body: formdata,

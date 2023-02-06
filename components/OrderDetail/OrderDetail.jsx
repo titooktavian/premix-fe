@@ -95,7 +95,7 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
                                     <div className="text-[#FF5C6F]">{`- ${toRupiah(detail.promo_value)}`}</div>
                                 </div>
                             </div>
-                            {detail.is_reviewed === '0' && (
+                            {detail.is_reviewed === 0 && (
                                 <div className="flex justify-end">
                                     <div className="h-[26px] px-[16px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {openPreviewModal(detail.id_transaction_detail, detail.id_product, detail.product.product_name);}}>
                                         Tulis Ulasan

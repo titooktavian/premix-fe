@@ -7,13 +7,16 @@ import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { BANK_LIST } from "constants/enum";
 import { useEffect, useState } from "react";
-import { createTransaction } from "helpers/api";
+import { createTransaction, register } from "helpers/api";
 import moment from "moment/moment";
+import { generaterandomCode } from "helpers/utils";
+import fetchApi from "helpers/config";
+import { setTokenLocalStorage } from "helpers/utils";
 
 const Index = ({
     pageTitle,
 }) => {
-    const { cartItems, onResetCart, setLoading, userLogin } = useStateContext();
+    const { cartItems, onResetCart, setLoading, userLogin, setUserLogin } = useStateContext();
     const [checkoutStatus, setCheckoutStatus] = useState(false);
     const [checkoutData, setCheckoutData] = useState(null);
     const [email, setEmail] = useState(userLogin ? userLogin.email : '');
@@ -23,11 +26,21 @@ const Index = ({
     const [total, setTotal] = useState(cartItems.price || 0);
     const [promoTotal, setPromoTotal] = useState(0);
     const [kodePembayaran, setKodePembayaran] = useState(0);
+    const [tempUserLogin, setTempUserLogin] = useState(null);
     
     const router = useRouter();
 
     const doCheckout = async () => {
         setLoading(true);
+        if (!userLogin || !tempUserLogin) {
+            doRegister();
+            return;
+        }
+
+        sendCheckoutData(userLogin)
+    }
+
+    const sendCheckoutData = async (user) => {
         try {
             let transactionDetail = [];
             cartItems.data.map((cart) => {
@@ -43,7 +56,7 @@ const Index = ({
             })
 
             const res = await createTransaction({
-                id_user_buyer: userLogin.id_user,
+                id_user_buyer: user.id_user || tempUserLogin.id_user,
                 subtotal: cartItems.price,
                 total: total,
                 details: transactionDetail,
@@ -52,7 +65,10 @@ const Index = ({
 
             if (!res.status) throw Error(res.msg);
 
-            onResetCart();
+            if (userLogin || tempUserLogin) {
+                onResetCart();
+            }
+            
             setCheckoutData(res.data);
             setCheckoutStatus(true);
             AlertService.success('Terima kasih. Pesananmu diterima');
@@ -60,6 +76,52 @@ const Index = ({
             AlertService.error(catchError(error));
         }
         setLoading(false);
+    }
+
+    const doRegister = async () => {
+        setLoading(true)
+        try {
+            const randPassword = generaterandomCode(8);
+            const res = await register({
+                email: email,
+                name: nama,
+                password: randPassword,
+                phone_number: phoneNumber,
+            });
+
+            if (!res.status) throw Error(res.msg);
+            
+            doLogin(randPassword);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+        setLoading(false)
+    }
+
+    const doLogin = async (password) => {
+        const body = {
+            email: email,
+            password: password,
+        };
+
+        setLoading(true);
+        fetchApi("/api/login", body, "post", {
+            serviceDomainType: "local"
+        }).then(async (res) => {
+            if (res) {
+                await setUserLogin(res.data.user_data);
+                await setTokenLocalStorage(res.data.access_token);
+                await setTempUserLogin(res.data.user_data);
+
+                sendCheckoutData(res.data.user_data);
+                return true;
+            }
+
+            throw Error(res.msg);
+        }).catch((error) => {
+            setLoading(false);
+            AlertService.error(catchError(error));
+        });
     }
 
     const confirmOrder = () => {
@@ -88,6 +150,10 @@ const Index = ({
     useEffect(() => {
         countTransaction();
     }, [cartItems]);
+
+    useEffect(() => {
+        setTempUserLogin(userLogin);
+    }, [userLogin]);
 
     return (
         <div 

@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
-        "start": "next start",
+        "start": "NODE_ENV=production node server.js",
         "lint": "eslint ./ --ext js,jsx,ts,tsx --ignore-path .gitignore",
         "lint:fix": "eslint ./ --ext js,jsx,ts,tsx --fix --ignore-path .gitignore",
         "prettier": "prettier  \"**/*.+(js|jsx|ts|tsx|json)\" --ignore-path .gitignore",
