@@ -1,14 +1,15 @@
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 
-import { AddCart, ImageSlider, ProductSection, SectionTitle, Variant } from "components";
-import { AiOutlineStar } from "react-icons/ai";
+import { AddCart, ImageSlider, Pagination, ProductSection, SectionTitle, Variant } from "components";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { getDetailProduct } from "helpers/api";
+import { getDetailProduct, getListReview } from "helpers/api";
 import { AlertService } from "services";
 import { catchError, toRupiah } from "helpers/formatter";
 import ProdukDetailSkeleton from "./ProdukDetailSkeleton";
 import { useStateContext } from "context/StateContext";
+import moment from "moment";
 
 const Index = ({
     pageTitle,
@@ -21,6 +22,11 @@ const Index = ({
     const [loadingState, setLoadingState] = useState(true);
     const [cartValue, setCartValue] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState(0);
+    const [sortFilter, setSortFilter] = useState('1');
+    const [limit, setLimit] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(0);
+    const [reviewList, setReviewList] = useState([]);
     const { setLoading, onAddToCart } = useStateContext();
 
     const fetchData = async () => {
@@ -35,6 +41,7 @@ const Index = ({
             setPrice(res.data.product_durations[0].price);
             setSelectedVariant(res.data.product_durations[0].id_product_duration);
             setLoadingState(false);
+            fetchReview(0);
         } catch (error) {
             AlertService.error(catchError(error));
         }
@@ -58,6 +65,47 @@ const Index = ({
         await onAddToCart(productCart);
         setLoading(false);
     };
+
+    const fetchReview = async (page) => {
+        setLoading(true);
+        try {
+            const res = await getListReview({
+                limit: limit,
+                page: page + 1,
+            }, id_produk);
+
+            if (!res.status) throw Error(res.msg);
+
+            const {
+                data,
+                meta: {
+                    last_page,
+                    per_page,
+                    current_page,
+                },
+            } = res;
+
+            setReviewList(data);
+            setCurrentPage(current_page);
+            setLimit(per_page);
+            setTotalPage(last_page);
+            setLoading(false);
+        } catch (error) {
+            AlertService.error(catchError(error));
+        }
+    };
+
+    const changePageHandler = (event) => {
+        fetchReview(event.selected);
+    }
+
+    const renderStar = (number) => {
+        let elements = [];
+        for(let i = 0; i < number; i++){
+            elements.push(<AiFillStar className="text-2xl text-[#F8CA56]" />);
+        }
+        return elements;
+    }
 
     useEffect(() => {
         fetchData();
@@ -100,39 +148,42 @@ const Index = ({
         
                     <section className="-mx-4 mb-4 p-4 md:mx-0 ">
                         <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col gap-8">
-                            <SectionTitle title="Review" subtitle="Isi review kamu sekarang juga... dan jangan lupa review produk “Icon Scout Premium” dibawah." rightButton={false} />
-                            <div className="flex flex-col mt-6">
-                                <label className="text-sm font-bold">Beri Rating</label>
-                                <div className="flex gap-1 mt-1">
-                                    <AiOutlineStar className="text-2xl text-[#F8CA56] cursor-pointer" />
-                                    <AiOutlineStar className="text-2xl text-[#F8CA56] cursor-pointer" />
-                                    <AiOutlineStar className="text-2xl text-[#F8CA56] cursor-pointer" />
-                                    <AiOutlineStar className="text-2xl text-[#F8CA56] cursor-pointer" />
-                                    <AiOutlineStar className="text-2xl text-[#F8CA56] cursor-pointer" />
+                            <div className="flex gap-4">
+                                <div className="w-3/4">
+                                    <SectionTitle title="Ulasan Pilihan" subtitle="Lihat ulasan yang diberikan oleh pelanggan kami" rightButton={false} />
+                                </div>
+                                <div className="w-1/4">
+                                    <div>
+                                        <label htmlFor="pemilik-rekening" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Urutkan</label>
+                                        <select
+                                            className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-slate-300 rounded-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:ring-sky-500 focus:ring-1 focus:outline-none"
+                                            aria-label="Default select example"
+                                            onChange={(e) => {setSortFilter(e.target.value)}}
+                                            value={sortFilter}
+                                        >
+                                            <option value="1">Terbaru</option>
+                                            <option value="2">Rating Tertinggi</option>
+                                            <option value="3">Rating Terendah</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="flex w-full gap-5">
-                                <div className="w-1/2">
-                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Nama
-                                    </label>
-                                    <input type="text" id="first_name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
-                                </div>
-                                <div className="w-1/2">
-                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Email
-                                    </label>
-                                    <input type="text" id="first_name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
-                                </div>
+
+                            <div className="flex flex-col">
+                                {reviewList.map((review) => (
+                                    <div className="flex flex-col pb-6 border-b-[1px]" key={`review-list-${review.id_review}`}>
+                                        <div className="text-base font-bold text-[#272541]">{review.reviewer_name}</div>
+                                        <div className="flex gap-1 mt-1">
+                                            {renderStar(review.reviewer_star)}
+                                        </div>
+                                        <div className="text-sm font-normal text-[#6E6C85] mt-1">{moment(review.created_at).format('DD MMM YYYY')}</div>
+                                        <div className="text-base font-normal text-[#272541] mt-3">{review.reviewer_value}</div>
+                                    </div>
+                                ))}
                             </div>
-                            <div>
-                                <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Review
-                                </label>
-                                <textarea id="message" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
-                            </div>
-                            <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-fit flex items-center text-white text-base font-bold cursor-pointer">
-                                Tulis Review
+                            
+                            <div className="w-full px-4 flex justify-center mt-5">
+                                <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />
                             </div>
                         </div>
                     </section>
