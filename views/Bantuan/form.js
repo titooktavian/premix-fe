@@ -134,22 +134,22 @@ const Form = ({
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
-                    <div className="w-2/6 self-start">
+                    <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
                         <div className="flex gap-2">
                             <div className="font-bold w-full text-2xl">Buat Tiket</div>
                         </div>
                         <div className="relative">
                             <div className="w-full flex flex-col gap-4">
                                 <div className="flex flex-col">
-                                    <div className="flex gap-4">
-                                        <div className="mt-3 w-1/2">
+                                    <div className="flex flex-col md:flex-row gap-4">
+                                        <div className="mt-3 w-full md:w-1/2">
                                             <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Subjek</label>
                                             <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan subjek" value={subjek} onChange={(e) => { setSubjek(e.target.value) }} />
                                         </div>
-                                        <div className="mt-3 w-1/2">
+                                        <div className="mt-3 w-full md:w-1/2">
                                             <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">No. Transaksi</label>
                                             <select
                                                 className="h-[42px] form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-slate-300 rounded-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:ring-sky-500 focus:ring-1 focus:outline-none"

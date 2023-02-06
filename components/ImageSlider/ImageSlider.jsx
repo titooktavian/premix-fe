@@ -42,7 +42,7 @@ const ImageSlider = ({ imageList }) => {
             >
                 {imageList.map((img, index) => (
                     <div className="pr-3 mt-2 cursor-pointer" key={`img-nav-${index}`}>
-                        <div className="w-full relative aspect-square pr-3 w-[124px] h-[124px]">
+                        <div className="w-full relative aspect-square pr-3 w-[50px] h-[50px] md:w-[124px] md:h-[124px]">
                             <Image 
                                 src={img}
                                 layout="fill"

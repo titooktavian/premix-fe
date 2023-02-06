@@ -11,18 +11,18 @@ const ChartFilter = ({ changeEvent }) => {
     }
 
     return (
-        <>
+        <div className="flex w-full">
             {CHART_FILTER.map(filter => {
-                let classList = `border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs px-3`;
+                let classList = `border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs px-3 w-1/2 text-center`;
                 if (selected === filter.id) {
-                    classList = `bg-[#8581B7] border-[#8581B7] text-[white] cursor-pointer border-[1px] p-1 text-xs px-3`;
+                    classList = `bg-[#8581B7] border-[#8581B7] text-[white] cursor-pointer border-[1px] p-1 text-xs px-3 w-1/2 text-center`;
                 }
 
                 return (
                     <div key={`chart-filter-${filter.id}`} className={classList} style={filter.additionalClass} onClick={() => {doChangeFilter(filter.id)}}>{filter.name}</div>
                 );
             })}
-        </>
+        </div>
     );
 };
 

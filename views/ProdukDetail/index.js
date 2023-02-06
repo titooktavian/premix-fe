@@ -117,12 +117,12 @@ const Index = ({
                 <div 
                     className="mb-6 md:mt-3 mt-0"
                 >
-                    <section className="-mx-4 mb-4 p-4 md:mx-0 ">
-                        <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-8">
-                            <div className="w-1/2">
+                    <section className="-mx-4 mb-4 p-4 md:mx-0 border-b-[1px] md:border-0">
+                        <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col md:flex-row gap-8">
+                            <div className="w-full md:w-1/2">
                                 <ImageSlider imageList={productDetail.img_url} />
                             </div>
-                            <div className="w-1/2">
+                            <div className="w-full md:w-1/2">
                                 <div className="font-bold text-3xl">{productDetail.product_name}</div>
                                 <div className="flex gap-2">
                                     <div className="font-bold text-xl mt-2">{toRupiah(price)}</div>
@@ -146,13 +146,13 @@ const Index = ({
                         </div>
                     </section>
         
-                    <section className="-mx-4 mb-4 p-4 md:mx-0 ">
+                    <section className="-mx-4 mb-4 p-4 md:mx-0 border-b-[1px] md:border-0">
                         <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col gap-8">
-                            <div className="flex gap-4">
-                                <div className="w-3/4">
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <div className="w-full md:w-3/4">
                                     <SectionTitle title="Ulasan Pilihan" subtitle="Lihat ulasan yang diberikan oleh pelanggan kami" rightButton={false} />
                                 </div>
-                                <div className="w-1/4">
+                                <div className="w-full md:w-1/4">
                                     <div>
                                         <label htmlFor="pemilik-rekening" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Urutkan</label>
                                         <select
@@ -180,6 +180,10 @@ const Index = ({
                                         <div className="text-base font-normal text-[#272541] mt-3">{review.reviewer_value}</div>
                                     </div>
                                 ))}
+                                
+                                {reviewList.length <= 0 && (
+                                    <div className="text-base">Belum ada ulasan</div>
+                                )}
                             </div>
                             
                             <div className="w-full px-4 flex justify-center mt-5">

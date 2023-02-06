@@ -211,22 +211,22 @@ const Index = ({
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
-                    <div className="w-2/6 self-start">
+                    <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
                         <div className="flex gap-2">
-                            <div className="font-bold w-2/3 text-2xl">{showDetail ? 'Detail Tiket' : 'Bantuan'}</div>
+                            <div className="font-bold w-full md:w-2/3 text-2xl">{showDetail ? 'Detail Tiket' : 'Bantuan'}</div>
                             {!showDetail && (
-                                <div className="w-1/3 flex justify-end">
-                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => { router.push('bantuan/buat') }}>
+                                <div className="w-full md:w-1/3 flex justify-end">
+                                    <div className="h-[37px] px-3 md:px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-sm md:text-base text-center font-bold cursor-pointer" onClick={() => { router.push('bantuan/buat') }}>
                                         Buat Tiket
                                     </div>
                                 </div>
                             )}
                             {showDetail && (
-                                <div className="w-1/3 flex justify-end">
-                                    <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-base font-bold cursor-pointer" onClick={() => {doKirimTiket('selesai');}}>
+                                <div className="w-full md:w-1/3 flex justify-end">
+                                    <div className="h-[37px] px-3 md:px-[24px] bg-[#FF5C6F] rounded-full flex justify-center items-center text-white text-sm md:text-base text-center font-bold cursor-pointer" onClick={() => {doKirimTiket('selesai');}}>
                                         Selesaikan Tiket
                                     </div>
                                 </div>
@@ -269,7 +269,7 @@ const Index = ({
                                                         <span className="text-sm font-bold cursor-pointer" onClick={() => { doShowDetail(complaint, 0) }}>{`Tiket #${complaint.id_complain}`}</span>
                                                     </div>
                                                     <div className="w-1/2 flex items-center justify-end gap-2">
-                                                        <span className="text-xs text-[#6E6C85]">{moment(complaint.created_at).format('DD MMM YYYY HH:mm') }</span>
+                                                        <span className="text-xs text-[#6E6C85] hidden md:block">{moment(complaint.created_at).format('DD MMM YYYY HH:mm') }</span>
                                                         <ComplaintStatus status={complaint.status} />
                                                     </div>
                                                 </div>
@@ -322,8 +322,9 @@ const Index = ({
                                                 <HiOutlineTicket />
                                                 <span className="text-sm font-bold cursor-pointer">{`Tiket #${complaintDetail.id_complain}`}</span>
                                             </div>
+                                            
                                             <div className="w-1/2 flex items-center justify-end gap-2">
-                                                <span className="text-xs text-[#6E6C85]">{moment(complaintDetail.created_at).format('DD MMM YYYY HH:mm') }</span>
+                                                <span className="text-xs text-[#6E6C85] hidden md:block">{moment(complaintDetail.created_at).format('DD MMM YYYY HH:mm') }</span>
                                                 <ComplaintStatus status={complaintDetail.status} />
                                             </div>
                                         </div>
@@ -402,7 +403,7 @@ const Index = ({
                                     {showForm ? (
                                         <>
                                             <div className="flex gap-3">
-                                                <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowForm(false);}}>
+                                                <div className="h-[37px] px-3 md:px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowForm(false);}}>
                                                     Batal Balas Tiket
                                                 </div>
                                                 <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {setShowDetail(false);}}>

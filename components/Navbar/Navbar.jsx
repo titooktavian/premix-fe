@@ -8,7 +8,7 @@ import { FaBars, FaChevronDown, FaChevronRight, FaUser } from "react-icons/fa";
 import { HiOutlineShoppingCart, HiOutlineSearch } from "react-icons/hi";
 import { GrClose } from "react-icons/gr";
 import { useStateContext } from "context/StateContext";
-import { NAVIGATIONS, USER_NAVIGATIONS } from "constants/enum";
+import { NAVIGATIONS, USER_NAVIGATIONS, USER_SIDEBAR } from "constants/enum";
 
 const Navbar = () => {
     const router = useRouter();
@@ -104,6 +104,7 @@ const Navbar = () => {
                         </div>
                     </a>
                 </Link>
+                
                 <div className="flex items-center space-x-6 hidden md:flex">
                     <label className="relative block">
                         <span className="sr-only">Search</span>
@@ -113,9 +114,36 @@ const Navbar = () => {
                         <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari" type="text" name="search" onChange={(e) => {handleChangeSearch(e)}}/>
                     </label>
                 </div>
+
+                <div className="flex gap-4 md:hidden">
+                    <div className="group relative  py-4">
+                        <Link href="/keranjang">
+                            <a
+                                className="relative group-hover:bg-blue-400"
+                                onClick={() => setIsHamburgerOpen(false)}
+                            >
+                                <HiOutlineShoppingCart className="text-2xl text-[#1d1d1d]" />
+                                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#FF5C6F] text-center text-xs font-bold text-white">
+                                    {cartItems.data.length}
+                                </span>
+                            </a>
+                        </Link>
+                    </div>
+                    <div
+                        className="md:hidden py-4"
+                        onClick={() => setIsHamburgerOpen(!isHamburgerOpen)}
+                    >
+                        {isHamburgerOpen ? (
+                            <GrClose className="text-2xl" />
+                        ) : (
+                            <FaBars className="text-2xl" />
+                        )}
+                    </div>
+                </div>
+                
             </div>
 
-            <div className="relative z-50 flex h-[60px] items-center justify-between  px-4 md:mx-auto md:max-w-[1110px]">
+            <div className="relative z-50 flex h-[60px] items-center justify-between hidden md:flex px-4 md:mx-auto md:max-w-[1110px]">
                 <ul className="hidden space-x-8 md:flex">
                     {navigations.map((nav) => (
                         <li
@@ -143,7 +171,7 @@ const Navbar = () => {
                         </li>
                     ))}
                 </ul>
-                <div className="flex items-center space-x-6 ">
+                <div className="flex items-center space-x-6 hidden md:flex ">
                     {userLogin ?(
                         <div className="group relative hidden md:block">
                             <div className="grid grid-flow-col gap-1 place-items-center cursor-pointer">
@@ -277,47 +305,47 @@ const Navbar = () => {
             
             {/* Mobile Menu */}
             <div
-                className={`absolute top-full left-0 z-40  h-screen-min-60 w-screen bg-dark-300/40 pb-10 transition-all duration-300 ease-in-out ${
+                className={`absolute top-full left-0 right-0 z-40  h-screen w-screen bg-dark-300/40 pb-10 transition-all duration-300 ease-in-out ${
                     isHamburgerOpen ? "opacity-1 block" : "hidden opacity-0"
                 }`}
+                style={{ width: '100%', height: '100vh' }}
             >
                 <ul className=" bg-white px-8 pb-5 pt-5">
-                    <a className="flex items-center justify-between py-4" onClick={openPopupLogin}>
-                        <li
-                            className="flex items-center"
-                            onClick={() =>
-                                setIsHamburgerOpen(!isHamburgerOpen)
-                            }
-                        > 
-                            {userLogin ? (
-                                <>
-                                    <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-dark-400">
-                                        <FaUser className="text-xl text-white" />
-                                    </div>
-                                    <div className="ml-4 flex flex-col space-y-4">
+                    <Link href="/login">
+                        <a className="flex items-center justify-between py-4 border-b-[1px]">
+                            <li
+                                className="flex items-center"
+                                onClick={() =>
+                                    setIsHamburgerOpen(!isHamburgerOpen)
+                                }
+                            > 
+                                {userLogin ? (
+                                    <>
+                                        <div className="flex flex-col space-y-4">
+                                            <p className="text-base font-medium text-dark-300">
+                                                {userLogin.name}
+                                            </p>
+                                            <p className="text-xs font-medium text-dark-100">
+                                                {userLogin.email}
+                                            </p>
+                                        </div>
+                                    </>
+
+                                ):(
+                                    <div className="cursor-pointer flex flex-col space-y-4">
                                         <p className="text-base font-medium text-dark-300">
-                                            {userLogin.customer_fullname}
+                                            Masuk
                                         </p>
                                         <p className="text-xs font-medium text-dark-100">
-                                            {userLogin.phone_no}
+                                            Klik untuk melanjutkan
                                         </p>
                                     </div>
-                                </>
 
-                            ):(
-                                <div className="cursor-pointer flex flex-col space-y-4">
-                                    <p className="text-base font-medium text-dark-300">
-                                        Masuk
-                                    </p>
-                                    <p className="text-xs font-medium text-dark-100">
-                                        Klik untuk melanjutkan
-                                    </p>
-                                </div>
-
-                            )}
-                        </li>
-                        <FaChevronRight className="text-base" />
-                    </a>
+                                )}
+                            </li>
+                            <FaChevronRight className="text-base" />
+                        </a>
+                    </Link>
                     {navigations.map((nav) => (
                         <li
                             className="py-4 text-base font-medium text-dark-300"
@@ -335,15 +363,41 @@ const Navbar = () => {
                             </Link>
                         </li>
                     ))}
+                    <div className="border-b-[1px]"></div>
                     {userLogin && (
                         <>
-                            <button
-                                type="button"
-                                className="text-red-300 py-4 text-base font-medium"
-                                onClick={handleLogout}
-                            >
-                                Keluar
-                            </button>
+                            {USER_SIDEBAR.map((nav) => {
+                                if (nav.link === '/logout') {
+                                    return (
+                                        <li
+                                            className="py-4 text-base font-medium text-dark-300"
+                                            key={nav.name}
+                                        >
+                                            <div onClick={() => {handleLogout()}}>
+                                                <a
+                                                    className="block"
+                                                >
+                                                    {nav.name}
+                                                </a>
+                                            </div>
+                                        </li>
+                                    );
+                                }
+                                return (
+                                    <li
+                                        className="py-4 text-base font-medium text-dark-300"
+                                        key={nav.name}
+                                    >
+                                        <Link href={nav.link}>
+                                            <a
+                                                className="block"
+                                            >
+                                                {nav.name}
+                                            </a>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </>
                     )}
                 </ul>

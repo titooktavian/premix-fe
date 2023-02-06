@@ -82,10 +82,10 @@ const Index = ({
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
-                    <div className="w-2/6 self-start">
+                    <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
                         <SectionTitle title="Akun Profil" subtitle=""  />
 
                         <div className="relative">

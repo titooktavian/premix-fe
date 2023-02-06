@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { ProductSection, SectionTitle } from "components";
+import { PageHeader, ProductSection, SectionTitle } from "components";
 import { HiOutlineSearch } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -64,19 +64,7 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div
-                        className="flex flex-col w-full h-[220px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-3xl text-white justify-center p-10"
-                        style={{
-                            backgroundImage: `url('/images/carousel/bg.png')`,
-                        }}
-                    >
-                        <div className="font-bold text-3xl">Kategori Produk</div>
-                        <div className="font-normal text-base">Temukan akun yang sesuai dengan kebutuhanmu disini</div>
-                    </div>
-                </div>
-            </section>
+            <PageHeader title="Kategori Produk" subtitle="Temukan akun yang sesuai dengan kebutuhanmu disini" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0 ">
                 <div className="md:mx-auto md:max-w-[1110px] px-4">
@@ -86,9 +74,9 @@ const Index = ({
 
             <section className="-mx-4 mb-4 p-4 md:mx-0 ">
                 <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div className="flex">
-                        <div className="w-1/2">
-                            <label className="relative block w-1/2">
+                    <div className="flex md:flex-row flex-col gap-2">
+                        <div className="w-full md:w-1/2">
+                            <label className="relative block w-full md:w-1/2">
                                 <span className="sr-only">Search</span>
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                                     <HiOutlineSearch />
@@ -96,8 +84,8 @@ const Index = ({
                                 <input className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm rounded-lg" placeholder="Cari" type="text" name="search" onChange={(e) => {handleChangeSearch(e)}}/>
                             </label>
                         </div>
-                        <div className="flex w-1/2 justify-end">
-                            <div className="w-1/2">
+                        <div className="flex w-full md:w-1/2 justify-end">
+                            <div className="w-full md:w-1/2">
                                 <div className="flex justify-center">
                                     <div className="mb-3 w-full">
                                         <select

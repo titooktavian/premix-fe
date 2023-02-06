@@ -53,7 +53,7 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
         <div className="w-full flex flex-col gap-4">
             {transaction && (
                 <div
-                    className="flex w-full h-[94px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-lg text-white items-center p-6 gap-6"
+                    className="flex flex-col md:flex-row w-full md:h-[94px] bg-fit bg-right bg-right-bottom bg-[#272541] bg-no-repeat rounded-lg text-white md:items-center p-3 md:p-6 gap-3 md:gap-6"
                     style={{
                         backgroundImage: `url('/images/bg-dashboard.png')`,
                     }}
@@ -77,7 +77,7 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
             
             <div className="flex w-full bg-white rounded-lg p-6 gap-6">
                 <div className="flex w-full flex-col">
-                    <div className="flex gap-2">
+                    <div className="hidden md:flex gap-2">
                         <div className="text-base font-bold w-2/3">Produk</div>
                         <div className="text-base font-bold text-right w-1/3">Total</div>
                     </div>

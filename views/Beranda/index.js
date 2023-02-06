@@ -6,6 +6,7 @@ import { AlertService } from "services";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import Image from "next/image";
+import useResponsive from "hooks/useResponsive";
 
 const Index = ({
     pageTitle,
@@ -13,6 +14,7 @@ const Index = ({
     const [categoryList, setCategoryList] = useState([]);
     const [bannerList, setBannerList] = useState([]);
     const [productPromo, setProductPromo] = useState([]);
+    const { isMobile } = useResponsive();
 
     const fetchCategory = async () => {
         try {
@@ -66,7 +68,7 @@ const Index = ({
             className="mb-6 md:mt-3 mt-0"
         >
             {bannerList.length > 0 && (
-                <section className="-mx-4 mb-4 p-4 md:mx-0 ">
+                <section className="-mx-4 mb-4 md:p-4 md:mx-0 ">
                     <div className="md:mx-auto md:max-w-[1110px] px-4">
                         <Carousel
                             options={{
@@ -78,7 +80,7 @@ const Index = ({
                                 draggable: true,
                                 lazyLoad: true,
                                 pageDots: false,
-                                prevNextButtons: true,
+                                prevNextButtons: isMobile ? false : true,
                                 groupCells: 1,
                                 wrapAround: true,
                             }}

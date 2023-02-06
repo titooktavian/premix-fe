@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { PageHeader } from "components";
 
 const Index = ({
     pageTitle,
@@ -9,19 +10,7 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div
-                        className="flex flex-col w-full h-[220px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-3xl text-white justify-center p-10"
-                        style={{
-                            backgroundImage: `url('/images/carousel/bg.png')`,
-                        }}
-                    >
-                        <div className="font-bold text-3xl">Peraturan Akun Desain</div>
-                        <div className="font-normal text-base">Yuk simak peraturan akun desain dibawah.</div>
-                    </div>
-                </div>
-            </section>
+            <PageHeader title="Peraturan Akun Desain" subtitle="Yuk simak peraturan akun desain dibawah." />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0 ">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col items-center gap-5">

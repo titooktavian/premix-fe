@@ -36,6 +36,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import ChartFilter from "components/ChartFilter/ChartFilter";
 import TransactionDetail from "components/Modal/Content/TransactionDetail";
+import useResponsive from "hooks/useResponsive";
 
 const Index = ({
     pageTitle,
@@ -55,8 +56,9 @@ const Index = ({
     const [showDetail, setShowDetail] = useState(false);
     const [transactionId, setTransactionId] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const { isMobile } = useResponsive();
 
-    const headerContent = [
+    const headerContent = !isMobile ? [
         {
             name: 'No. Order',
             selector: 'order_number',
@@ -80,6 +82,28 @@ const Index = ({
             selector: 'expired_date',
             customComponent: (data) => (
                 <DateColumn data={data.expired_date} format="DD-MM-YYYY" />
+            )
+        },
+        {
+            name: 'Status',
+            selector: 'status',
+            customComponent: (data) => (
+                <StatusColumn data={data.id_status} />
+            ),
+        },
+        {
+            name: 'Aksi',
+            selector: 'name',
+            customComponent: (data) => (
+                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} confirmHandler={(data) => openConfirmTransaction(data)} />
+            ),
+        },
+    ] : [
+        {
+            name: 'Nama Akun',
+            selector: 'id_product',
+            customComponent: (data) => (
+                <AccountColumn data={data} />
             )
         },
         {
@@ -279,7 +303,7 @@ const Index = ({
     };
 
     const ButtonDatepicker = forwardRef(({ value, onClick }, ref) => (
-        <button className="border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs w-[170px] rounded-md" onClick={onClick} ref={ref}>
+        <button className="border-[#8581B7] text-[#8581B7] cursor-pointer border-[1px] p-1 text-xs w-full md:w-[170px] rounded-md" onClick={onClick} ref={ref}>
           {value}
         </button>
     ));
@@ -292,23 +316,23 @@ const Index = ({
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
-                    <div className="w-2/6 self-start">
+                    <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
                         {!showDetail && (
                             <>
                                 <div><span>Halo, <label className="font-bold">{userLogin?.name}!</label></span></div>
-                                <div className="flex gap-3">
-                                    <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
+                                <div className="flex flex-col md:flex-row gap-3">
+                                    <div className="bg-white p-4 shadow flex flex-col w-full md:w-1/3 rounded-2xl gap-3">
                                         <div className="text-sm text-normal text-[#6E6C85]">Akun</div>
                                         <div className="text-[#FF5C6F] text-2xl font-bold">{transactionCount}</div>
                                     </div>
-                                    <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
+                                    <div className="bg-white p-4 shadow flex flex-col w-full md:w-1/3 rounded-2xl gap-3">
                                         <div className="text-sm text-normal text-[#6E6C85]">Menunggu</div>
                                         <div className="text-[#F8CA56] text-2xl font-bold">{transactionWaiting}</div>
                                     </div>
-                                    <div className="bg-white p-4 shadow flex flex-col w-1/3 rounded-2xl gap-3">
+                                    <div className="bg-white p-4 shadow flex flex-col w-full md:w-1/3 rounded-2xl gap-3">
                                         <div className="text-sm text-normal text-[#6E6C85]">Lunas</div>
                                         <div className="text-[#66AE76] text-2xl font-bold">{transactionConfirmed}</div>
                                     </div>
@@ -318,7 +342,7 @@ const Index = ({
                                     <>
                                         
                                         <div className="bg-white p-4 rounded-lg flex flex-col gap-3 mt-6">
-                                            <div className="flex w-full justify-end">
+                                            <div className="flex flex-col md:flex-row w-full justify-end gap-3 md:gap-0">
                                                 <div className="text-base font-bold w-full">Grafik Total Penjualan</div>
                                                 <div className="mr-2 text-xs">
                                                     <DatePicker
@@ -341,7 +365,7 @@ const Index = ({
         
                                 <div className="text-base font-bold mt-6">Akun yang akan berakhir</div>
         
-                                <div className="relative">
+                                <div className="block md:relative">
                                     <Table header={headerContent} content={accountList} />
                                     <div className="w-full px-4 flex justify-center mt-5">
                                         <Pagination handlePageClick={changePageHandler} pageCount={totalPage} perPage={limit} currentPage={currentPage} />

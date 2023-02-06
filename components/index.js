@@ -23,3 +23,4 @@ export { default as ComplaintStatus } from "./ComplaintStatus/ComplaintStatus";
 export { default as ContentHeader } from "./ContentHeader/ContentHeader";
 export { default as Modal } from "./Modal/Modal";
 export { default as OrderDetail } from "./OrderDetail/OrderDetail";
+export { default as PageHeader } from "./PageHeader/PageHeader";
