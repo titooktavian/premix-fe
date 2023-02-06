@@ -25,6 +25,7 @@ module.exports = {
             "via.placeholder.com",
             "api.nusahabbat.com",
             "localhost:8000",
+            "api.premixstore.com",
         ]
     }
 };

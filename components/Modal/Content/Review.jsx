@@ -1,10 +1,8 @@
-import StatusColumn from "components/Table/components/StatusColumn";
 import { useStateContext } from "context/StateContext";
-import { acceptTransaction, addReview, getTransactionDetail } from "helpers/api";
+import { addReview } from "helpers/api";
 import { catchError } from "helpers/formatter";
-import moment from "moment/moment";
 import propTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { AlertService } from "services";
 
@@ -12,7 +10,7 @@ const Review = ({ idTransactionDetail, idProduct, callbackAction, productName })
     const defaultReview = [1, 2, 3, 4, 5];
 
     const { setLoading, userLogin } = useStateContext();
-    const [reviewList, setReviewList] = useState(defaultReview);
+    const [reviewList] = useState(defaultReview);
     const [review, setReview] = useState(0);
     const [ulasan, setUlasan] = useState('');
 

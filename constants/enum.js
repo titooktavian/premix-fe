@@ -258,8 +258,8 @@ export const COMPLAINT_STATUS = {
 }
 
 export const USER_PERMISSION = {
-    ADMIN: '1',
-    CUSTOMER: '2',
+    ADMIN: 1,
+    CUSTOMER: 2,
 }
 
 export const COMPLAINT_TYPE = [

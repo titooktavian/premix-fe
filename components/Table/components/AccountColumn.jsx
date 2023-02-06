@@ -1,5 +1,4 @@
 import propTypes from "prop-types";
-import moment from "moment/moment";
 
 const AccountColumn = ({ data }) => {
     return (

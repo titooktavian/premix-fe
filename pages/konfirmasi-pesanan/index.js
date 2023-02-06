@@ -1,7 +1,7 @@
 import KonfirmasiPesanan from "views/KonfirmasiPesanan";
 import { coreGSSP } from "helpers/CoreHOC";
 
-export const getServerSideProps = coreGSSP(async ({ req }) => {
+export const getServerSideProps = coreGSSP(async () => {
     return {
         props: {
             pageTitle: 'PremixStore',

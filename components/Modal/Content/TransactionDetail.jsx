@@ -1,7 +1,7 @@
 import StatusColumn from "components/Table/components/StatusColumn";
 import { useStateContext } from "context/StateContext";
 import { acceptTransaction, getTransactionDetail } from "helpers/api";
-import { catchError, toRupiah } from "helpers/formatter";
+import { catchError } from "helpers/formatter";
 import moment from "moment/moment";
 import propTypes from "prop-types";
 import { useEffect, useState } from "react";
