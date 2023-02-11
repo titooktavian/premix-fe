@@ -98,18 +98,18 @@ const Index = ({
                         </span>
 
                         <div className="mt-3">
-                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
                             <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                         </div>
                         <div className="mt-3">
-                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
                             <input type="password" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                         </div>
 
                         <div className="flex mt-3">
                             <div className="flex items-center mb-4">
                                 <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2" />
-                                <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Ingatkan saya</label>
+                                <label htmlFor="default-checkbox" className="ml-2 text-sm font-medium text-gray-900">Ingatkan saya</label>
                             </div>
                         </div>
 

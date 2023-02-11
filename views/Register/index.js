@@ -106,21 +106,21 @@ const Index = ({
                         </span>
 
                         <div className="mt-3">
-                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
+                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
                             <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nama" value={nama} onChange={(e) => { setNama(e.target.value) }} />
                         </div>
 
                         <div className="mt-3">
-                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
                             <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                         </div>
                         <div className="mt-3">
-                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
                             <input type="password" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
                             <span className="text-sm font-normal text-[#6E6C85] mt-2">Password minimal 8 karakter</span>
                         </div>
                         <div className="mt-3">
-                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Handphone</label>
+                            <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">No. Handphone</label>
                             <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nomor handphone" value={phoneNumber} onChange={(e) => { setPhoneNumber(e.target.value) }} />
                         </div>
 

@@ -181,15 +181,15 @@ const Index = ({
                                 <SectionTitle title="Info Pemesan" subtitle="" rightButton={false} />
 
                                 <div className="mt-3">
-                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
+                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
                                     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: Tito Hamzah" value={nama} onChange={(e) => { setNama(e.target.value) }} />
                                 </div>
                                 <div className="mt-3">
-                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
                                     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: titohamzah@gmail.com" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                                 </div>
                                 <div className="mt-3">
-                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No. Handphone</label>
+                                    <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900">No. Handphone</label>
                                     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: 08162758732" value={phoneNumber} onChange={(e) => { setPhoneNumber(e.target.value) }} />
                                 </div>
                             </div>
@@ -216,7 +216,7 @@ const Index = ({
                                     
                                     <tbody>
                                         {cartItems.data.length > 0 ?cartItems.data.map((items) => (
-                                            <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                                 <td className="py-4 pr-6">
                                                     <div className="flex gap-4">
                                                         <div className="w-14 h-14 relative">
@@ -244,7 +244,7 @@ const Index = ({
                                                 </td>
                                             </tr>
                                         )) : (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <tr className="bg-white border-b hover:bg-gray-50">
                                                 <td colSpan="4" className="py-4 px-6 text-center">
                                                     Keranjang anda kosong
                                                 </td>
@@ -357,7 +357,7 @@ const Index = ({
                                     </thead>
                                     <tbody>
                                         {checkoutData.transaction_details && checkoutData.transaction_details.length > 0 ? checkoutData.transaction_details.map((items) => (
-                                            <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                                 <td className="py-4 px-6">
                                                     <div className="flex gap-4">
                                                         <div className="h-20 w-20 relative">
@@ -385,7 +385,7 @@ const Index = ({
                                                 </td>
                                             </tr>
                                         )) : (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <tr className="bg-white border-b hover:bg-gray-50">
                                                 <td colSpan="3" className="py-4 px-6 text-center">
                                                     Keranjang anda kosong
                                                 </td>

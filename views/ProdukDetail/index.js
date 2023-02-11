@@ -154,7 +154,7 @@ const Index = ({
                                 </div>
                                 <div className="w-full md:w-1/4">
                                     <div>
-                                        <label htmlFor="pemilik-rekening" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Urutkan</label>
+                                        <label htmlFor="pemilik-rekening" className="block mb-1 text-sm font-medium text-gray-900">Urutkan</label>
                                         <select
                                             className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-slate-300 rounded-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:ring-sky-500 focus:ring-1 focus:outline-none"
                                             aria-label="Default select example"

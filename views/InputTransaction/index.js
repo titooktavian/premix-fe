@@ -276,7 +276,7 @@ const Index = ({
                                         </thead>
                                         <tbody>
                                             {selectedProduct.length > 0 ? selectedProduct.map((items) => (
-                                                <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                                     <td className="py-4 px-6">
                                                         <div className="flex gap-4">
                                                             <div className="flex flex-col justify-center">
@@ -306,7 +306,7 @@ const Index = ({
                                                     </td>
                                                 </tr>
                                             )) : (
-                                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                <tr className="bg-white border-b hover:bg-gray-50">
                                                     <td colSpan="4" className="py-4 px-6 text-center">
                                                         Anda belum memilih produk
                                                     </td>

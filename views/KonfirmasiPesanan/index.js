@@ -91,17 +91,17 @@ const Index = ({
                         <SectionTitle title="Konfirmasi Pembayaran" subtitle="Upload bukti pembayaran berupa gambar atau foto." rightButton={false} />
 
                         <div className="mt-3">
-                            <label htmlFor="pemilik-rekening" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Pemilik Rekening</label>
+                            <label htmlFor="pemilik-rekening" className="block mb-2 text-sm font-medium text-gray-900">Nama Pemilik Rekening</label>
                             <input type="text" id="pemilik-rekening" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nama pemilik rekening" value={pemilikRekening} onChange={(e) => { setPemilikRekening(e.target.value) }} />
                         </div>
 
                         <div className="mt-3">
-                            <label htmlFor="nominal-transfer" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nominal Transfer</label>
+                            <label htmlFor="nominal-transfer" className="block mb-2 text-sm font-medium text-gray-900">Nominal Transfer</label>
                             <input type="text" id="nominal-transfer" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nominal transfer" value={nominal} onChange={(e) => { setNominal(e.target.value) }} />
                         </div>
 
                         <div className="mt-3">
-                            <label htmlFor="pemilik-rekening" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rekening Tujuan</label>
+                            <label htmlFor="pemilik-rekening" className="block mb-2 text-sm font-medium text-gray-900">Rekening Tujuan</label>
                             <select
                                 className="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-slate-300 rounded-lg transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:ring-sky-500 focus:ring-1 focus:outline-none"
                                 aria-label="Default select example"
@@ -117,7 +117,7 @@ const Index = ({
 
                         <div className="mt-3">
                             <div className="flex items-center justify-center w-full flex-col">
-                                <label htmlFor="file-uploader" className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100">
+                                <label htmlFor="file-uploader" className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                                     {buktiBayar === '' ? (
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Upload Gambar</span></p>

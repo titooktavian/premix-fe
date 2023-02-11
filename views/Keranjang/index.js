@@ -100,7 +100,7 @@ const Index = ({
                             </thead>
                             <tbody>
                                 {cartItems.data.length > 0 ?cartItems.data.map((items) => (
-                                    <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                         <td className="py-4 px-6">
                                             <div className="flex gap-4">
                                                 <div className="h-20 w-20 relative">
@@ -133,7 +133,7 @@ const Index = ({
                                         </td>
                                     </tr>
                                 )) : (
-                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <tr className="bg-white border-b hover:bg-gray-50">
                                         <td colSpan="4" className="py-4 px-6 text-center">
                                             Keranjang anda kosong
                                         </td>

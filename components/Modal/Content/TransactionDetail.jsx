@@ -175,11 +175,11 @@ const TransactionDetail = ({ transactionId, callbackAction }) => {
                                             {detail.formData.map((dataForm, i) => (
                                                 <div className="flex gap-2" key={`form-data-${i}-${detail.id_transaction_detail}`}>
                                                     <div className="w-1/3 mt-3">
-                                                        <label htmlFor={`email-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                                        <label htmlFor={`email-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900">Email</label>
                                                         <input type="text" id={`email-${i}-${detail.id_transaction_detail}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={dataForm.email} onChange={(e) => { changeInputHandler(e.target.value, 'email', detail.id_transaction_detail, `form-data-email-${i}-${detail.id_transaction_detail}`) }} />
                                                     </div>
                                                     <div className="w-1/3 mt-3">
-                                                        <label htmlFor={`password-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                                        <label htmlFor={`password-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900">Password</label>
                                                         <input type="password" id={`password-${i}-${detail.id_transaction_detail}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={dataForm.password} onChange={(e) => { changeInputHandler(e.target.value, 'password', detail.id_transaction_detail, `form-data-password-${i}-${detail.id_transaction_detail}`) }} />
                                                     </div>
                                                 </div>
