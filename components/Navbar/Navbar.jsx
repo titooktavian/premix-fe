@@ -25,6 +25,7 @@ const Navbar = () => {
             return { ...nav };
         });
         setNavigations(menus);
+        setIsHamburgerOpen(false);
     };
 
     const { 
@@ -181,14 +182,14 @@ const Navbar = () => {
                             <div className="absolute right-0 top-full w-[200px] z-cart hidden h-fit rounded-b-2xl bg-white shadow-md md:group-hover:block">
                                 <ul className="flex flex-col whitespace-nowrap">
                                     {USER_NAVIGATIONS.map( (userNav, index) =>(
-                                        <li key={`user-nav-${index}`} className="p-3 group relative w-full h-full cursor-pointer text-sm font-medium hover:font-bold">
+                                        <li key={`user-nav-${index}`} className="p-3 group relative w-full h-full cursor-pointer text-sm font-medium hover:font-bold" onClick={() => activeMenu(userNav.link)}>
                                             <Link href={userNav.link}>
                                                 <a className="block h-full">{userNav.name}</a>
                                             </Link>
                                         </li>
                                     ))}
                                     <li className="p-3 text-red-300 group relative w-full h-full cursor-pointer text-sm font-medium hover:font-bold" onClick={handleLogout}>
-                                        <a className="block h-full">Logout</a>
+                                        <a className="block h-full" onClick={() => setIsHamburgerOpen(false)}>Logout</a>
                                     </li>
                                 </ul>
                             </div>
@@ -376,6 +377,7 @@ const Navbar = () => {
                                             <div onClick={() => {handleLogout()}}>
                                                 <a
                                                     className="block"
+                                                    onClick={() => activeMenu(nav.link)}
                                                 >
                                                     {nav.name}
                                                 </a>
@@ -391,6 +393,7 @@ const Navbar = () => {
                                         <Link href={nav.link}>
                                             <a
                                                 className="block"
+                                                onClick={() => activeMenu(nav.link)}
                                             >
                                                 {nav.name}
                                             </a>

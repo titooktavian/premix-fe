@@ -38,7 +38,7 @@ const Sidebar = () => {
     }
 
     const sidebarList = userLogin?.id_permission === USER_PERMISSION.ADMIN ? ADMIN_SIDEBAR : USER_SIDEBAR;
-    console.log(userLogin)
+
     return (
         <div className="flex flex-col w-full bg-[#F4F4FD] rounded-3xl py-8">
             <div className="flex gap-4 px-8">

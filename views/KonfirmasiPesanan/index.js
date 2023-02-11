@@ -71,10 +71,17 @@ const Index = ({
             if (!res.status) throw Error(res.msg);
 
             AlertService.success('Pesanan anda telah terkonfirmasi, silahkan tunggu informasi dari admin');
+            setTimeout(() => redirectToHome(), 1000);
         } catch (error) {
             AlertService.error(catchError(error));
         }
         setLoading(false);
+    }
+
+    const redirectToHome = () => {
+        router.push({
+            pathname: '/',
+        })
     }
 
     useEffect(() => {

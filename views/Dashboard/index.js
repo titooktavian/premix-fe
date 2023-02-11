@@ -176,9 +176,11 @@ const Index = ({
         setLoading(true);
         try {
             const res = await getSummary({
-                from_date: moment(startDate, 'MM/DD/YYYY').format('DD-MM-YYYY'),
-                to_date: moment(endDate, 'MM/DD/YYYY').format('DD-MM-YYYY'),
-                filter_type: '1'
+                ...filteredChart !== '2' && {
+                    from_date: moment(startDate, 'MM/DD/YYYY').format('DD-MM-YYYY'),
+                    to_date: moment(endDate, 'MM/DD/YYYY').format('DD-MM-YYYY'),
+                },
+                filter_type: filteredChart
             });
 
             if (!res.status) throw Error(res.msg);
@@ -230,34 +232,46 @@ const Index = ({
                 })
             })
         } else if (filteredChart === '2') {
-            const groups = dates.reduce((acc, date) => {
-                const yearWeek = `${moment(date).year()}-${moment(date).week()}`;
-                if (!acc[yearWeek]) {
-                    acc[yearWeek] = [];
-                }
+            // const groups = dates.reduce((acc, date) => {
+            //     const yearWeek = `${moment(date).year()}-${moment(date).week()}`;
+            //     if (!acc[yearWeek]) {
+            //         acc[yearWeek] = [];
+            //     }
 
-                acc[yearWeek].push(date);
+            //     acc[yearWeek].push(date);
                 
-                return acc;
+            //     return acc;
             
-            }, {});
+            // }, {});
 
-            Object.keys(groups).forEach((weekGroup) => {
-                const label = weekGroup.replace('-', ' Minggu ke ');
-                labels.push(label)
+            // Object.keys(groups).forEach((weekGroup) => {
+            //     const label = weekGroup.replace('-', ' Minggu ke ');
+            //     labels.push(label)
 
-                let totalTransaksi = 0;
-                groups[weekGroup].map(week => {
-                    data.map((chart) => {
-                        if (moment(chart.date, 'DD-MM-YYYY').format('MM/DD/YYYY') === week) {
-                            totalTransaksi += parseFloat(chart.total_sales);
-                        } else {
-                            totalTransaksi += 0;
-                        }
-                    })
+            //     let totalTransaksi = 0;
+            //     groups[weekGroup].map(week => {
+            //         data.map((chart) => {
+            //             if (moment(chart.date, 'DD-MM-YYYY').format('MM/DD/YYYY') === week) {
+            //                 totalTransaksi += parseFloat(chart.total_sales);
+            //             } else {
+            //                 totalTransaksi += 0;
+            //             }
+            //         })
+            //     })
+
+            //     datasets.push(totalTransaksi)
+            // })
+            const dateList = moment.monthsShort();
+            dateList.map((dates) => {
+                data.map((chart) => {
+                    if (moment(chart.date, 'MMM-YYYY').format('MMM') === dates) {
+                        datasets.push(parseFloat(chart.total_sales));
+                    } else {
+                        datasets.push(0);
+                    }
+
+                    labels.push(dates);
                 })
-
-                datasets.push(totalTransaksi)
             })
         }
 
@@ -344,16 +358,18 @@ const Index = ({
                                         <div className="bg-white p-4 rounded-lg flex flex-col gap-3 mt-6">
                                             <div className="flex flex-col md:flex-row w-full justify-end gap-3 md:gap-0">
                                                 <div className="text-base font-bold w-full">Grafik Total Penjualan</div>
-                                                <div className="mr-2 text-xs">
-                                                    <DatePicker
-                                                        selected={startDate}
-                                                        onChange={onChange}
-                                                        startDate={startDate}
-                                                        endDate={endDate}
-                                                        selectsRange
-                                                        customInput={<ButtonDatepicker />}
-                                                    />
-                                                </div>
+                                                {filteredChart !== '2' && (
+                                                    <div className="mr-2 text-xs">
+                                                        <DatePicker
+                                                            selected={startDate}
+                                                            onChange={onChange}
+                                                            startDate={startDate}
+                                                            endDate={endDate}
+                                                            selectsRange
+                                                            customInput={<ButtonDatepicker />}
+                                                        />
+                                                    </div>
+                                                )}
                                                 <ChartFilter changeEvent={ setFilteredChart } />
                                             </div>
                                             {chartData && (

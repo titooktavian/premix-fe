@@ -5,16 +5,17 @@ import { useEffect, useState } from "react";
 import { catchError, toRupiah } from "helpers/formatter";
 import { createTransaction, getListProduct } from "helpers/api";
 import { AlertService } from "services";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
-import Image from "next/image";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+import { generateRandomId } from "helpers/utils";
 
 const Index = ({
     pageTitle,
 }) => {
-    const { setLoading, userLogin, cartItems } = useStateContext();
+    const { setLoading } = useStateContext();
     const [productList, setProductList] = useState([]);
     const [searchProduct, setSearchProduct] = useState('');
     const [selectedProduct, setSelectedProduct] = useState([]);
+    const [emailUser, setEmailUser] = useState('');
 
     const fetchData = async (page) => {
         setLoading(true);
@@ -54,12 +55,19 @@ const Index = ({
         console.log(string, results)
     }
 
+    const defaultCredential = () => {
+        return {
+            email: '',
+            id: generateRandomId(5),
+        }
+    }
+
     const handleOnSelect = (item) => {
         const newSelectedProduct = [
             ...selectedProduct,
             ...[{
                 ...item,
-                ...{ selectedVariant: '', qty: 1, price: 0, subtotal: 0 }
+                ...{ selectedVariant: '', qty: 1, price: 0, subtotal: 0, credential: [defaultCredential()] },
             }],
         ];
 
@@ -99,12 +107,24 @@ const Index = ({
         let newProductList = [];
         if (qty != 0) {
             newProductList = selectedProduct.map((items) => {
+                let credential = [...items.credential];
+                if (qty > items.credential.length) {
+                    for (let index = 0; index < qty - items.credential.length; index++) {
+                        credential.push(defaultCredential())
+                    }
+                }
+                
+                if (qty < items.credential.length) {
+                    credential.pop();
+                }
+
                 if (items.id_product === productId) {
                     const newObj = {
                         ...items,
                         ...{
                             subtotal: qty * items.price,
                             qty: qty,
+                            credential: credential,
                         }
                     }
                     return newObj;
@@ -144,12 +164,19 @@ const Index = ({
             let subtotal = 0;
             let promoTotal = 0;
             selectedProduct.map((items) => {
+                const accountValue = items.credential.map(cred => {
+                    return {
+                        credential: cred.email,
+                    }
+                });
+
                 const detail = {
                     id_product: items.id_product,
                     id_product_duration: items.selectedVariant,
                     qty: items.qty,
                     subtotal: items.subtotal,
                     promo_value: (parseFloat(items.promo) / 100) * parseFloat(items.subtotal),
+                    account_value: accountValue
                 }
 
                 const price = items.subtotal;
@@ -168,6 +195,7 @@ const Index = ({
                 total: total,
                 details: transactionDetail,
                 unique_code: 0,
+                email_to: emailUser,
             });
 
             if (!res.status) throw Error(res.msg);
@@ -223,6 +251,34 @@ const Index = ({
         );
     }
 
+    const changeInputHandler = (val, idProduct, idComponent) => {
+        const newProductList = selectedProduct.map(items => {
+            if (idProduct === items.id_product) {
+                const newCredential = items.credential.map(cred => {
+                    if (cred.id === idComponent) {
+                        return {
+                            id: cred.id,
+                            email: val,
+                        }
+                    }
+
+                    return cred;
+                });
+
+                const newProduct = {
+                    ...items,
+                    credential: [...newCredential],
+                }
+
+                return newProduct;
+            }
+
+            return items;
+        });
+
+        setSelectedProduct(newProductList)
+    }
+
     useEffect(() => {
         fetchData(0)
     }, []);
@@ -275,36 +331,56 @@ const Index = ({
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {selectedProduct.length > 0 ? selectedProduct.map((items) => (
-                                                <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
-                                                    <td className="py-4 px-6">
-                                                        <div className="flex gap-4">
-                                                            <div className="flex flex-col justify-center">
-                                                                <span className="font-bold text-base -mb-6">{items.product_name}</span>
-                                                                <Variant list={items.product_durations} clickHandler={(idProductDuration, stock, price) => { changeVariantHandler(items.id_product, idProductDuration, price); }} selectedVariant={items.selectedVariant} />
+                                            {selectedProduct.length > 0 ? selectedProduct.map(items => (
+                                                <>
+                                                    <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
+                                                        <td className="py-4 px-6">
+                                                            <div className="flex gap-4">
+                                                                <div className="flex flex-col justify-center">
+                                                                    <span className="font-bold text-base -mb-6">{items.product_name}</span>
+                                                                    <Variant list={items.product_durations} clickHandler={(idProductDuration, stock, price) => { changeVariantHandler(items.id_product, idProductDuration, price); }} selectedVariant={items.selectedVariant} />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        
-                                                    </td>
-                                                    <td className="py-4 px-6">
-                                                        {toRupiah(items.price)}
-                                                    </td>
-                                                    <td className="py-4 px-6">
-                                                        <div className="-mt-6">
-                                                            <AddCart cartValue={items.qty} setCartValue={(qty) => { changeProductQty(qty, items.id_product); }} withStock={false} withLabel={false} />
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-4 px-6">
-                                                        <div className="flex flex-col">
-                                                            <div>
-                                                                {toRupiah(items.subtotal)}
+                                                            
+                                                        </td>
+                                                        <td className="py-4 px-6">
+                                                            {toRupiah(items.price)}
+                                                        </td>
+                                                        <td className="py-4 px-6">
+                                                            <div className="-mt-6">
+                                                                <AddCart cartValue={items.qty} setCartValue={(qty) => { changeProductQty(qty, items.id_product); }} withStock={false} withLabel={false} />
                                                             </div>
-                                                            <div className="text-[#FF5C6F]">
-                                                                {`- ${toRupiah((parseFloat(items.promo_percentage) / 100) * items.subtotal)}`}
+                                                        </td>
+                                                        <td className="py-4 px-6">
+                                                            <div className="flex flex-col">
+                                                                <div>
+                                                                    {toRupiah(items.subtotal)}
+                                                                </div>
+                                                                <div className="text-[#FF5C6F]">
+                                                                    {`- ${toRupiah((parseFloat(items.promo_percentage) / 100) * items.subtotal)}`}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                    {items.credential.map((credential, i) => (
+                                                        <tr className="bg-white border-b hover:bg-gray-50" key={`credential-${credential.id}-${items.id_product}`}>
+                                                            <td colSpan="4" className="py-4 px-6">
+                                                                <div className="w-full mt-3">
+                                                                    <label htmlFor={`email-${i}-${items.id_product}-${items.id_product_duration}`} className="block mb-2 text-sm font-medium text-gray-900">Credential</label>
+                                                                    <textarea
+                                                                        id="message"
+                                                                        rows="2"
+                                                                        className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                                                        placeholder="Masukkan credential akun"
+                                                                        value={credential.email}
+                                                                        onChange={(e) => { changeInputHandler(e.target.value, items.id_product, credential.id) }}
+                                                                    />
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                    
+                                                </>
                                             )) : (
                                                 <tr className="bg-white border-b hover:bg-gray-50">
                                                     <td colSpan="4" className="py-4 px-6 text-center">
@@ -315,8 +391,13 @@ const Index = ({
                                         </tbody>
                                     </table>
                                 </div>
-
+                                
                                 <div className="flex flex-col bg-white rounded-2xl p-5">
+                                    <label htmlFor="name" className="block mb-2 text-lg font-bold text-gray-900">Email User</label>
+                                    <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={emailUser} onChange={(e) => { setEmailUser(e.target.value) }} />
+                                </div>
+
+                                <div className="flex flex-col bg-white rounded-2xl p-5 mt-4">
                                     <label htmlFor="name" className="block mb-2 text-lg font-bold text-gray-900">Ringkasan Transaksi</label>
                                     {renderRingkasan()}
                                 </div>

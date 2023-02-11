@@ -168,7 +168,7 @@ const Index = ({
                         }}
                     >
                         <div className="font-bold text-3xl">Checkout</div>
-                        <div className="font-normal text-base">Ayo checkout belanjaanmu sekarang juga!</div>
+                        <div className="font-normal text-base">{checkoutStatus ? 'Silahkan check email untuk melihat detail transaksi' : 'Ayo checkout belanjaanmu sekarang juga!'}</div>
                     </div>
                 </div>
             </section>
@@ -193,7 +193,7 @@ const Index = ({
                                     <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: 08162758732" value={phoneNumber} onChange={(e) => { setPhoneNumber(e.target.value) }} />
                                 </div>
                             </div>
-                            <div className="w-full flex flex-col rounded-3xl shadow-[0px_4px_40px_rgba(39,38,65,0.06)] p-10 gap-2">
+                            {/* <div className="w-full flex flex-col rounded-3xl shadow-[0px_4px_40px_rgba(39,38,65,0.06)] p-10 gap-2">
                                 <SectionTitle title="Informasi Bank" subtitle="" rightButton={false} />
                                 <div className="flex flex-col gap-3">
                                     {BANK_LIST.map((bank) => (
@@ -205,7 +205,7 @@ const Index = ({
                                         </Accordion>
                                     ))}
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         
                         <div className="w-3/5 flex flex-col rounded-3xl shadow-[0px_4px_40px_rgba(39,38,65,0.06)] p-10 gap-2 pb-20 self-start">
@@ -445,7 +445,7 @@ const Index = ({
                     <section className="-mx-4 mb-4 p-4 md:mx-0">
                         <div className="md:mx-auto md:max-w-[1110px] px-4 flex justify-center">
                             <div className="h-[37px] px-[24px] bg-[#FF5C6F] rounded-full w-72 flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3" onClick={() => {confirmOrder();}}>
-                                Bayar Sekarang
+                                Konfirmasi Pembayaran
                             </div>
                         </div>
                     </section>

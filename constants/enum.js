@@ -201,8 +201,8 @@ export const TRANSACTION_STATUS = {
 };
 
 export const PRODUCT_STATUS = {
-    INACTIVE: '0',
-    ACTIVE: '1',
+    INACTIVE: 0,
+    ACTIVE: 1,
 };
 
 export const TRANSACTION_STATUS_LABEL = {
@@ -225,29 +225,29 @@ export const BANK_LIST = [
         id: 1,
         bankName: 'Bank BCA',
         logo: '/images/bank-icon/bca.png',
-        rekening: '12345678',
-        receiverName: 'Aku',
+        rekening: '4110286126',
+        receiverName: 'Kornelius Dimas',
     },
     {
         id: 2,
         bankName: 'Bank Mandiri',
         logo: '/images/bank-icon/mandiri.png',
-        rekening: '12345678',
-        receiverName: 'Aku',
+        rekening: '1440011875355',
+        receiverName: 'Kornelius Dimas',
     },
-    {
-        id: 3,
-        bankName: 'Bank Negara Indonesia',
-        logo: '/images/bank-icon/bni.png',
-        rekening: '12345678',
-        receiverName: 'Aku',
-    },
+    // {
+    //     id: 3,
+    //     bankName: 'Bank Negara Indonesia',
+    //     logo: '/images/bank-icon/bni.png',
+    //     rekening: '12345678',
+    //     receiverName: 'Kornelius Dimas',
+    // },
     {
         id: 4,
         bankName: 'Bank Rakyat Indonesia',
         logo: '/images/bank-icon/bri.png',
-        rekening: '12345678',
-        receiverName: 'Aku',
+        rekening: '647301010918539',
+        receiverName: 'Kornelius Dimas',
     },
 ];
 
@@ -284,7 +284,7 @@ export const COMPLAINT_TYPE = [
 export const CHART_FILTER = [
     {
         id: '1',
-        name: 'Minggu',
+        name: 'Hari',
         additionalClass: {
             borderTopLeftRadius: 6,
             borderBottomLeftRadius: 6,

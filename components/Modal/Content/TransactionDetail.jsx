@@ -83,7 +83,7 @@ const TransactionDetail = ({ transactionId, callbackAction }) => {
             const detail = transactionDetail.map(trx => {
                 const trxDetail = trx.formData.map((formData) => {
                     const newTrxDetail = {
-                        credential: `${formData.email} - ${formData.password}`,
+                        credential: formData.email,
                     }
 
                     return newTrxDetail;
@@ -174,14 +174,15 @@ const TransactionDetail = ({ transactionId, callbackAction }) => {
                                         <div className="flex flex-col gap-2">
                                             {detail.formData.map((dataForm, i) => (
                                                 <div className="flex gap-2" key={`form-data-${i}-${detail.id_transaction_detail}`}>
-                                                    <div className="w-1/3 mt-3">
-                                                        <label htmlFor={`email-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                                                        <input type="text" id={`email-${i}-${detail.id_transaction_detail}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={dataForm.email} onChange={(e) => { changeInputHandler(e.target.value, 'email', detail.id_transaction_detail, `form-data-email-${i}-${detail.id_transaction_detail}`) }} />
+                                                    <div className="w-2/3 mt-3">
+                                                        <label htmlFor={`email-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900">Credential</label>
+                                                        {/* <input type="text" id={`email-${i}-${detail.id_transaction_detail}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={dataForm.email} onChange={(e) => { changeInputHandler(e.target.value, 'email', detail.id_transaction_detail, `form-data-email-${i}-${detail.id_transaction_detail}`) }} /> */}
+                                                        <textarea id="message" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Masukkan credential akun" onChange={(e) => { changeInputHandler(e.target.value, 'email', detail.id_transaction_detail, `form-data-email-${i}-${detail.id_transaction_detail}`) }} value={dataForm.email} />
                                                     </div>
-                                                    <div className="w-1/3 mt-3">
+                                                    {/* <div className="w-1/3 mt-3">
                                                         <label htmlFor={`password-${i}-${detail.id_transaction_detail}`} className="block mb-2 text-sm font-medium text-gray-900">Password</label>
                                                         <input type="password" id={`password-${i}-${detail.id_transaction_detail}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan email" value={dataForm.password} onChange={(e) => { changeInputHandler(e.target.value, 'password', detail.id_transaction_detail, `form-data-password-${i}-${detail.id_transaction_detail}`) }} />
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             ))}
                                         </div>

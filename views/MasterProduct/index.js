@@ -12,6 +12,8 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { getTokenLocalStorage, generateRandomId } from "helpers/utils";
 import Switch from "react-switch";
 import { HiTrash } from "react-icons/hi";
+import { duration } from "moment";
+import { PRODUCT_STATUS } from "constants/enum";
 
 const Index = ({
     pageTitle,
@@ -69,7 +71,7 @@ const Index = ({
         setSelectedCategory(data.id_product_category);
         setDeskripsi(data.description);
         setProductImage(data.img_url);
-        setProductStatus(data.is_active === '1' ? true : false);
+        setProductStatus(data.is_active === PRODUCT_STATUS.ACTIVE ? true : false);
         setProductId(data.id_product);
 
         const newProductDuration = data.product_durations.map((dur) => {
@@ -163,7 +165,7 @@ const Index = ({
 
     const addProductDuration = () => {
         const tempProductDuration = [...productDuration, ...[{
-            id: generateRandomId(10),
+            id: `add-${generateRandomId(10)}`,
             duration: 0,
             price: 0,
             stock: 0,
@@ -209,10 +211,14 @@ const Index = ({
         setLoading(true);
         try {
             const newDuration = productDuration.map((duration) => {
+                const isNew = duration.id.toString().includes('add');
                 const durationObj = {
                     duration_value: duration.duration,
                     price: duration.price,
                     stock: duration.stock,
+                    ...!isNew && {
+                        id_product_duration: duration.id
+                    },
                 }
     
                 return durationObj;
@@ -222,7 +228,7 @@ const Index = ({
                 product_name: productName,
                 description:deskripsi,
                 id_product_category: selectedCategory,
-                is_active: productStatus,
+                is_active: productStatus ? PRODUCT_STATUS.ACTIVE : PRODUCT_STATUS.INACTIVE,
                 promo_percentage: productPromo,
                 product_duration: [...newDuration],
                 images: [...productImage],
@@ -230,7 +236,6 @@ const Index = ({
                     id_product: productId,
                 }
             };
-
 
             let formAction = createProduct;
             if (formType === 'edit') formAction = updateProduct;

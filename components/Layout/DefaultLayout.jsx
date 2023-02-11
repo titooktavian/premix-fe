@@ -45,7 +45,7 @@ const DefaultLayout = ({ children, outletInfo, merchantCode, user, selectedOutle
 
     return (
         <>
-            <div className="grid h-screen w-screen bg-white bg-[url('/background.jpeg')] bg-fill md:bg-contain bg-no-repeat">
+            <div className="grid h-screen w-screen bg-white bg-[url('/background.jpeg')] bg-fill md:bg-contain bg-no-repeat overflow-x-hidden">
                 <Head>
                     <link
                         rel="shortcut icon"

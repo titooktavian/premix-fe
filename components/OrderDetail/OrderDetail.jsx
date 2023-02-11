@@ -5,6 +5,7 @@ import { useStateContext } from "context/StateContext";
 import { getTransactionDetail } from "helpers/api";
 import { catchError, toRupiah } from "helpers/formatter";
 import moment from "moment/moment";
+import { useRouter } from "next/router";
 import propTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { AlertService } from "services";
@@ -17,6 +18,7 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
     const [idTransactionDetail, setIdTransactionDetail] = useState(null);
     const [idProduct, setIdProduct] = useState('');
     const [productName, setProductName] = useState('');
+    const router = useRouter();
 
     const fetchData = async () => {
         setLoading(true);
@@ -43,6 +45,13 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
         setIdProduct(productId);
         setProductName(name);
         setShowModal(true);
+    }
+
+    const createComplaint = () => {
+        router.push({
+            pathname: '/bantuan/buat',
+            query: { transactionId: transactionDetail.id_transaction },
+        })
     }
 
     useEffect(() => {
@@ -110,17 +119,17 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
                             )}
                             
                             {detail.account_value && detail.account_value.map((account, i) => {
-                                const accountSplited = account.credential.split(' - ');
+                                // const accountSplited = account.credential.split(' - ');
                                 return (
-                                    <div className="flex flex-col" key={`account-value-${i}`}>
-                                        <div className="flex gap-1" >
-                                            <div className="text-sm w-1/4 text-[#6E6C85]">Email</div>
-                                            <div className="text-sm font-bold w-3/4">{accountSplited[0]}</div>
+                                    <div className="flex flex-col mt-3" key={`account-value-${i}`}>
+                                        <div className="flex flex-col gap-1" >
+                                            <div className="text-sm w-1/4 text-[#6E6C85]">Credential</div>
+                                            <div className="text-sm font-bold w-3/4">{account.credential}</div>
                                         </div>
-                                        <div className="flex gap-1">
+                                        {/* <div className="flex gap-1">
                                             <div className="text-sm w-1/4 text-[#6E6C85]">Password</div>
                                             <div className="text-sm font-bold w-3/4">{accountSplited[1]}</div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 );
                             })}
@@ -153,9 +162,15 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
                 </div>
             </div>
             
-            <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {callbackAction();}}>
-                Kembali
+            <div className="flex gap-2">
+                <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-[#8581B7] text-base font-bold cursor-pointer mt-3 border-[1px] border-[#8581B7]" onClick={() => {callbackAction();}}>
+                    Kembali
+                </div>
+                <div className="h-[37px] px-[24px] rounded-full w-fit flex justify-center items-center text-white text-base font-bold cursor-pointer mt-3 bg-[#FF5C6F]" onClick={() => {createComplaint();}}>
+                    Buat Tiket
+                </div>
             </div>
+            
 
             <Modal
                 show={showModal}
