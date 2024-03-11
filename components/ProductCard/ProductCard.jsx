@@ -22,9 +22,9 @@ const ProductCard = ({ name, category, price, imageUrl, productId }) => {
                 </div>
                 
                 <div className="text-base font-bold text-[#272541] cursor-pointer">{name}</div>
-                <div className="flex gap-2">
+                <div className="flex md:flex-row flex-col gap-2">
                     <div className="text-sm font-normal text-[#8E8E9A] w-1/2">{toRupiah(price)}</div>
-                    <div className="flex justify-end w-1/2">
+                    <div className="flex md:justify-end md:w-1/2">
                         <span className="py-1 px-2 bg-[#272541] rounded-2xl text-xs text-[#FFFFFF] font-bold w-fit">
                             {category}
                         </span>

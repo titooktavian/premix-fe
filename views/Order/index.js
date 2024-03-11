@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, Modal, OrderDetail, Pagination, SectionTitle, Sidebar } from "components";
+import { ContentHeader, Modal, OrderDetail, PageHeader, Pagination, SectionTitle, Sidebar } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import Table from "components/Table/Table";
@@ -137,14 +137,14 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <ContentHeader title="Order" subtitle="Lihat daftar transaksi anda di sini" />
+            <PageHeader title="Order" subtitle="Lihat daftar transaksi anda di sini" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
                     <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col md:bg-[#F4F4FD] rounded-3xl md:p-8 gap-4 self-start">
                         <SectionTitle title={!showDetail ? 'List Order' : 'Order Detail'} subtitle=""  />
 
                         <div className="block md:relative">

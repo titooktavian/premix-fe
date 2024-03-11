@@ -124,12 +124,8 @@ const OrderDetail = ({ transactionId, callbackAction }) => {
                                     <div className="flex flex-col mt-3" key={`account-value-${i}`}>
                                         <div className="flex flex-col gap-1" >
                                             <div className="text-sm w-1/4 text-[#6E6C85]">Credential</div>
-                                            <div className="text-sm font-bold w-3/4">{account.credential}</div>
+                                            <div className="text-sm font-bold w-3/4" dangerouslySetInnerHTML={{ __html: account.credential }} />
                                         </div>
-                                        {/* <div className="flex gap-1">
-                                            <div className="text-sm w-1/4 text-[#6E6C85]">Password</div>
-                                            <div className="text-sm font-bold w-3/4">{accountSplited[1]}</div>
-                                        </div> */}
                                     </div>
                                 );
                             })}

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import Image from "next/image";
 import { useStateContext } from "context/StateContext";
 import { catchError, toRupiah } from "helpers/formatter";
-import { Accordion, SectionTitle } from "components";
+import { Accordion, PageHeader, SectionTitle } from "components";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { BANK_LIST } from "constants/enum";
@@ -12,6 +12,7 @@ import moment from "moment/moment";
 import { generaterandomCode } from "helpers/utils";
 import fetchApi from "helpers/config";
 import { setTokenLocalStorage } from "helpers/utils";
+import useResponsive from "hooks/useResponsive";
 
 const Index = ({
     pageTitle,
@@ -27,6 +28,7 @@ const Index = ({
     const [promoTotal, setPromoTotal] = useState(0);
     const [kodePembayaran, setKodePembayaran] = useState(0);
     const [tempUserLogin, setTempUserLogin] = useState(null);
+    const { isMobile } = useResponsive();
     
     const router = useRouter();
 
@@ -159,24 +161,12 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div
-                        className="flex flex-col w-full h-[220px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-3xl text-white justify-center p-10"
-                        style={{
-                            backgroundImage: `url('/images/carousel/bg.png')`,
-                        }}
-                    >
-                        <div className="font-bold text-3xl">Checkout</div>
-                        <div className="font-normal text-base">{checkoutStatus ? 'Silahkan check email untuk melihat detail transaksi' : 'Ayo checkout belanjaanmu sekarang juga!'}</div>
-                    </div>
-                </div>
-            </section>
+            <PageHeader title="Checkout" subtitle={checkoutStatus ? 'Silahkan check email untuk melihat detail transaksi' : 'Ayo checkout belanjaanmu sekarang juga!'} />
             
             {!checkoutStatus && (
                 <section className="-mx-4 mb-4 p-4 md:mx-0">
-                    <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
-                        <div className="flex flex-col w-2/5 gap-4">
+                    <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col md:flex-row gap-4">
+                        <div className="flex flex-col w-full md:w-2/5 gap-4">
                             <div className="w-full flex flex-col rounded-3xl shadow-[0px_4px_40px_rgba(39,38,65,0.06)] p-10 gap-2">
                                 <SectionTitle title="Info Pemesan" subtitle="" rightButton={false} />
 
@@ -208,7 +198,7 @@ const Index = ({
                             </div> */}
                         </div>
                         
-                        <div className="w-3/5 flex flex-col rounded-3xl shadow-[0px_4px_40px_rgba(39,38,65,0.06)] p-10 gap-2 pb-20 self-start">
+                        <div className="w-full md:w-3/5 flex flex-col rounded-3xl shadow-[0px_4px_40px_rgba(39,38,65,0.06)] p-10 gap-2 pb-20 self-start">
                             <SectionTitle title="Detail Pesanan" subtitle="" rightButton={false} />
 
                             <div className="overflow-x-auto relative">
@@ -219,9 +209,11 @@ const Index = ({
                                             <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                                 <td className="py-4 pr-6">
                                                     <div className="flex gap-4">
-                                                        <div className="w-14 h-14 relative">
-                                                            <Image src={items.imgURL} className="rounded-lg" layout='fill' objectFit='contain'/>
-                                                        </div>
+                                                        {!isMobile && (
+                                                            <div className="w-14 h-14 relative">
+                                                                <Image src={items.imgURL} className="rounded-lg" layout='fill' objectFit='contain'/>
+                                                            </div>
+                                                        )}
                                                         <div className="flex flex-col justify-center">
                                                             <span className="font-bold text-base">{items.name}</span>
                                                             <label className="w-fit bg-[#3F0071] text-white text-xs px-4 py-[2px] rounded-[4px]">{`${items.variant} Hari`}</label>
@@ -298,8 +290,8 @@ const Index = ({
                 <>
                     <section className="-mx-4 mb-4 p-4 md:mx-0">
                         <div className="md:mx-auto md:max-w-[1110px] px-4">
-                            <div className="flex gap-4">
-                                <div className="flex flex-col w-1/3">
+                            <div className="flex md:flex-row flex-col gap-4">
+                                <div className="flex flex-col w-full md:w-1/3">
                                     <div className="font-bold text-2xl text-[#272541]">Detail Order</div>
 
                                     <div className="text-sm text-[#272541] font-normal mt-5">Nomor Order</div>
@@ -312,7 +304,7 @@ const Index = ({
                                     <div className="text-base text-[#272541] font-bold">{email}</div>
                                 </div>
 
-                                <div className="flex flex-col w-2/3">
+                                <div className="flex flex-col md:w-2/3 w-full">
                                     <div className="font-bold text-2xl text-[#272541]">Bank Transfer</div>
 
                                     <div className="grid grid-cols-2 mt-5 gap-4">
@@ -360,9 +352,11 @@ const Index = ({
                                             <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                                 <td className="py-4 px-6">
                                                     <div className="flex gap-4">
-                                                        <div className="h-20 w-20 relative">
-                                                            <Image src={items.product.img_url[0]} className="rounded-lg" layout='fill' objectFit='contain'/>
-                                                        </div>
+                                                        {!isMobile && (
+                                                            <div className="h-20 w-20 relative">
+                                                                <Image src={items.product.img_url[0]} className="rounded-lg" layout='fill' objectFit='contain'/>
+                                                            </div>
+                                                        )}
                                                         <div className="flex flex-col justify-center">
                                                             <span className="font-bold text-base">{items.product.product_name}</span>
                                                             <label className="w-fit bg-[#3F0071] text-white text-xs px-4 py-[2px] rounded-[4px]">{`${items.product_duration.duration_value} Hari`}</label>

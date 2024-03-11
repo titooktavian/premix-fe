@@ -2,10 +2,11 @@ import PropTypes from "prop-types";
 import Image from "next/image";
 import { useStateContext } from "context/StateContext";
 import { toRupiah } from "helpers/formatter";
-import { AddCart } from "components";
+import { AddCart, PageHeader } from "components";
 import { useRouter } from "next/router";
 import { AlertService } from "services";
 import { useEffect, useState } from "react";
+import useResponsive from "hooks/useResponsive";
 
 const Index = ({
     pageTitle,
@@ -14,6 +15,7 @@ const Index = ({
     const [total, setTotal] = useState(cartItems.price || 0);
     const [promoTotal, setPromoTotal] = useState(0);
     const router = useRouter();
+    const { isMobile } = useResponsive();
 
     const changeCartValue = async (qty, productId, variant, name) => {
         setLoading(true);
@@ -64,19 +66,7 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
-                <div className="md:mx-auto md:max-w-[1110px] px-4">
-                    <div
-                        className="flex flex-col w-full h-[220px] bg-fill bg-right bg-[#272541] bg-no-repeat rounded-3xl text-white justify-center p-10"
-                        style={{
-                            backgroundImage: `url('/images/carousel/bg.png')`,
-                        }}
-                    >
-                        <div className="font-bold text-3xl">Keranjang Belanja</div>
-                        <div className="font-normal text-base">Ini adalah list pesananmu, segera checkout dan miliki akunmu!</div>
-                    </div>
-                </div>
-            </section>
+            <PageHeader title="Keranjang Belanja" subtitle="Ini adalah list pesananmu, segera checkout dan miliki akunmu!" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex flex-col">
@@ -90,12 +80,16 @@ const Index = ({
                                     <th scope="col" className="py-5 px-6">
                                         Harga
                                     </th>
-                                    <th scope="col" className="py-5 px-6">
-                                        Jumlah
-                                    </th>
-                                    <th scope="col" className="py-5 px-6">
-                                        Subtotal
-                                    </th>
+                                    {!isMobile && (
+                                        <>
+                                            <th scope="col" className="py-5 px-6">
+                                                Jumlah
+                                            </th>
+                                            <th scope="col" className="py-5 px-6">
+                                                Subtotal
+                                            </th>
+                                        </>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,12 +97,19 @@ const Index = ({
                                     <tr key={`${items.id_product}-${items.id_product_duration}`} className="bg-white border-b hover:bg-gray-50">
                                         <td className="py-4 px-6">
                                             <div className="flex gap-4">
-                                                <div className="h-20 w-20 relative">
-                                                    <Image src={items.imgURL || '/images/image-slider/1.jpeg'} className="rounded-lg" layout='fill' objectFit='contain'/>
-                                                </div>
+                                                {!isMobile && (
+                                                    <div className="h-20 w-20 relative">
+                                                        <Image src={items.imgURL || '/images/image-slider/1.jpeg'} className="rounded-lg" layout='fill' objectFit='contain'/>
+                                                    </div>
+                                                )}
                                                 <div className="flex flex-col justify-center">
                                                     <span className="font-bold text-base">{items.name}</span>
                                                     <label className="w-fit bg-[#3F0071] text-white text-xs px-4 py-[2px] rounded-[4px]">{`${items.variant} Hari`}</label>
+                                                    {isMobile && (
+                                                        <div className="-mt-6">
+                                                            <AddCart cartValue={items.qty} setCartValue={(qty) => { changeCartValue(qty, items.id_product, items.id_product_duration, items.name); }} withStock={false} withLabel={false} />
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                             
@@ -116,25 +117,29 @@ const Index = ({
                                         <td className="py-4 px-6">
                                             {toRupiah(items.price)}
                                         </td>
-                                        <td className="py-4 px-6">
-                                            <div className="-mt-6">
-                                                <AddCart cartValue={items.qty} setCartValue={(qty) => { changeCartValue(qty, items.id_product, items.id_product_duration, items.name); }} withStock={false} withLabel={false} />
-                                            </div>
-                                        </td>
-                                        <td className="py-4 px-6">
-                                            <div className="flex flex-col">
-                                                <div>
-                                                    {toRupiah(items.subtotal)}
-                                                </div>
-                                                <div className="text-[#FF5C6F]">
-                                                    {`- ${toRupiah((parseFloat(items.promo) / 100) * items.subtotal)}`}
-                                                </div>
-                                            </div>
-                                        </td>
+                                        {!isMobile && (
+                                            <>
+                                                <td className="py-4 px-6">
+                                                    <div className="-mt-6">
+                                                        <AddCart cartValue={items.qty} setCartValue={(qty) => { changeCartValue(qty, items.id_product, items.id_product_duration, items.name); }} withStock={false} withLabel={false} />
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    <div className="flex flex-col">
+                                                        <div>
+                                                            {toRupiah(items.subtotal)}
+                                                        </div>
+                                                        <div className="text-[#FF5C6F]">
+                                                            {`- ${toRupiah((parseFloat(items.promo) / 100) * items.subtotal)}`}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </>
+                                        )}
                                     </tr>
                                 )) : (
                                     <tr className="bg-white border-b hover:bg-gray-50">
-                                        <td colSpan="4" className="py-4 px-6 text-center">
+                                        <td colSpan={!isMobile ? '4' : '2'} className="py-4 px-6 text-center">
                                             Keranjang anda kosong
                                         </td>
                                     </tr>
@@ -143,20 +148,20 @@ const Index = ({
                         </table>
                     </div>
                     <div className="flex gap-2 mt-6">
-                        <div className="h-[37px] px-[24px] bg-[white] border-[1px] border-[#8581B7] rounded-full w-fit flex items-center text-[#8581B7] text-base font-bold cursor-pointer" onClick={() => {goProduct();}}>
+                        <div className="h-[37px] px-3 md:px-[24px] bg-[white] border-[1px] border-[#8581B7] rounded-full w-fit flex items-center text-[#8581B7] text-base font-bold cursor-pointer" onClick={() => {goProduct();}}>
                             Lanjutkan Belanja
                         </div>
-                        <div className="h-[37px] px-[24px] bg-[white] rounded-full w-fit flex items-center text-[#8581B7] text-base font-bold cursor-pointer" onClick={() => {resetCart();}}>
+                        <div className="h-[37px] px-3 md:px-[24px] bg-[white] rounded-full w-fit flex items-center text-[#8581B7] text-base font-bold cursor-pointer" onClick={() => {resetCart();}}>
                             Hapus Keranjang
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section className="-mx-4 mb-4 p-4 md:mx-0">
+            <section className="mb-4 md:p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4">
                     <div className="flex gap-2 justify-end w-full border-[#e5e7eb] border-t py-4">
-                        <div className="w-96 p-6 bg-[#F4F4FD] rounded-lg flex flex-col gap-3">
+                        <div className="w-full md:w-96 p-6 bg-[#F4F4FD] rounded-lg flex flex-col gap-3">
                             <div className="flex w-full">
                                 <div className="flex w-1/3">
                                     Subtotal

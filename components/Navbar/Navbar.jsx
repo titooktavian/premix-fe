@@ -8,7 +8,7 @@ import { FaBars, FaChevronDown, FaChevronRight, FaUser } from "react-icons/fa";
 import { HiOutlineShoppingCart, HiOutlineSearch } from "react-icons/hi";
 import { GrClose } from "react-icons/gr";
 import { useStateContext } from "context/StateContext";
-import { NAVIGATIONS, USER_NAVIGATIONS, USER_SIDEBAR } from "constants/enum";
+import { NAVIGATIONS, USER_NAVIGATIONS, USER_SIDEBAR, ADMIN_SIDEBAR, USER_PERMISSION } from "constants/enum";
 
 const Navbar = () => {
     const router = useRouter();
@@ -84,6 +84,8 @@ const Navbar = () => {
             setNavBackground("relative");
         }
     }, [clientScroll]);
+
+    const sidebarList = userLogin?.id_permission === USER_PERMISSION.ADMIN ? ADMIN_SIDEBAR : USER_SIDEBAR;
 
     return (
         <div
@@ -367,7 +369,7 @@ const Navbar = () => {
                     <div className="border-b-[1px]"></div>
                     {userLogin && (
                         <>
-                            {USER_SIDEBAR.map((nav) => {
+                            {sidebarList.map((nav) => {
                                 if (nav.link === '/logout') {
                                     return (
                                         <li

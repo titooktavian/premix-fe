@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
-import { ContentHeader, SectionTitle, Sidebar } from "components";
+import { ContentHeader, PageHeader, SectionTitle, Sidebar } from "components";
 import { useState } from "react";
 import { catchError } from "helpers/formatter";
 import { updateUser } from "helpers/api";
@@ -78,7 +78,7 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <ContentHeader title="Akun" subtitle="Ubah informasi akun anda di sini" />
+            <PageHeader title="Akun" subtitle="Ubah informasi akun anda di sini" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, Modal, OrderDetail, Pagination, Sidebar } from "components";
+import { ContentHeader, Modal, OrderDetail, PageHeader, Pagination, Sidebar } from "components";
 import { useState, useEffect, forwardRef } from "react";
 import { catchError } from "helpers/formatter";
 import { getAccountDashboard, getSummary } from "helpers/api";
@@ -308,6 +308,8 @@ const Index = ({
             display: false,
           },
         },
+        maintainAspectRatio: false,
+        // aspectRatio: 2
     };
 
     const onChange = (dates) => {
@@ -326,14 +328,14 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <ContentHeader title="Dashboard" subtitle="Selamat datang di dashboard customer Premix Store" />
+            <PageHeader title="Dashboard" subtitle="Selamat datang di dashboard customer Premix Store" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
                     <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col md:bg-[#F4F4FD] rounded-3xl md:p-8 gap-4 self-start">
                         {!showDetail && (
                             <>
                                 <div><span>Halo, <label className="font-bold">{userLogin?.name}!</label></span></div>
@@ -359,7 +361,7 @@ const Index = ({
                                             <div className="flex flex-col md:flex-row w-full justify-end gap-3 md:gap-0">
                                                 <div className="text-base font-bold w-full">Grafik Total Penjualan</div>
                                                 {filteredChart !== '2' && (
-                                                    <div className="mr-2 text-xs">
+                                                    <div className="md:mr-2 text-xs">
                                                         <DatePicker
                                                             selected={startDate}
                                                             onChange={onChange}
@@ -370,10 +372,13 @@ const Index = ({
                                                         />
                                                     </div>
                                                 )}
+                                                
                                                 <ChartFilter changeEvent={ setFilteredChart } />
                                             </div>
                                             {chartData && (
-                                                <Line data={chartData} width={100} height={40} options={options} />
+                                                <div className="h-[40vh] w-full">
+                                                    <Line data={chartData} options={options} />
+                                                </div>
                                             )}
                                         </div>
                                     </>

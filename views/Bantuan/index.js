@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
-import { ComplaintStatus, ContentHeader, Pagination, Sidebar, TextEditor } from "components";
+import { ComplaintStatus, ContentHeader, PageHeader, Pagination, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import { HiOutlineChatAlt, HiOutlineSearch, HiOutlineTicket } from "react-icons/hi";
@@ -207,14 +207,14 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <ContentHeader title="Bantuan" subtitle="Lihat daftar tiket komplain anda di sini" />
+            <PageHeader title="Bantuan" subtitle="Lihat daftar tiket komplain anda di sini" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
                     <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-full md:w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col md:bg-[#F4F4FD] rounded-3xl md:p-8 gap-4 self-start">
                         <div className="flex gap-2">
                             <div className="font-bold w-full md:w-2/3 text-2xl">{showDetail ? 'Detail Tiket' : 'Bantuan'}</div>
                             {!showDetail && (
@@ -232,10 +232,10 @@ const Index = ({
                                 </div>
                             )}
                         </div>
-                        <div className="relative">
+                        <div className="">
                             {!showDetail && (
                                 <div className="w-full flex flex-col gap-4">
-                                    <div className="flex">
+                                    <div className="grid grid-cols-2 md:grid-cols-4">
                                         {COMPLAINT_TYPE.map((comp) => {
                                             let statusClass = 'text-[#6E6C85] cursor-pointer font-normal p-2 text-center border-b-2 border-[#E2E2E7] px-5';
                                             if (comp.id === statusFilter) statusClass = 'text-[#272541] cursor-pointer font-bold p-2 text-center border-b-2 border-[#272541] px-5';
@@ -287,10 +287,6 @@ const Index = ({
                                                         <span className="text-xs font-normal text-[#3F0071]">{complaint.customer_name}</span>
                                                     </div>
                                                     <div className="w-2/3 flex items-center justify-end gap-2">
-                                                        {/* <div className="flex items-center gap-1">
-                                                            <AiOutlineTag className="text-xs" />
-                                                            <span className="text-xs font-normal text-[#3F0071]">Login, Akun profil</span>
-                                                        </div> */}
                                                         <div className="flex items-center gap-1">
                                                             <GrAttachment className="text-xs" />
                                                             <span className="text-xs font-normal text-[#3F0071]">{complaint.complain_details[0].file_url.length}</span>

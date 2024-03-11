@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useStateContext } from "context/StateContext";
 import { AlertService } from "services";
-import { ContentHeader, Pagination, Sidebar, TextEditor } from "components";
+import { ContentHeader, PageHeader, Pagination, Sidebar, TextEditor } from "components";
 import { useEffect, useState } from "react";
 import { catchError } from "helpers/formatter";
 import Table from "components/Table/Table";
@@ -14,6 +14,7 @@ import Switch from "react-switch";
 import { HiTrash } from "react-icons/hi";
 import { duration } from "moment";
 import { PRODUCT_STATUS } from "constants/enum";
+import useResponsive from "hooks/useResponsive";
 
 const Index = ({
     pageTitle,
@@ -39,8 +40,9 @@ const Index = ({
     const [categoryList, setCategoryList] = useState([]);
     const [formType, setFormType] = useState('add');
     const [productId, setProductId] = useState('');
+    const { isMobile } = useResponsive();
 
-    const headerContent = [
+    const headerContent = !isMobile ? [
         {
             name: 'Product',
             selector: 'product_name',
@@ -55,6 +57,18 @@ const Index = ({
             customComponent: (data) => (
                 <ProductStatusColumn data={data.is_active} />
             ),
+        },
+        {
+            name: 'Aksi',
+            selector: 'name',
+            customComponent: (data) => (
+                <ActionColumn data={data} clickHandler={(data) => { rowClickHandler(data) }} />
+            ),
+        },
+    ] : [
+        {
+            name: 'Product',
+            selector: 'product_name',
         },
         {
             name: 'Aksi',
@@ -125,6 +139,15 @@ const Index = ({
     };
 
     const showForm = (type) => {
+        setProductName('');
+        setProductPromo('');
+        setSelectedCategory('');
+        setDeskripsi('');
+        setProductImage([]);
+        setProductStatus(true);
+        setProductId('');
+        setProductDuration([]);
+
         setFormType(type);
         setShowDetail(true);
     }
@@ -273,14 +296,14 @@ const Index = ({
         <div 
             className="mb-6 md:mt-3 mt-0"
         >
-            <ContentHeader title="Produk" subtitle="Lihat, buat, dan ubah produk yang ingin anda jual" />
+            <PageHeader title="Produk" subtitle="Lihat, buat, dan ubah produk yang ingin anda jual" />
 
             <section className="-mx-4 mb-4 p-4 md:mx-0">
                 <div className="md:mx-auto md:max-w-[1110px] px-4 flex gap-4">
-                    <div className="w-2/6 self-start">
+                    <div className="hidden md:block w-2/6 self-start">
                         <Sidebar />
                     </div>
-                    <div className="w-4/6 flex flex-col bg-[#F4F4FD] rounded-3xl p-8 gap-4 self-start">
+                    <div className="w-full md:w-4/6 flex flex-col md:bg-[#F4F4FD] rounded-3xl md:p-8 gap-4 self-start">
                         <div className="flex gap-2">
                             <div className="font-bold w-2/3 text-2xl">{!showDetail ? 'List Produk' : 'Produk'}</div>
                             {!showDetail && (
@@ -292,7 +315,7 @@ const Index = ({
                             )}
                         </div>
 
-                        <div className="relative">
+                        <div className="block md:relative">
                             {!showDetail && (
                                 <>
                                     <Table header={headerContent} content={orderList} />
@@ -304,8 +327,8 @@ const Index = ({
                             {showDetail && (
                                 <div className="w-full flex flex-col gap-4">
                                     <div className="flex w-full flex-col bg-white rounded-lg p-6 gap-5">
-                                        <div className="flex w-full gap-5">
-                                            <div className="flex items-center justify-center w-1/2 flex-col">
+                                        <div className="flex flex-col md:flex-row w-full gap-5">
+                                            <div className="flex items-center justify-center md:w-1/2 w-full flex-col">
                                                 <label htmlFor="file-uploader" className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                         <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Upload Gambar</span></p>
@@ -327,7 +350,7 @@ const Index = ({
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div className="flex w-1/2 flex-col gap-2">
+                                            <div className="flex w-full md:w-1/2 flex-col gap-2">
                                                 <div className="">
                                                     <label htmlFor="product_name" className="block mb-2 text-sm font-medium text-gray-900">Nama</label>
                                                     <input type="text" id="product_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 -mt-1" placeholder="Masukkan nama produk" value={productName} onChange={(e) => { setProductName(e.target.value) }} />
